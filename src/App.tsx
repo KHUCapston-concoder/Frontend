@@ -1,11 +1,22 @@
 import { useState } from "react";
+import styled from "styled-components";
+import { useTheme } from "@/context/ThemeContext";
+import Home from "@/pages/Home";
 
 function App() {
+  const { themeColorset } = useTheme();
+
   return (
-    <div className="text-center selection:bg-green-900">
-      hi
-    </div>
+    <MainDiv theme={themeColorset}>
+      <Home />
+    </MainDiv>
   );
 }
+
+const MainDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: ${(props) => props.theme.bgColor};
+`;
 
 export default App;
