@@ -1,0 +1,18 @@
+$point-color: #00adb5;
+$base-color: #222831;
+$bg-color: #393e46;
+$text-color: #eeeeee;
+
+button {
+  background-color: $point-color !important;
+  color: $text-color !important;
+  font-weight: 600 !important;
+  padding: 10px 18px !important;
+  border-radius: 14px;
+}
+
+#home-lottie-player {
+  a {
+    display: none;
+  }
+}
