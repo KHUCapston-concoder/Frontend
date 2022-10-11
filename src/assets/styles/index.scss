@@ -4,11 +4,31 @@ $bg-color: #393e46;
 $text-color: #eeeeee;
 
 button {
-  background-color: $point-color !important;
-  color: $text-color !important;
-  font-weight: 600 !important;
-  padding: 10px 18px !important;
+  position: relative;
+  background-color: $point-color;
+  color: $text-color;
+  font-weight: 600;
+  padding: 10px 18px;
   border-radius: 14px;
+  z-index: 1;
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: darken($point-color, 5%);
+    transition: all 0.2s;
+    border-radius: 14px;
+    z-index: -1;
+  }
+  &:hover {
+    color: #fff;
+    &:before {
+      width: 100%;
+    }
+  }
 }
 
 #home-lottie-player {
