@@ -1,13 +1,19 @@
 import React from "react";
-import styled from "styled-components";
 import tw from "tailwind-styled-components";
-import { Button } from "@/components/styled/Buttons";
 import { useTheme } from "@/context/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
 const ImgURL = "https://embed.lottiefiles.com/animation/63487";
 
 const Home = () => {
+  const navigate = useNavigate();
   const { themeColorset } = useTheme();
+
+  const onClickEnterCode = () => {
+    console.log("hi");
+
+    navigate("./workspace/1");
+  };
 
   return (
     <HomeDiv>
@@ -22,7 +28,7 @@ const Home = () => {
         </BtnDiv>
         <BtnDiv>
           초대받으셨나요?
-          <button>ENTER CODE</button>
+          <button onClick={onClickEnterCode}>ENTER CODE</button>
         </BtnDiv>
       </BtnContainer>
     </HomeDiv>
