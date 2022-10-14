@@ -1,7 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
+
+// 색상 변수
 $point-color: #00adb5;
 $base-color: #222831;
 $bg-color: #393e46;
 $text-color: #eeeeee;
+
+html {
+  @apply h-full min-h-full w-full min-w-full overflow-auto;
+  font-family: "Pretendard";
+}
+
+body {
+  @apply h-full w-full;
+}
+
+#root {
+  @apply h-full w-full;
+}
+
+.dark-1 {
+  background-color: #1b2128;
+}
+
+.dark-2 {
+  background-color: #222831;
+}
+
+.dark-3 {
+  background-color: #393e46;
+}
 
 button {
   position: relative;

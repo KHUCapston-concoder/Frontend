@@ -7,17 +7,19 @@ const commonTheme = {
 
 const lightTheme = {
     ...commonTheme,
+    darkerColor: '-',
     baseColor: "#222831",
     bgColor: "#393E46",
     textColor: "#EEEEEE",
 };
 
 const darkTheme = {
-    // 추후 추가 예정 ..
-    ...commonTheme,
-    baseColor: "#222831",
-    bgColor: "#393E46",
-    textColor: "#EEEEEE",
+  // 추후 추가 예정 ..
+  ...commonTheme,
+  darkerColor: "#1b2128",
+  baseColor: "#222831",
+  bgColor: "#393E46",
+  textColor: "#EEEEEE",
 };
 
 type propType = {
@@ -25,7 +27,7 @@ type propType = {
 };
 
 const ThemeContext = createContext({
-    themeMode: 'light',
+    themeMode: 'dark',
     setThemeMode: (themeMode: string) => {},
     themeColorset: null,
 });
