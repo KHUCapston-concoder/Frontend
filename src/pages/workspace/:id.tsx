@@ -4,6 +4,7 @@ import SnapshotBtn from "@/components/Snapshot/PopupBtn";
 import TimerBtn from "@/components/Timer/PopupBtn";
 import { useTheme } from "@/context/ThemeContext";
 import ChatPopupBtn from "@/components/Chat/PopupBtn";
+import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 
 const Workspace = () => {
   const { themeColorset } = useTheme();
@@ -12,7 +13,9 @@ const Workspace = () => {
     <MainDiv>
       <CamDiv></CamDiv>
       <AlgoDiv>
-        <AlgoFilterDiv></AlgoFilterDiv>
+        <AlgoFilterDiv>
+          <AlgoFilterContainer />
+        </AlgoFilterDiv>
         <AlgoInfoDiv></AlgoInfoDiv>
       </AlgoDiv>
       <CodeDiv>
@@ -31,7 +34,7 @@ const Workspace = () => {
             <TimerBtn />
           </UtilButtonDiv>
           <UtilButtonDiv>
-            <ChatPopupBtn/>
+            <ChatPopupBtn />
           </UtilButtonDiv>
         </UtilButtonsDiv>
       </FlexDiv>
@@ -73,12 +76,13 @@ grow-[2] bg-inherit
 
 const AlgoFilterDiv = tw(CommonDiv)`
 m-0
-h-[20%]
+h-[25%]
+bg-inherit
 `;
 
 const AlgoInfoDiv = tw(CommonDiv)`
 m-0 mt-[15px]
-h-[calc(80%-15px)]
+h-[calc(75%-15px)]
 `;
 
 /* 3.4.2 실시간 동시 코딩 */
