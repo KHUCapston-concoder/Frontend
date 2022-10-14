@@ -1,3 +1,4 @@
+import SnapshotBtn from "@/components/Snapshot/SnapshotBtn";
 import { useTheme } from "@/context/ThemeContext";
 import React from "react";
 import tw from "tailwind-styled-components";
@@ -20,7 +21,9 @@ const Workspace = () => {
         <CompileInfoDiv></CompileInfoDiv>
         <TestCasaeDiv></TestCasaeDiv>
         <UtilButtonsDiv>
-          <UtilButtonDiv></UtilButtonDiv>
+          <UtilButtonDiv>
+            <SnapshotBtn />
+          </UtilButtonDiv>
           <UtilButtonDiv></UtilButtonDiv>
           <UtilButtonDiv></UtilButtonDiv>
         </UtilButtonsDiv>
@@ -111,4 +114,5 @@ m-0
 basis-[60px] grow
 h-full
 max-x-[80px] max-h-[80px]
+min-x-[60px] min-y-[60px] 
 `;

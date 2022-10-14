@@ -12,7 +12,7 @@ const Home = () => {
   const onClickEnterCode = () => {
     console.log("hi");
 
-    navigate("./workspace/1");
+    navigate("/workspace/1");
   };
 
   return (
@@ -24,11 +24,13 @@ const Home = () => {
       <BtnContainer style={{ color: themeColorset.textColor }}>
         <BtnDiv>
           새로운 방을 만들고싶다면 ..
-          <button>CREATE A WORKSPACE</button>
+          <button className="styled">CREATE A WORKSPACE</button>
         </BtnDiv>
         <BtnDiv>
           초대받으셨나요?
-          <button onClick={onClickEnterCode}>ENTER CODE</button>
+          <button className="styled" onClick={onClickEnterCode}>
+            ENTER CODE
+          </button>
         </BtnDiv>
       </BtnContainer>
     </HomeDiv>
