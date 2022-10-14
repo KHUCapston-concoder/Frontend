@@ -19,7 +19,11 @@ const Workspace = () => {
       <FlexDiv>
         <CompileInfoDiv></CompileInfoDiv>
         <TestCasaeDiv></TestCasaeDiv>
-        <UtilButtonsDiv></UtilButtonsDiv>
+        <UtilButtonsDiv>
+          <UtilButtonDiv></UtilButtonDiv>
+          <UtilButtonDiv></UtilButtonDiv>
+          <UtilButtonDiv></UtilButtonDiv>
+        </UtilButtonsDiv>
       </FlexDiv>
     </MainDiv>
   );
@@ -72,6 +76,14 @@ const CodeDiv = tw(CommonDiv)`
 grow-[6]
 `;
 
+const FloatButtonDiv = tw.div`
+relative
+top-[90%] left-[50%]
+w-[50%] h-[60px]
+rounded-[15px]
+dark-1
+`;
+
 /* 3.4.5 컴파일 정보 */
 const CompileInfoDiv = tw(CommonDiv)`
 m-0 mb-[15px]
@@ -90,12 +102,13 @@ basis-[100px] grow-[6]
 const UtilButtonsDiv = tw(CommonDiv)`
 m-0 w-full 
 basis-[60px] grow
+flex gap-[10px] items-end
+bg-inherit
 `;
 
-const FloatButtonDiv = tw.div`
-relative
-top-[90%] left-[50%]
-w-[50%] h-[60px]
-rounded-[15px]
-dark-1
+const UtilButtonDiv = tw(CommonDiv)`
+m-0
+basis-[60px] grow
+h-full
+max-x-[80px] max-h-[80px]
 `;
