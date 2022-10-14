@@ -5,6 +5,7 @@
 
 // 색상 변수
 $point-color: #00adb5;
+$darker-color: #1b2128;
 $base-color: #222831;
 $bg-color: #393e46;
 $text-color: #eeeeee;
@@ -23,16 +24,28 @@ body {
 }
 
 .dark-1 {
-  background-color: #1b2128;
+  background-color: $darker-color;
 }
 
 .dark-2 {
-  background-color: #222831;
+  background-color: $base-color;
 }
 
 .dark-3 {
-  background-color: #393e46;
+  background-color: $bg-color;
 }
+
+// .tab-active {
+//   background-color: $base-color !important;
+//   &::before,
+//   &::after {
+//     background-image: unset !important;
+//   }
+// }
+
+// .tab:not(.tab-active) {
+//   border: 1px solid $base-color;
+// }
 
 button:hover {
   filter: brightness(80%);
