@@ -1,10 +1,16 @@
 module.exports = {
   content: ["index.html", "./src/**/*.{js,jsx,ts,tsx,vue,html}"],
-  theme: {
-    mytheme: {
-      neutral: "#191D24",
-      "base-100": "#2A303C",
-    },
+  daisyui: {
+    themes: [
+      {
+        light: {
+          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
+          accent: "#00adb5",
+          neutral: "#1b2128",
+          "base-100": "#222831",
+        },
+      },
+    ],
   },
   plugins: [require("daisyui")],
 };

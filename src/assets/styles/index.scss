@@ -35,17 +35,17 @@ body {
   background-color: $bg-color;
 }
 
-.tab-active {
-  background-color: $base-color !important;
-  &::before,
-  &::after {
-    background-image: unset !important;
-  }
-}
+// .tab-active {
+//   background-color: $base-color !important;
+//   &::before,
+//   &::after {
+//     background-image: unset !important;
+//   }
+// }
 
-.tab:not(.tab-active) {
-  border: 1px solid $base-color;
-}
+// .tab:not(.tab-active) {
+//   border: 1px solid $base-color;
+// }
 
 button:hover {
   filter: brightness(80%);
