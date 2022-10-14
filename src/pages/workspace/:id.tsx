@@ -1,7 +1,10 @@
-import SnapshotBtn from "@/components/Snapshot/SnapshotBtn";
-import { useTheme } from "@/context/ThemeContext";
 import React from "react";
 import tw from "tailwind-styled-components";
+import SnapshotBtn from "@/components/Snapshot/PopupBtn";
+import TimerBtn from "@/components/Timer/PopupBtn";
+import { useTheme } from "@/context/ThemeContext";
+import ChatPopupBtn from "@/components/Chat/PopupBtn";
+
 const Workspace = () => {
   const { themeColorset } = useTheme();
 
@@ -24,8 +27,12 @@ const Workspace = () => {
           <UtilButtonDiv>
             <SnapshotBtn />
           </UtilButtonDiv>
-          <UtilButtonDiv></UtilButtonDiv>
-          <UtilButtonDiv></UtilButtonDiv>
+          <UtilButtonDiv>
+            <TimerBtn />
+          </UtilButtonDiv>
+          <UtilButtonDiv>
+            <ChatPopupBtn/>
+          </UtilButtonDiv>
         </UtilButtonsDiv>
       </FlexDiv>
     </MainDiv>
