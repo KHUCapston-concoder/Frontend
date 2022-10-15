@@ -4,6 +4,8 @@ import SnapshotBtn from "@/components/Snapshot/PopupBtn";
 import TimerBtn from "@/components/Timer/PopupBtn";
 import { useTheme } from "@/context/ThemeContext";
 import ChatPopupBtn from "@/components/Chat/PopupBtn";
+import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
+import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 
 const Workspace = () => {
   const { themeColorset } = useTheme();
@@ -12,8 +14,12 @@ const Workspace = () => {
     <MainDiv>
       <CamDiv></CamDiv>
       <AlgoDiv>
-        <AlgoFilterDiv></AlgoFilterDiv>
-        <AlgoInfoDiv></AlgoInfoDiv>
+        <AlgoFilterDiv>
+          <AlgoFilterContainer />
+        </AlgoFilterDiv>
+        <AlgoInfoDiv>
+          <AlgoInfo />
+        </AlgoInfoDiv>
       </AlgoDiv>
       <CodeDiv>
         <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
@@ -31,7 +37,7 @@ const Workspace = () => {
             <TimerBtn />
           </UtilButtonDiv>
           <UtilButtonDiv>
-            <ChatPopupBtn/>
+            <ChatPopupBtn />
           </UtilButtonDiv>
         </UtilButtonsDiv>
       </FlexDiv>
@@ -74,6 +80,7 @@ grow-[2] bg-inherit
 const AlgoFilterDiv = tw(CommonDiv)`
 m-0
 h-[20%]
+bg-inherit
 `;
 
 const AlgoInfoDiv = tw(CommonDiv)`
