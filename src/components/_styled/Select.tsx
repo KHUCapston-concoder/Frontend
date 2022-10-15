@@ -27,7 +27,9 @@ const SelectBox = ({
   };
   return (
     <div className="my-[2px] w-full px-[12px] py-[4px]">
-      <div className="w-full text-left text-xs font-bold">· {label}</div>
+      <div className="w-full text-left text-xs font-bold">
+        {label != undefined && `· ${label}`}
+      </div>
       <select
         defaultValue={-1}
         className={className}

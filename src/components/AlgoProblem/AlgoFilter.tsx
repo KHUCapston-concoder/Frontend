@@ -61,6 +61,7 @@ const AlgoFilterContainer = () => {
         ) : (
           <InputBox
             placeholder="문제 번호를 검색하세요"
+            label="문제 번호"
             setInput={setProblemNum}
           />
         )}
