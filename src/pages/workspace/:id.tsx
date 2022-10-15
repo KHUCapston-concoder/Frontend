@@ -5,6 +5,7 @@ import TimerBtn from "@/components/Timer/PopupBtn";
 import { useTheme } from "@/context/ThemeContext";
 import ChatPopupBtn from "@/components/Chat/PopupBtn";
 import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
+import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 
 const Workspace = () => {
   const { themeColorset } = useTheme();
@@ -16,7 +17,9 @@ const Workspace = () => {
         <AlgoFilterDiv>
           <AlgoFilterContainer />
         </AlgoFilterDiv>
-        <AlgoInfoDiv></AlgoInfoDiv>
+        <AlgoInfoDiv>
+          <AlgoInfo />
+        </AlgoInfoDiv>
       </AlgoDiv>
       <CodeDiv>
         <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
