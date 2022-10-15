@@ -6,9 +6,7 @@ const TimerPopupBtn = () => {
     console.log(e);
   };
 
-  return (
-    <IconButton name="stopwatch" size="xl" onClick={onClick} />
-  );
+  return <IconButton name="stopwatch" size="lg" onClick={onClick} />;
 };
 
 export default TimerPopupBtn;
