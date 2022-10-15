@@ -22,9 +22,13 @@ const AlgoInfo = () => {
 
   return (
     <MainDiv>
-      <TitleHolder>
-        {algoInfo.num} {algoInfo.title}
-      </TitleHolder>
+      <MenuController>
+        <i className="fa-solid fa-angle-left"></i>
+        <TitleHolder>
+          {algoInfo.num} {algoInfo.title}
+        </TitleHolder>
+        <i className="fa-solid fa-angle-right"></i>
+      </MenuController>
       <RestraintDiv>
         시간 복잡도 <RestraintHolder>{algoInfo.timeRestraint}</RestraintHolder>
       </RestraintDiv>
@@ -47,6 +51,11 @@ export default AlgoInfo;
 const MainDiv = tw.div`
 w-full h-full overflow-y-scroll overflow-x-hidden
 px-[14px] py-[10px]
+`;
+
+const MenuController = tw.div`
+w-full h-[30px]
+flex justify-between items-center
 `;
 
 const TitleHolder = tw.span`
