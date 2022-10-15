@@ -3,6 +3,7 @@ import { algoProbState } from "@/store/algoProbState";
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import tw from "tailwind-styled-components";
+import { IconButton } from "../_styled/Buttons";
 
 const AlgoInfo = () => {
   const algoProblem = useRecoilValue(algoProbState);
@@ -20,21 +21,31 @@ const AlgoInfo = () => {
       ) : (
         <>
           <MenuController>
-            <i className="fa-solid fa-angle-left"></i>
+            <IconButton
+              name="angle-left"
+              width="auto"
+              disabled={probIndex == 0}
+              onClick={() => setProbIndex(probIndex - 1)}
+            />
             <TitleHolder>
               {algoProblem.list[probIndex].num}{" "}
               {algoProblem.list[probIndex].title}
             </TitleHolder>
-            <i className="fa-solid fa-angle-right"></i>
+            <IconButton
+              name="angle-right"
+              width="auto"
+              disabled={probIndex == algoProblem.length - 1}
+              onClick={() => setProbIndex(probIndex + 1)}
+            />
           </MenuController>
           <RestraintDiv>
-            시간 복잡도{" "}
+            시간 복잡도
             <RestraintHolder>
               {algoProblem.list[probIndex].timeRestraint}
             </RestraintHolder>
           </RestraintDiv>
           <RestraintDiv>
-            공간 복잡도{" "}
+            공간 복잡도
             <RestraintHolder>
               {algoProblem.list[probIndex].memoryRestraint}
             </RestraintHolder>
