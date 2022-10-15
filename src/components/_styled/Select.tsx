@@ -26,7 +26,7 @@ const SelectBox = ({
     setSelection(e.target.value);
   };
   return (
-    <div className="my-[2px] w-full px-[12px] py-[4px]">
+    <div className="w-full py-[4px] pl-[12px]">
       <div className="w-full text-left text-xs font-bold">
         {label != undefined && `· ${label}`}
       </div>

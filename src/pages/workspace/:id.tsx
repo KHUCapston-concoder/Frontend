@@ -79,13 +79,13 @@ grow-[2] bg-inherit
 
 const AlgoFilterDiv = tw(CommonDiv)`
 m-0
-h-[25%]
+h-[20%]
 bg-inherit
 `;
 
 const AlgoInfoDiv = tw(CommonDiv)`
 m-0 mt-[15px]
-h-[calc(75%-15px)]
+h-[calc(80%-15px)]
 `;
 
 /* 3.4.2 실시간 동시 코딩 */

@@ -44,7 +44,7 @@ const AlgoFilterContainer = () => {
       </div>
       <ContentDiv>
         {tabNum == 0 ? (
-          <>
+          <div className="flex">
             <SelectBox
               options={levelList}
               placeholder="티어를 선택하세요"
@@ -57,7 +57,7 @@ const AlgoFilterContainer = () => {
               label="유형"
               setSelection={setTypeFilter}
             />
-          </>
+          </div>
         ) : (
           <InputBox
             placeholder="문제 번호를 검색하세요"
@@ -65,6 +65,7 @@ const AlgoFilterContainer = () => {
             setInput={setProblemNum}
           />
         )}
+        <SearchBtn> 검색 </SearchBtn>
       </ContentDiv>
     </>
   );
@@ -74,7 +75,16 @@ export default AlgoFilterContainer;
 
 const ContentDiv = tw.div`
 w-full h-[calc(100%-32px)]
+py-[5px]
 rounded-b-[15px]
 dark-2
-flex flex-col justify-center items-center gap-[6px]
+flex flex-col justify-between items-center gap-[4px]
+`;
+
+const SearchBtn = tw.button`
+btn
+h-fit min-h-[10px] w-[90%]
+py-[4px]
+bg-netural
+text-xs
 `;

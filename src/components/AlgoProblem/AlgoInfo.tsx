@@ -45,7 +45,7 @@ const AlgoInfo = () => {
 export default AlgoInfo;
 
 const MainDiv = tw.div`
-w-full h-full overflow-y-scroll
+w-full h-full overflow-y-scroll overflow-x-hidden
 px-[14px] py-[10px]
 `;
 
@@ -54,8 +54,8 @@ text-m font-bold
 `;
 
 const RestraintDiv = tw.div`
-relative right-[5%]
-w-[110%] h-[30px]
+relative right-[2%]
+w-[104%] h-[30px]
 mt-[6px] px-[10px]
 flex justify-between items-center
 text-xs font-bold
