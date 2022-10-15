@@ -6,7 +6,7 @@ const SnapshotPopupBtn = () => {
     console.log(e);
   };
 
-  return <IconButton name="history" size="xl" onClick={onClick} />;
+  return <IconButton name="history" size="lg" onClick={onClick} />;
 };
 
 export default SnapshotPopupBtn;

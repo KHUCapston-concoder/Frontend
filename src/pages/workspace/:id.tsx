@@ -110,16 +110,14 @@ basis-[100px] grow-[6]
 
 /* 부가기능 버튼들 */
 const UtilButtonsDiv = tw(CommonDiv)`
-m-0 w-full 
-basis-[60px] grow
-flex gap-[10px] items-end
+m-0 w-full
+basis-[60px]
+flex gap-[10px] justify-end items-end
 bg-inherit
 `;
 
 const UtilButtonDiv = tw(CommonDiv)`
 m-0
-basis-[60px] grow
-h-full
-max-x-[80px] max-h-[80px]
-min-x-[60px] min-y-[60px] 
+max-w-[60px]
+h-[60px] w-[60px]
 `;
