@@ -9,7 +9,9 @@ interface PropType {
 
 const TestCase = ({ testCaseNo = 1 }) => {
   const [isCompileSuccess, setIsCompileSuccess] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
 
+  const onClickDotMenu = () => {};
   return (
     <MainDiv>
       <MenuBar>
@@ -27,10 +29,32 @@ const TestCase = ({ testCaseNo = 1 }) => {
             </CompileResultDiv>
           )}
         </div>
-        <IconButton width="fit-content" name="ellipsis-vertical" />
+        {/* dot menu dropdown */}
+        <div className="dropdown dropdown-end">
+          <label tabIndex={0}>
+            <IconButton
+              onClick={onClickDotMenu}
+              width="fit-content"
+              name="ellipsis-vertical"
+            />
+          </label>
+          <DropdownUl tabIndex={0}>
+            <DropdownLi>
+              <DropdownA>수정</DropdownA>
+            </DropdownLi>
+            <DropdownLi>
+              <DropdownA className="font-warning">삭제</DropdownA>
+            </DropdownLi>
+          </DropdownUl>
+        </div>
       </MenuBar>
-      <InputBox label="입력" className="w-full" />
-      <InputBox label="출력" className="w-full" />
+      <InputBox
+        label="입력"
+        type="textarea"
+        className="h-fit w-full"
+        disabled={!isEditing}
+      />
+      <InputBox label="출력" type="textarea" className="h-fit w-full" />
     </MainDiv>
   );
 };
@@ -59,4 +83,18 @@ p-[0_6px]
 rounded-[10px]
 bg-accent
 text-neutral font-bold text-2xs 
+`;
+
+const DropdownUl = tw.ul`
+dropdown-content menu rounded-box w-20 
+bg-base-100 p-[5px] text-sm shadow"
+`;
+
+const DropdownLi = tw.li`
+text-2xs
+flex justify-center items-center
+`;
+
+const DropdownA = tw.a`
+py-[4px]
 `;

@@ -23,6 +23,17 @@ body {
   @apply h-full w-full;
 }
 
+input, textarea {
+  &:focus,
+  &:active {
+    outline: unset !important;
+  }
+}
+
+textarea {
+  resize: none;
+}
+
 .dark-1 {
   background-color: $darker-color;
 }
