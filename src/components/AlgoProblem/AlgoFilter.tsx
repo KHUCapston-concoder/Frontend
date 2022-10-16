@@ -43,14 +43,18 @@ const AlgoFilterContainer = () => {
       <div className="tabs w-full">
         <a
           id="0"
-          className={`tab tab-lifted ${tabNum == 0 && "tab-active"} w-1/2`}
+          className={`tab tab-lifted ${
+            tabNum == 0 && "tab-active font-bold"
+          } w-1/2`}
           onClick={onClickTab}
         >
           필터검색
         </a>
         <a
           id="1"
-          className={`tab tab-lifted ${tabNum == 1 && "tab-active"} w-1/2`}
+          className={`tab tab-lifted ${
+            tabNum == 1 && "tab-active font-bold"
+          } w-1/2`}
           onClick={onClickTab}
         >
           번호검색

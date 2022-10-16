@@ -9,8 +9,8 @@ const TestCaseList = () => {
   return (
     <>
       <div className="dark-1 tabs w-full">
-        <TitleDiv id="0" className={`tab tab-active tab-lifted w-2/3`}>
-          TEST CASE
+        <TitleDiv className={`tab tab-active tab-lifted w-2/3`}>
+          테스트 케이스
         </TitleDiv>
       </div>
       <MainDiv>
