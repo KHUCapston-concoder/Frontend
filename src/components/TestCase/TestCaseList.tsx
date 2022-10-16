@@ -4,20 +4,27 @@ import TestCase from "@/components/TestCase/TestCase";
 import { IconButton } from "@/components/_styled/Buttons";
 
 const TestCaseList = () => {
-    const length = 5;
+  const length = 5;
 
   return (
-    <MainDiv>
-      <AddTestCase>
-        <IconButton name="circle-plus" />
-      </AddTestCase>
-      <TestCase />
-      <TestCase />
-      <TestCase />
-      <TestCase />
-      <TestCase />
-      <TestCase />
-    </MainDiv>
+    <>
+      <div className="dark-1 tabs w-full">
+        <TitleDiv id="0" className={`tab tab-active tab-lifted w-2/3`}>
+          TEST CASE
+        </TitleDiv>
+      </div>
+      <MainDiv>
+        <AddTestCase>
+          <IconButton name="circle-plus" />
+        </AddTestCase>
+        <TestCase />
+        <TestCase />
+        <TestCase />
+        <TestCase />
+        <TestCase />
+        <TestCase />
+      </MainDiv>
+    </>
   );
 };
 
@@ -27,6 +34,9 @@ const MainDiv = tw.div`
 w-full h-full
 overflow-x-hidden overflow-y-scroll
 `;
+
+const TitleDiv = tw.div`
+text-sm font-bold`;
 
 const AddTestCase = tw.div`
 dark-1
