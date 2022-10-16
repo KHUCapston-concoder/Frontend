@@ -10,7 +10,7 @@ interface PropType {
 const InputBox = ({
   setInput,
   placeholder,
-  className = "input input-xs w-[80%] max-w-xs",
+  className = "",
   label,
 }: PropType) => {
   return (
@@ -19,10 +19,9 @@ const InputBox = ({
         {label != undefined && `· ${label}`}
       </div>
       <input
-        className="mt-[4px]"
         type="text"
         placeholder={placeholder}
-        className={className}
+        className={className + " input input-xs mt-[4px]"}
       />
     </div>
   );
