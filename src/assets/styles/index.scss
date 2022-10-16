@@ -11,7 +11,7 @@ $bg-color: #393e46;
 $text-color: #eeeeee;
 
 html {
-  @apply h-full min-h-full w-full min-w-full overflow-auto;
+  @apply h-full min-h-[700px] w-full min-w-full overflow-auto;
   font-family: "Pretendard";
 }
 

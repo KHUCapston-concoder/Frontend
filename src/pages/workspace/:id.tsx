@@ -7,13 +7,16 @@ import ChatPopupBtn from "@/components/Chat/PopupBtn";
 import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 import TestCaseList from "@/components/TestCase/TestCaseList";
+import CompileInfo from "@/components/Compile/CompileInfo";
 
 const Workspace = () => {
   const { themeColorset } = useTheme();
 
   return (
     <MainDiv>
+      {/* Section 1 */}
       <CamDiv></CamDiv>
+      {/* Section 2 */}
       <AlgoDiv>
         <AlgoFilterDiv>
           <AlgoFilterContainer />
@@ -22,16 +25,23 @@ const Workspace = () => {
           <AlgoInfo />
         </AlgoInfoDiv>
       </AlgoDiv>
+      {/* Section 3 */}
       <CodeDiv>
         <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
           {/* Floating Buttons Container */}
         </FloatButtonDiv>
       </CodeDiv>
+      {/* Section 4 */}
       <FlexDiv>
-        <CompileInfoDiv></CompileInfoDiv>
+        {/* 컴파일 정보 */}
+        <CompileInfoDiv>
+          <CompileInfo />
+        </CompileInfoDiv>
+        {/* 테스트 케이스 */}
         <TestCasaeDiv>
           <TestCaseList />
         </TestCasaeDiv>
+        {/* 아래 버튼 3개 */}
         <UtilButtonsDiv>
           <UtilButtonDiv>
             <SnapshotBtn />
@@ -106,14 +116,14 @@ dark-1
 
 /* 3.4.5 컴파일 정보 */
 const CompileInfoDiv = tw(CommonDiv)`
-m-0 mb-[15px]
+m-0 mb-[15px] dark-1
 w-full h-[40%]
 basis-auto
 `;
 
 /* 3.4.6 테스트 케이스 */
 const TestCasaeDiv = tw(CommonDiv)`
-m-0 mb-[15px]
+m-0 mb-[15px] dark-1
 w-full h-[60%]
 basis-[0px]
 `;
