@@ -6,6 +6,9 @@ interface ButtonProps {
   name: string;
   size: string;
   className: string;
+  width: string;
+  height: string;
+  disabled: boolean;
   onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -18,18 +21,22 @@ export const IconButton = ({
   name = "",
   size = "", // 2x, xs, sm, lg, xl, 2xl
   className = "",
+  width = "100%",
+  height = "100%",
+  disabled = false,
   onClick = () => {},
 }: ButtonProps) => {
   return (
     <button
       style={{
-        width: "100%",
-        height: "100%",
+        width: width,
+        height: height,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
       onClick={onClick}
+      disabled={disabled}
     >
       <i className={`fa-${type} fa-${name} fa-${size} ${className || ""}`} />
     </button>

@@ -1,15 +1,29 @@
 import { useTheme } from "@/context/ThemeContext";
 import React, { useState } from "react";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import tw from "tailwind-styled-components";
 import SelectBox from "@/components/_styled/Select";
 import InputBox from "@/components/_styled/Input";
+import { algoProbState } from "@/store/algoProbState";
+import algoProbDummyData from "@/utils/dummyData/algoInfo.json";
 
 const AlgoFilterContainer = () => {
   const [tabNum, setTabNum] = useState(0);
+  const [algoProblemList, setAlgoProblemList] = useRecoilState(algoProbState);
+  const resetAlgoProblemList = useResetRecoilState(algoProbState);
+
   const onClickTab = (e: React.MouseEvent<HTMLElement>) => {
     console.log(e.target);
 
     setTabNum(e.target.id);
+  };
+
+  const onSearch = () => {
+    /* API 호출 비동기 작업 */
+    resetAlgoProblemList();
+    setAlgoProblemList(() => {
+      return { list: algoProbDummyData, length: algoProbDummyData.length };
+    });
   };
 
   const [levelList, setLevelList] = useState([
@@ -65,7 +79,7 @@ const AlgoFilterContainer = () => {
             setInput={setProblemNum}
           />
         )}
-        <SearchBtn> 검색 </SearchBtn>
+        <SearchBtn onClick={onSearch}> 검색 </SearchBtn>
       </ContentDiv>
     </>
   );

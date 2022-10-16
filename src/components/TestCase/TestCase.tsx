@@ -14,7 +14,7 @@ const TestCase = ({ testCaseNo = 1 }) => {
     <MainDiv>
       <MenuBar>
         {`테스트케이스 #${testCaseNo}`}
-        <IconButton width="fit-content" name="ellipsis-vertical" />
+        <IconButton className="w-fit" name="ellipsis-vertical" />
       </MenuBar>
       <InputBox label="입력" className="w-full" />
       <InputBox label="출력" className="w-full" />
