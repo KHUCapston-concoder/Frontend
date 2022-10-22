@@ -113,25 +113,25 @@ grow-[6]
 const FloatButtonDiv = tw.div`
 relative
 top-[90%] left-[50%]
-w-[50%] h-[60px]
+w-fit h-[60px]
+px-[10px]
 rounded-[15px]
 dark-1
-
-flex
-justify-center
+flex gap-[10px]
+justify-around
 `;
 
 /* 3.4.5 컴파일 정보 */
 const CompileInfoDiv = tw(CommonDiv)`
 m-0 mb-[15px] dark-1
-w-full h-[40%]
+w-full h-[20%]
 basis-auto
 `;
 
 /* 3.4.6 테스트 케이스 */
 const TestCasaeDiv = tw(CommonDiv)`
 m-0 mb-[15px] dark-1
-w-full h-[60%] min-h-[420px]
+w-full h-[80%] min-h-[420px]
 basis-auto
 `;
 

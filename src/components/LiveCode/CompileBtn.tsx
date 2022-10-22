@@ -12,12 +12,12 @@ const CompileFloatBtn = () => {
 export default CompileFloatBtn;
 
 const CompileBtn = tw.button`
-text-center
-text-black
-w-[40%]
+text-center text-sm
+text-neutral
+font-bold
+w-fit
 p-2
 my-auto
-mr-1
 bg-accent
 rounded-[10px]
 `;

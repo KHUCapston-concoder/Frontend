@@ -39,26 +39,25 @@ overflow-x-hidden
 `;
 
 const InfoList = tw.div`
-dark-1
 w-[100%-20px] h-fit
-mx-[10px] my-[10px] p-[10px_0_10px_0]
-flex flex-col justify-between
+mx-[10px] my-[8px] p-[10px_0_10px_0]
+flex flex-col justify-between gap-[14px]
 rounded-[10px]
 `;
 
 const Info = tw.div`
 flex flex-row justify-around
-mx-4 my-3
+mx-4
 `;
 
 const InfoTitle = tw.div`
 py-1
-w-full text-left text-lg font-bold
+w-full text-left text-sm font-bold
 `;
 
 const InfoData = tw.div`
-dark-3
+dark-1
 rounded-[10px]
 py-1
-w-full text-center text-lg font-bold
+w-full text-center text-sm font-bold
 `;
