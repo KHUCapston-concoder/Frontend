@@ -3,6 +3,7 @@ import { IconButton } from "@/components/_styled/Buttons";
 import TimerForm from "./TimerForm";
 import TimerPortal from "./TimerPortal";
 import TimerToast from "./TimerToast";
+import Modal from "@/hoc/Portal";
 
 interface Time {
   hour: number;
@@ -58,7 +59,7 @@ const TimerPopupBtn = () => {
 
   return (
     <>
-      <TimerPortal
+      {/* <TimerPortal
         children={
           <TimerForm
             onClickTimerStart={timerSettingHandler}
@@ -67,9 +68,21 @@ const TimerPopupBtn = () => {
           />
         }
         isShowing={timerFromIsShowing}
+      /> */}
+
+      <Modal
+        children={
+          <TimerForm
+            onClickTimerStart={timerSettingHandler}
+            onClose={hideTimerFormHandler}
+            onShowTimerToast={showTimerToastHandler}
+          />
+        }
+        isShowing={timerFromIsShowing}
+        close={hideTimerFormHandler}
       />
 
-      <TimerPortal
+      {/* <TimerPortal
         children={
           <TimerToast
             timeData={timerInputs}
@@ -78,6 +91,18 @@ const TimerPopupBtn = () => {
           />
         }
         isShowing={timerToastIsShowing}
+      /> */}
+
+      <Modal
+        children={
+          <TimerToast
+            timeData={timerInputs}
+            onClose={hideTimerToastHandler}
+            onTimerReset={showTimerFormHandler}
+          />
+        }
+        isShowing={timerToastIsShowing}
+        close={hideTimerToastHandler}
       />
 
       <IconButton name="stopwatch" size="lg" onClick={showTimerFormHandler} />
