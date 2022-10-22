@@ -45,7 +45,7 @@ export const ModalWrapper = styled.div`
 
 const ModalContainer = tw.div`
 dark-2 
-w-[60%] h-1/2 max-w-[400px] max-h-[600px]
+w-[60%] h-1/2
 rounded-[10px] z-100
 `;
 
