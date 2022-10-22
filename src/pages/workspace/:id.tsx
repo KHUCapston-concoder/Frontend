@@ -124,8 +124,8 @@ basis-auto
 /* 3.4.6 테스트 케이스 */
 const TestCasaeDiv = tw(CommonDiv)`
 m-0 mb-[15px] dark-1
-w-full h-[60%]
-basis-[0px]
+w-full h-[60%] min-h-[420px]
+basis-auto
 `;
 
 /* 부가기능 버튼들 */
