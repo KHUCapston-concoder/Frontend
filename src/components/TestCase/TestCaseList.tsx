@@ -1,25 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import tw from "tailwind-styled-components";
 import TestCase from "@/components/TestCase/TestCase";
 import { IconButton } from "@/components/_styled/Buttons";
 import LabelTab from "@/components/_styled/LabelTab";
+import { useRecoilState } from "recoil";
+import { testCaseState, testCaseType } from "@/store/testCaseState";
 
 const TestCaseList = () => {
-  const length = 5;
+  const [testCases, setTestCases] = useRecoilState(testCaseState);
+  const [isAdding, setIsAdding] = useState(false);
+
+  const showAddBtn = () => {
+    return (testCases.list.length == 0 && !isAdding) || !isAdding;
+  };
+
+  const sortedTestCases = [...testCases.list].reverse();
+
+  const onAddTestCase = () => {
+    setIsAdding(true);
+  };
+
+  console.log(testCases, sortedTestCases);
 
   return (
     <>
       <LabelTab label="테스트 케이스" />
       <MainDiv>
-        <AddTestCase>
-          <IconButton name="circle-plus" />
-        </AddTestCase>
-        <TestCase />
-        <TestCase />
-        <TestCase />
-        <TestCase />
-        <TestCase />
-        <TestCase />
+        {showAddBtn() && (
+          <AddTestCase onClick={onAddTestCase}>
+            <IconButton name="circle-plus" />
+          </AddTestCase>
+        )}
+        {isAdding && (
+          <TestCase
+            testCaseNo={sortedTestCases.length}
+            setIsAdding={setIsAdding}
+          />
+        )}
+        {sortedTestCases.map((e, idx) => (
+          <TestCase
+            key={sortedTestCases.length - idx}
+            testCaseNo={sortedTestCases.length - 1 - idx}
+            disabled={true}
+            inputVal={e.input}
+            outputVal={e.output}
+          />
+        ))}
       </MainDiv>
     </>
   );

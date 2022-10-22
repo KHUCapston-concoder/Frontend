@@ -1,60 +1,113 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
-import InputBox from "@/components/_styled/Input";
+import Textarea from "@/components/_styled/TextArea";
+import { useRecoilState } from "recoil";
+import { testCaseState } from "@/store/testCaseState";
 
 interface PropType {
   testCaseNo: number;
+  inputVal: string;
+  outputVal: string;
+  disabled: boolean;
+  setIsAdding: Dispatch<SetStateAction<boolean>>;
 }
 
-const TestCase = ({ testCaseNo = 1 }) => {
-  const [isCompileSuccess, setIsCompileSuccess] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
+const TestCase = ({
+  testCaseNo,
+  inputVal,
+  outputVal,
+  disabled,
+  setIsAdding
+}: PropType) => {
+  const [testCases, setTestCases] = useRecoilState(testCaseState);
 
-  const onClickDotMenu = () => {};
+  const [compileResult, setCompileResult] = useState(null);
+  const [isEditing, setIsEditing] = useState(true);
+
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const outputRef = useRef<HTMLTextAreaElement>(null);
+
+  const onDeleteTestCase = () => {
+    const newList = testCases.list.filter((item, idx) => idx !== testCaseNo);
+
+    setTestCases({ list: newList });
+    setIsAdding(false);
+  };
+
+  const onSaveTestCase = () => {
+    console.log(inputRef.current?.value, outputRef.current?.value);
+
+    const newObj = {
+      input: inputRef.current?.value,
+      output: outputRef.current?.value,
+    };
+
+    const newList = [...testCases.list, newObj];
+
+    console.log(newList);
+
+    setTestCases({ list: newList });
+    setIsEditing(false);
+    setIsAdding(false);
+  };
+
   return (
     <MainDiv>
       <MenuBar>
         <div className="flex items-center gap-[8px]">
-          {`#${testCaseNo}`}
-          {isCompileSuccess ? (
-            <CompileResultDiv>
-              <i className="fa-solid fa-check" />
-              {"  "} 컴파일 성공
-            </CompileResultDiv>
-          ) : (
-            <CompileResultDiv>
-              <i className="fa-solid fa-triangle-exclamation" />
-              {"  "}컴파일 실패
-            </CompileResultDiv>
+          {`#${testCaseNo + 1}`}
+          {/* 테스트 케이스 컴파일 성공 여부 */}
+          {!isEditing && (
+            <>
+              {compileResult == "success" && (
+                <CompileResultDiv>
+                  <i className="fa-solid fa-check" />
+                  {"  "} 컴파일 성공
+                </CompileResultDiv>
+              )}
+              {compileResult == "fail" && (
+                <CompileResultDiv>
+                  <i className="fa-solid fa-triangle-exclamation" />
+                  {"  "}컴파일 실패
+                </CompileResultDiv>
+              )}
+            </>
           )}
         </div>
-        {/* dot menu dropdown */}
-        <div className="dropdown dropdown-end">
-          <label tabIndex={0}>
+        {/* 삭제/저장 버튼 */}
+        <div className="flex gap-[14px]">
+          {isEditing && (
             <IconButton
-              onClick={onClickDotMenu}
+              name="check"
               width="fit-content"
-              name="ellipsis-vertical"
+              onClick={onSaveTestCase}
             />
-          </label>
-          <DropdownUl tabIndex={0}>
-            <DropdownLi>
-              <DropdownA>수정</DropdownA>
-            </DropdownLi>
-            <DropdownLi>
-              <DropdownA className="font-warning">삭제</DropdownA>
-            </DropdownLi>
-          </DropdownUl>
+          )}
+          <IconButton
+            name="close"
+            width="fit-content"
+            onClick={onDeleteTestCase}
+          />
         </div>
       </MenuBar>
-      <InputBox
+      {/* inputs */}
+      <Textarea
         label="입력"
-        type="textarea"
         className="h-fit w-full"
-        disabled={!isEditing}
+        disabled={!isEditing || disabled}
+        placeholder={inputVal}
+        ref={inputRef}
       />
-      <InputBox label="출력" type="textarea" className="h-fit w-full" />
+      <Textarea
+        label="출력"
+        className="h-fit w-full"
+        disabled={!isEditing || disabled}
+        placeholder={outputVal}
+        ref={outputRef}
+      />
+      {/* 취소 & 저장 버튼 */}
+      {isEditing && <></>}
     </MainDiv>
   );
 };
@@ -83,16 +136,6 @@ p-[0_6px]
 rounded-[10px]
 bg-accent
 text-neutral font-bold text-2xs 
-`;
-
-const DropdownUl = tw.ul`
-dropdown-content menu rounded-box w-20 
-bg-base-100 p-[5px] text-sm shadow"
-`;
-
-const DropdownLi = tw.li`
-text-2xs
-flex justify-center items-center
 `;
 
 const DropdownA = tw.a`

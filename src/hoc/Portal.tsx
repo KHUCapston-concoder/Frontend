@@ -1,13 +1,28 @@
+import { IconButton } from "@/components/_styled/Buttons";
+import React, { Dispatch, ReactNode, SetStateAction } from "react";
 import * as ReactDOM from "react-dom";
+import styled from "styled-components";
+import tw from "tailwind-styled-components";
 
 const $portal = document.querySelector("#modal-root");
 
-const Modal = ({ children, isShowing, close }) => {
+interface PropType {
+  children: ReactNode;
+  isShowing: boolean;
+  close: Dispatch<SetStateAction<boolean>>;
+}
+
+const Modal = ({ children, isShowing, close }: PropType) => {
   return isShowing && $portal
     ? ReactDOM.createPortal(
-        <S.ModalWrapper className={"modal-container"} onClick={close}>
-          <div className={"contents"}>{children}</div>
-        </S.ModalWrapper>,
+        <ModalWrapper onClick={close}>
+          <ModalContainer>
+            <CloseButton>
+              <IconButton name="close" onClick={close} />
+            </CloseButton>
+            {children}
+          </ModalContainer>
+        </ModalWrapper>,
         $portal
       )
     : null;
@@ -24,6 +39,16 @@ export const ModalWrapper = styled.div`
   top: 0;
   background: rgba(0, 0, 0, 0.4); // 바깥 배경 밝기
   z-index: 10;
+`;
+
+const ModalContainer = tw.div`
+dark-2 
+w-[60%] h-1/2 max-w-[400px] max-h-[600px]
+rounded-[10px] z-100
+`;
+
+const CloseButton = tw.div`
+relative float-right w-fit p-[10px_14px]
 `;
 
 export default Modal;
