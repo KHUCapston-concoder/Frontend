@@ -8,6 +8,8 @@ import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 import TestCaseList from "@/components/TestCase/TestCaseList";
 import CompileInfo from "@/components/Compile/CompileInfo";
+import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
+import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
 
 const Workspace = () => {
   const { themeColorset } = useTheme();
@@ -29,6 +31,8 @@ const Workspace = () => {
       <CodeDiv>
         <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
           {/* Floating Buttons Container */}
+          <CompileFloatBtn />
+          <SnapshotFloatBtn />
         </FloatButtonDiv>
       </CodeDiv>
       {/* Section 4 */}
@@ -112,6 +116,9 @@ top-[90%] left-[50%]
 w-[50%] h-[60px]
 rounded-[15px]
 dark-1
+
+flex
+justify-center
 `;
 
 /* 3.4.5 컴파일 정보 */
