@@ -7,24 +7,18 @@ import tw from "tailwind-styled-components";
 const $portal = document.querySelector("#modal-root");
 
 interface PropType {
-  width: string;
-  height: string;
+  className: string;
   children: ReactNode;
   isShowing: boolean;
   close: Dispatch<SetStateAction<boolean>>;
 }
 
-const Modal = ({ children, isShowing, close, width, height }: PropType) => {
+const Modal = ({ children, isShowing, close, className }: PropType) => {
   return isShowing && $portal
     ? ReactDOM.createPortal(
         <>
           <ModalWrapper onClick={close}></ModalWrapper>
-          <ModalContainer
-            style={{
-              width: width,
-              height: height,
-            }}
-          >
+          <ModalContainer className={className}>
             <CloseButton>
               <IconButton name="close" onClick={close} />
             </CloseButton>
