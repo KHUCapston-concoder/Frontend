@@ -1,5 +1,6 @@
 /* libraries */
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 /* router */
@@ -11,8 +12,6 @@ import { workspaceState } from "@/store/workspaceState";
 
 function App() {
   const { themeColorset } = useTheme();
-
-  const [hasWorksapce, setHasWorkspace] = useRecoilState(workspaceState);
 
   return (
     <MainDiv theme={themeColorset}>

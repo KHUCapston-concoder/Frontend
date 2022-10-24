@@ -2,12 +2,20 @@ import React from "react";
 import tw from "tailwind-styled-components";
 import { useTheme } from "@/context/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import { uuidv4 } from "@/utils/commonFunc/genUuid"
 
 const ImgURL = "https://embed.lottiefiles.com/animation/63487";
 
 const Home = () => {
   const navigate = useNavigate();
   const { themeColorset } = useTheme();
+
+  const onClickCreateWorkspace = () => {
+    const wordkspaceId = uuidv4();
+    localStorage.setItem("workspace-id", wordkspaceId);
+    // @todo: workspace id 서버로 넘기기
+    console.log(wordkspaceId);
+  };
 
   const onClickEnterCode = () => {
     console.log("hi");
@@ -24,7 +32,7 @@ const Home = () => {
       <BtnContainer style={{ color: themeColorset.textColor }}>
         <BtnDiv>
           새로운 방을 만들고싶다면 ..
-          <button className="styled">CREATE A WORKSPACE</button>
+          <button className="styled" onClick={onClickCreateWorkspace}>CREATE A WORKSPACE</button>
         </BtnDiv>
         <BtnDiv>
           초대받으셨나요?

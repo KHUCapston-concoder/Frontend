@@ -1,15 +1,25 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import Home from "@/pages/home";
 import Workspace from "@/pages/workspace/:id";
 
-const AppRouter = () => (
-  <Router>
-    <Routes>
-      <Route path="/home" element={<Home />} />
-      <Route path="/workspace/:id" element={<Workspace />} />
-    </Routes>
-  </Router>
-);
+const AppRouter = () => {
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/workspace/:id" element={<Workspace />} />
+        <Route path="/home" element={<Home />} >
+          
+        </Route>
+      </Routes>
+    </Router>
+  );
+};
 
 export default AppRouter;
