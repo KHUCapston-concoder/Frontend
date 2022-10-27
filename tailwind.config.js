@@ -9,6 +9,7 @@ module.exports = {
           warning: "#B73E3E",
           neutral: "#1b2128",
           "base-100": "#222831",
+          "base-200": "#4d5663",
         },
       },
     ],

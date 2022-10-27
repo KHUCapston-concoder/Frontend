@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import tw from "tailwind-styled-components";
 import { useTheme } from "@/context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { uuidv4 } from "@/utils/commonFunc/genUuid";
-import { generateNickname } from "@/utils/commonFunc/genNickname";
+import Modal from "@/hoc/Portal";
+import EnterCodeModal from "@/components/Home/EnterCodeModal";
 
 const ImgURL = "https://embed.lottiefiles.com/animation/63487";
 
 const Home = () => {
   const navigate = useNavigate();
   const { themeColorset } = useTheme();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const onClickCreateWorkspace = () => {
     const wordkspaceId = uuidv4();
@@ -18,15 +20,6 @@ const Home = () => {
     localStorage.setItem("nickname", nickname);
     // @todo: workspace id 서버로 넘기기
     console.log(wordkspaceId);
-  };
-
-  const onClickEnterCode = () => {
-    console.log("hi");
-    if(!localStorage.getItem("nickname")){
-      const nickname = generateNickname();
-      localStorage.setItem("nickname", nickname);
-    }
-    navigate("/workspace/1");
   };
 
   return (
@@ -44,11 +37,18 @@ const Home = () => {
         </BtnDiv>
         <BtnDiv>
           초대받으셨나요?
-          <button className="styled" onClick={onClickEnterCode}>
+          <button className="styled" onClick={() => setIsModalOpen(true)}>
             ENTER CODE
           </button>
         </BtnDiv>
       </BtnContainer>
+      <Modal
+        className="h-[30%] w-[60%] min-w-[300px] max-w-[900px]"
+        isShowing={isModalOpen}
+        close={() => setIsModalOpen(false)}
+      >
+        <EnterCodeModal />
+      </Modal>
     </HomeDiv>
   );
 };
