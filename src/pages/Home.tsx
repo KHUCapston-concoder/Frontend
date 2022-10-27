@@ -2,7 +2,8 @@ import React from "react";
 import tw from "tailwind-styled-components";
 import { useTheme } from "@/context/ThemeContext";
 import { useNavigate } from "react-router-dom";
-import { uuidv4 } from "@/utils/commonFunc/genUuid"
+import { uuidv4 } from "@/utils/commonFunc/genUuid";
+import { generateNickname } from "@/utils/commonFunc/genNickname";
 
 const ImgURL = "https://embed.lottiefiles.com/animation/63487";
 
@@ -12,14 +13,19 @@ const Home = () => {
 
   const onClickCreateWorkspace = () => {
     const wordkspaceId = uuidv4();
+    const nickname = generateNickname();
     localStorage.setItem("workspace-id", wordkspaceId);
+    localStorage.setItem("nickname", nickname);
     // @todo: workspace id 서버로 넘기기
     console.log(wordkspaceId);
   };
 
   const onClickEnterCode = () => {
     console.log("hi");
-
+    if(!localStorage.getItem("nickname")){
+      const nickname = generateNickname();
+      localStorage.setItem("nickname", nickname);
+    }
     navigate("/workspace/1");
   };
 
@@ -32,7 +38,9 @@ const Home = () => {
       <BtnContainer style={{ color: themeColorset.textColor }}>
         <BtnDiv>
           새로운 방을 만들고싶다면 ..
-          <button className="styled" onClick={onClickCreateWorkspace}>CREATE A WORKSPACE</button>
+          <button className="styled" onClick={onClickCreateWorkspace}>
+            CREATE A WORKSPACE
+          </button>
         </BtnDiv>
         <BtnDiv>
           초대받으셨나요?
