@@ -1,4 +1,4 @@
-import React, { Dispatch, RefObject, SetStateAction } from "react";
+import React, { Dispatch, RefObject, SetStateAction, useRef } from "react";
 
 interface PropType {
   setInput: Dispatch<SetStateAction<string>>;
@@ -15,6 +15,7 @@ const InputBox = ({
   label,
   disabled = false,
 }: PropType) => {
+  const inputRef = useRef(null);
   return (
     <div className="my-[2px] w-full px-[12px] py-[4px]">
       <div className="w-full text-left text-xs font-bold">
@@ -25,7 +26,8 @@ const InputBox = ({
         placeholder={placeholder}
         className={className + " input input-xs mt-[4px]"}
         disabled={disabled}
-        onChange={setInput}
+        ref={inputRef}
+        onChange={() => setInput(inputRef.current.value || "")}
       />
     </div>
   );

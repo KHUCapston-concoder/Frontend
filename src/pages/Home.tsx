@@ -9,7 +9,6 @@ import EnterCodeModal from "@/components/Home/EnterCodeModal";
 const ImgURL = "https://embed.lottiefiles.com/animation/63487";
 
 const Home = () => {
-  const navigate = useNavigate();
   const { themeColorset } = useTheme();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 

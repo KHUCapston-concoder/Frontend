@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import { generateNickname } from "@/utils/commonFunc/genNickname";
 import tw from "tailwind-styled-components";
 import InputBox from "@/components/_styled/Input";
+import { useNavigate } from "react-router-dom";
 
 const EnterCodeModal = () => {
   const [nickname, setNickname] = useState<string>("");
+  const [workspaceId, setWorkspaceId] = useState<string>("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const savedNickname = localStorage.getItem("nickname") || "";
@@ -18,6 +22,14 @@ const EnterCodeModal = () => {
     setNickname(newNickname);
   };
 
+  const enterWorkspace = () => {
+    /* @todo 이 코드의 방이 있는지 확인*/
+    console.log(workspaceId);
+
+    localStorage.setItem("nickname", nickname);
+    navigate(`/workspace/${workspaceId}`);
+  };
+
   return (
     <MainDiv>
       <NicknameDiv>
@@ -28,8 +40,16 @@ const EnterCodeModal = () => {
         <InputBox
           className="input-bordered mt-0 h-[48px] w-full px-[10px]"
           placeholder="방 코드를 입력해주세요"
+          setInput={setWorkspaceId}
         />
-        <button className="btn"> 입장하기 </button>
+        <button
+          disabled={workspaceId.length == 0}
+          className="btn"
+          onClick={enterWorkspace}
+        >
+          {" "}
+          입장하기{" "}
+        </button>
       </EnterCodeDiv>
     </MainDiv>
   );
