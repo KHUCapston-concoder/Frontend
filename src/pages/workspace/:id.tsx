@@ -10,6 +10,7 @@ import TestCaseList from "@/components/TestCase/TestCaseList";
 import CompileInfo from "@/components/Compile/CompileInfo";
 import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
 import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
+import LiveCode from "@/components/LiveCode/LiveCode";
 
 const Workspace = () => {
   const { themeColorset } = useTheme();
@@ -29,6 +30,7 @@ const Workspace = () => {
       </AlgoDiv>
       {/* Section 3 */}
       <CodeDiv>
+        <LiveCode/>
         <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
           {/* Floating Buttons Container */}
           <CompileFloatBtn />

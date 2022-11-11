@@ -60,7 +60,7 @@ rounded-[10px] z-[100]
 `;
 
 const CloseButton = tw.div`
-relative float-right w-fit p-[10px_14px]
+absolute right-0 w-fit p-[10px_14px]
 `;
 
 export default Modal;
