@@ -1,11 +1,11 @@
 import React, { Dispatch, RefObject, SetStateAction } from "react";
 
 interface PropType {
-  setInput: Dispatch<SetStateAction<string>>;
-  placeholder: string;
-  className: string;
-  label: string;
-  disabled: boolean;
+  setInput?: Dispatch<SetStateAction<string>>;
+  placeholder?: string;
+  className?: string;
+  label?: string;
+  disabled?: boolean;
 }
 
 const TextBox = React.forwardRef(

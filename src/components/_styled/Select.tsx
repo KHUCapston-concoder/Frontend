@@ -6,15 +6,15 @@ interface OptionPropType {
 }
 
 interface PropType {
-  options: Array<OptionPropType>;
+  options?: Array<OptionPropType>;
   setSelection: Dispatch<SetStateAction<string>>;
-  placeholder: string;
-  className: string;
-  label: string;
+  placeholder?: string;
+  className?: string;
+  label?: string;
 }
 
 const SelectBox = ({
-  options,
+  options = [],
   setSelection,
   placeholder = "Select an option",
   className = "select select-xs select-ghost w-full max-w-xs",

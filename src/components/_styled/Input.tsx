@@ -27,7 +27,7 @@ const InputBox = ({
         className={className + " input input-xs mt-[4px]"}
         disabled={disabled}
         ref={inputRef}
-        onChange={() => setInput(inputRef.current.value || "")}
+        onChange={() => setInput(inputRef.current? inputRef.current.value : "")}
       />
     </div>
   );

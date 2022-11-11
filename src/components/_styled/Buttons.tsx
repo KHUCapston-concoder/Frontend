@@ -2,14 +2,14 @@ import React, { MouseEventHandler } from "react";
 import tw from "tailwind-styled-components";
 
 interface ButtonProps {
-  type: string;
-  name: string;
-  size: string;
-  className: string;
-  width: string;
-  height: string;
-  disabled: boolean;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  type?: string;
+  name?: string;
+  size?: string;
+  className?: string;
+  width?: string;
+  height?: string;
+  disabled?: boolean;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const Button = tw.button`

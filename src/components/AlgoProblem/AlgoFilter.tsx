@@ -6,6 +6,7 @@ import SelectBox from "@/components/_styled/Select";
 import InputBox from "@/components/_styled/Input";
 import { algoProbState } from "@/store/algoProbState";
 import algoProbDummyData from "@/utils/dummyData/algoInfo.json";
+import useHttp from "@/hooks/useHttp";
 
 const AlgoFilterContainer = () => {
   const [tabNum, setTabNum] = useState(0);
@@ -19,6 +20,15 @@ const AlgoFilterContainer = () => {
   };
 
   const onSearch = () => {
+    const requestConfig = {
+      url: "/api/problems/levels",
+      method: "GET"
+    }
+
+    const { isLoading, error, sendRequest } = useHttp({requestConfig});
+
+    sendRequest
+
     /* API 호출 비동기 작업 */
     resetAlgoProblemList();
     setAlgoProblemList(() => {
