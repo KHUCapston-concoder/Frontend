@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { IconButton } from "@/components/_styled/Buttons";
 import Modal from "@/hoc/Portal";
 import SnapshotListModal from "@/components/Snapshot/SnapshotListModal";
+import useModal from "@/hooks/useModal";
 
 const SnapshotPopupBtn = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const onClick = (e: React.MouseEvent<HTMLElement>) => {
-    setIsModalOpen(true);
-  };
+  const [isModalOpen, setIsModalOpen, onClickOpen] = useModal();
 
   return (
     <>
-      <IconButton name="history" size="lg" onClick={onClick} />
+      <IconButton name="history" size="lg" onClick={onClickOpen} />
       <Modal
         className="h-[70%] w-[80%] min-w-[600px] max-w-[900px]"
         isShowing={isModalOpen}

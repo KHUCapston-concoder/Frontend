@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { IconButton } from "@/components/_styled/Buttons";
-import TimerForm from "./TimerForm";
+import TimerForm from "./SetTimerPopup";
 import TimerPortal from "./TimerPortal";
 import TimerToast from "./TimerToast";
+import useModal from "@/hooks/useModal";
 import Modal from "@/hoc/Portal";
 
 interface Time {
@@ -57,30 +58,21 @@ const TimerPopupBtn = () => {
     });
   };
 
+  const [isModalOpen, setIsModalOpen, onClickOpen] = useModal();
+
   return (
     <>
-      {/* <TimerPortal
-        children={
-          <TimerForm
-            onClickTimerStart={timerSettingHandler}
-            onClose={hideTimerFormHandler}
-            onShowTimerToast={showTimerToastHandler}
-          />
-        }
-        isShowing={timerFromIsShowing}
-      /> */}
-
       <Modal
-        children={
-          <TimerForm
-            onClickTimerStart={timerSettingHandler}
-            onClose={hideTimerFormHandler}
-            onShowTimerToast={showTimerToastHandler}
-          />
-        }
-        isShowing={timerFromIsShowing}
-        close={hideTimerFormHandler}
-      />
+        className="h-[25%] min-h-[200px] w-[20%] min-w-[300px] max-w-[900px]"
+        isShowing={isModalOpen}
+        close={() => setIsModalOpen(false)}
+      >
+        <TimerForm
+          onClickTimerStart={timerSettingHandler}
+          onClose={hideTimerFormHandler}
+          onShowTimerToast={showTimerToastHandler}
+        />
+      </Modal>
 
       <TimerPortal
         children={
@@ -93,7 +85,7 @@ const TimerPopupBtn = () => {
         isShowing={timerToastIsShowing}
       />
 
-      <IconButton name="stopwatch" size="lg" onClick={showTimerFormHandler} />
+      <IconButton name="stopwatch" size="lg" onClick={onClickOpen} />
     </>
   );
 };
