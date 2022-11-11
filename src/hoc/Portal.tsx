@@ -7,30 +7,31 @@ import tw from "tailwind-styled-components";
 const $portal = document.querySelector("#modal-root");
 
 interface PropType {
-  width: string;
-  height: string;
+  className: string;
   children: ReactNode;
   isShowing: boolean;
   close: Dispatch<SetStateAction<boolean>>;
 }
 
-const Modal = ({ children, isShowing, close, width, height }: PropType) => {
+const Modal = ({ children, isShowing, close, className }: PropType) => {
   return isShowing && $portal
     ? ReactDOM.createPortal(
-        <ModalWrapper onClick={close}>
-          <ModalContainer style={{ width: width, height: height }}>
+        <>
+          <ModalWrapper onClick={close}></ModalWrapper>
+          <ModalContainer className={className}>
             <CloseButton>
               <IconButton name="close" onClick={close} />
             </CloseButton>
             {children}
           </ModalContainer>
-        </ModalWrapper>,
+        </>,
+
         $portal
       )
     : null;
 };
 
-export const ModalWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,14 +40,23 @@ export const ModalWrapper = styled.div`
   height: 100%;
   left: 0;
   top: 0;
+`;
+
+export const ModalWrapper = styled(Wrapper)`
   background: rgba(0, 0, 0, 0.4); // 바깥 배경 밝기
   z-index: 10;
 `;
 
 const ModalContainer = tw.div`
-dark-2 
-w-[60%] h-1/2 max-w-[400px] max-h-[600px]
-rounded-[10px] z-100
+fixed
+left-[50%]
+bottom-[50%]
+transform
+translate-x-[-50%]
+translate-y-[50%]
+dark-2
+w-[600px] h-[400px]
+rounded-[10px] z-[100]
 `;
 
 const CloseButton = tw.div`

@@ -82,7 +82,7 @@ const TimerPopupBtn = () => {
         close={hideTimerFormHandler}
       />
 
-      {/* <TimerPortal
+      <TimerPortal
         children={
           <TimerToast
             timeData={timerInputs}
@@ -91,18 +91,6 @@ const TimerPopupBtn = () => {
           />
         }
         isShowing={timerToastIsShowing}
-      /> */}
-
-      <Modal
-        children={
-          <TimerToast
-            timeData={timerInputs}
-            onClose={hideTimerToastHandler}
-            onTimerReset={showTimerFormHandler}
-          />
-        }
-        isShowing={timerToastIsShowing}
-        close={hideTimerToastHandler}
       />
 
       <IconButton name="stopwatch" size="lg" onClick={showTimerFormHandler} />

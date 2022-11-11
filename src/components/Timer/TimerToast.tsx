@@ -7,7 +7,9 @@ import { IconButton } from "@/components/_styled/Buttons";
 const padNumber = (num, len) => {
   return String(num).padStart(len, "0");
 };
-
+interface Interval {
+  current?: Number;
+}
 const TimerToast = ({ timeData, onTimerReset, onClose }: TimerToastProps) => {
   // time관련 state, ref
   const [hour, setHour] = useState(padNumber(timeData.hour, 2));
@@ -16,7 +18,15 @@ const TimerToast = ({ timeData, onTimerReset, onClose }: TimerToastProps) => {
   const initialTime = useRef(
     timeData.hour * 60 * 60 + timeData.min * 60 + timeData.sec
   );
-  const interval = useRef(null);
+  let interval = useRef<Interval>({ current: 0 });
+
+  useEffect(() => {
+    setHour(padNumber(timeData.hour, 2));
+    setMin(padNumber(timeData.min, 2));
+    setSec(padNumber(timeData.sec, 2));
+    initialTime.current =
+      timeData.hour * 60 * 60 + timeData.min * 60 + timeData.sec;
+  }, [timeData]);
 
   // control관련 state
   const [isPlaying, setIsPlaying] = useState(true);
@@ -32,6 +42,8 @@ const TimerToast = ({ timeData, onTimerReset, onClose }: TimerToastProps) => {
   };
   const clickStopHandler = () => {
     initialTime.current = 0;
+    // TODO: isPlaying = false되면서 멈췄지만, interval이 clear되지 않음. 추후 수정 필요
+    setIsPlaying(false);
     // 즉시 화면에 0초로 보이기 위해
     setHour(padNumber(0, 2));
     setMin(padNumber(0, 2));
@@ -46,12 +58,14 @@ const TimerToast = ({ timeData, onTimerReset, onClose }: TimerToastProps) => {
   // 1초씩 줄어드는 effect
   useEffect(() => {
     if (isPlaying && initialTime.current !== 0) {
-      interval.current = setInterval(() => {
-        initialTime.current -= 1;
-        setSec(padNumber(initialTime.current % 60, 2));
-        setMin(padNumber(parseInt((initialTime.current / 60) % 60), 2));
-        setHour(padNumber(parseInt((initialTime.current / 60 / 60) % 60), 2));
-      }, 1000);
+      interval = {
+        current: setInterval(() => {
+          initialTime.current -= 1;
+          setSec(padNumber(initialTime.current % 60, 2));
+          setMin(padNumber(parseInt((initialTime.current / 60) % 60), 2));
+          setHour(padNumber(parseInt((initialTime.current / 60 / 60) % 60), 2));
+        }, 1000),
+      };
     }
     return () => clearInterval(interval.current);
   }, [isPlaying]);
@@ -60,6 +74,8 @@ const TimerToast = ({ timeData, onTimerReset, onClose }: TimerToastProps) => {
   useEffect(() => {
     if (initialTime.current <= 0) {
       clearInterval(interval.current);
+      // TODO: isPlaying = false되면서 멈췄지만, interval이 clear되지 않음. 추후 수정 필요
+      setIsPlaying(false);
       //   TODO: time over 시 어떻게 처리할지 정하기 (e.g. bg-color 변경, 클릭 시 toast 내리기 or 모달창으로 알림 띄우고 toast 내리기)
     }
   }, [sec]);
