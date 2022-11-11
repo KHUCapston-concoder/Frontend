@@ -30,7 +30,7 @@ const Workspace = () => {
       </AlgoDiv>
       {/* Section 3 */}
       <CodeDiv>
-        <LiveCode/>
+        <LiveCode />
         <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
           {/* Floating Buttons Container */}
           <CompileFloatBtn />
@@ -114,13 +114,14 @@ grow-[6]
 
 const FloatButtonDiv = tw.div`
 relative
-top-[90%] left-[50%]
+top-[-10%] left-[50%]
 w-fit h-[60px]
 px-[10px]
 rounded-[15px]
 dark-1
 flex gap-[10px]
 justify-around
+z-100
 `;
 
 /* 3.4.5 컴파일 정보 */
