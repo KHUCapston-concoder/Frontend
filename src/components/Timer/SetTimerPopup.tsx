@@ -98,7 +98,7 @@ const TimerFormMainDiv = tw.div`
 w-full h-full
 flex
 flex-col
-pt-[50px] pb-[20px] px-[40px]
+pt-[10%] pb-[20px] px-[40px]
 items-center justify-between
 `;
 
