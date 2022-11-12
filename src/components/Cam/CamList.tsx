@@ -13,11 +13,13 @@ const CamList = () => {
   let muted = false;
 
   // socket
-  const socket = new WebSocket(`ws://localhost:3050`);
+  const socketUrl = `ws://localhost:3050`;
+  const ws = useRef<WebSocket | null>(null);
 
   // socket message send 함수
-  const send = (msg) => {
-    socket.send(JSON.stringify(msg));
+  const makeMsg = (eventType, payload) => {
+    const msg = { event: eventType, data: payload };
+    ws.current?.send(JSON.stringify(msg));
   };
 
   // webRTC
@@ -83,6 +85,15 @@ const CamList = () => {
 
   useEffect(async () => {
     await getMedia();
+
+    // socket 연결
+    ws.current = new WebSocket(socketUrl);
+    // socket 연결 시, workspace에 입장했음을 socket server에 알림. (추후 server는 해당 workspace의 다른 user들에게 user 입장에 대한 socket msg 보냄)
+    ws.current.onopen = () => {
+      // workspace id를 data로 담아 workspace 입장에 대한 socket msg 보냄
+      makeMsg("enter", "workspace01");
+    };
+
     makeConnection();
   }, [myCam]);
 
