@@ -1,20 +1,18 @@
-import { Dispatch, SetStateAction, useState } from "react";
-
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import axios from "axios";
 interface RequestConfigType {
   requestConfig: {
     url: string;
-    method: string;
     headers?: HeadersInit;
-    body?: string;
   };
-  handleResponse?: Function;
+  handleResponse: Function;
 }
 
-const useHttp = ({ requestConfig, handleResponse }: RequestConfigType) => {
+const useGet = ({ requestConfig, handleResponse }: RequestConfigType) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const sendRequest = async () => {
+  const sendRequest = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     // const url = process.env.REACT_API_HOST + requestConfig.url;
@@ -22,21 +20,26 @@ const useHttp = ({ requestConfig, handleResponse }: RequestConfigType) => {
 
     try {
       const response = await fetch(url, {
-        method: requestConfig.method,
+        method: "GET",
         headers: requestConfig.headers || {},
-        body: JSON.stringify(requestConfig.body),
         mode: "no-cors",
       });
 
       if (!response.ok) {
-        throw new Error("Request Failed");
+        throw new Error("Request failed!");
       }
+
+      const data = response.json();
+      console.log(JSON.stringify(data));
+
+      handleResponse(data);
     } catch (e) {
       setError(e.message);
     }
     setIsLoading(false);
-  };
+  }, [isLoading, error]);
+
   return { isLoading, error, sendRequest };
 };
 
-export default useHttp;
+export default useGet;
