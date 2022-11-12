@@ -7,9 +7,9 @@ import { testCaseState } from "@/store/testCaseState";
 
 interface PropType {
   testCaseNo: number;
-  inputVal: string;
-  outputVal: string;
-  disabled: boolean;
+  inputVal?: string;
+  outputVal?: string;
+  disabled?: boolean;
   setIsAdding: Dispatch<SetStateAction<boolean>>;
 }
 
