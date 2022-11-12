@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import tw from "tailwind-styled-components";
 import SnapshotBtn from "@/components/Snapshot/PopupBtn";
 import TimerBtn from "@/components/Timer/PopupBtn";
-import { useTheme } from "@/context/ThemeContext";
 import ChatPopupBtn from "@/components/Chat/PopupBtn";
 import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
@@ -11,9 +10,54 @@ import CompileInfo from "@/components/Compile/CompileInfo";
 import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
 import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
 import LiveCode from "@/components/LiveCode/LiveCode";
+import useGet from "@/hooks/useHttpGet";
+import { AlgoProbCategory, AlgoProbLevel } from "@/interface/AlgoProbLevel";
+import {
+  algoProbCategoryState,
+  algoProbLevelState,
+} from "@/store/algoProbState";
+import { useRecoilState } from "recoil";
 
 const Workspace = () => {
-  const { themeColorset } = useTheme();
+  const [algoProbLevelList, setAlgoProbLevelList] =
+    useRecoilState(algoProbLevelState);
+
+  const [algoProbCategoryList, setAlgoProbCategoryList] = useRecoilState(
+    algoProbCategoryState
+  );
+
+  /* 알고리즘 문제 level 정보 fetch */
+  const saveProbLevelInfo = (levelInfoList: Array<AlgoProbLevel>) => {
+    setAlgoProbLevelList(() => {
+      return { list: levelInfoList, length: levelInfoList.length };
+    });
+  };
+
+  const { sendRequest: sendRequestProbLevel } = useGet({
+    requestConfig: {
+      url: "/api/problems/levels",
+    },
+    handleResponse: saveProbLevelInfo,
+  });
+
+  /* 알고리즘 문제 category 정보 fetch */
+  const saveProbCategoryInfo = (categoryInfoList: Array<AlgoProbCategory>) => {
+    setAlgoProbLevelList(() => {
+      return { list: categoryInfoList };
+    });
+  };
+
+  const { sendRequest: sendRequestProbCategory } = useGet({
+    requestConfig: {
+      url: "/api/problems/categories",
+    },
+    handleResponse: saveProbCategoryInfo,
+  });
+
+  useEffect(() => {
+    sendRequestProbLevel();
+    sendRequestProbCategory();
+  }, []);
 
   return (
     <MainDiv>
