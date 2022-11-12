@@ -1,15 +1,13 @@
 import { useTheme } from "@/context/ThemeContext";
-import { algoProbState } from "@/store/algoProbState";
+import { algoProbListState } from "@/store/algoProbState";
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import tw from "tailwind-styled-components";
 import { IconButton } from "@/components/_styled/Buttons";
 
 const AlgoInfo = () => {
-  const algoProblem = useRecoilValue(algoProbState);
+  const algoProblem = useRecoilValue(algoProbListState);
   const [probIndex, setProbIndex] = useState(0);
-
-  console.log(algoProblem);
 
   return (
     <MainDiv>

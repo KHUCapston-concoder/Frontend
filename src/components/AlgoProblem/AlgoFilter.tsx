@@ -4,14 +4,20 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import tw from "tailwind-styled-components";
 import SelectBox from "@/components/_styled/Select";
 import InputBox from "@/components/_styled/Input";
-import { algoProbState } from "@/store/algoProbState";
-import algoProbDummyData from "@/utils/dummyData/algoInfo.json";
-import useHttp from "@/hooks/useHttp";
+import { algoProbListState } from "@/store/algoProbState";
+import useGet from "@/hooks/useHttpGet";
 
 const AlgoFilterContainer = () => {
   const [tabNum, setTabNum] = useState(0);
-  const [algoProblemList, setAlgoProblemList] = useRecoilState(algoProbState);
-  const resetAlgoProblemList = useResetRecoilState(algoProbState);
+  const [algoProblemList, setAlgoProblemList] = useRecoilState(algoProbListState);
+  const resetAlgoProblemList = useResetRecoilState(algoProbListState);
+
+  const saveRequest = () => {
+    resetAlgoProblemList();
+    setAlgoProblemList(() => {
+      return { list: [], length: 0 };
+    });
+  };
 
   const onClickTab = (e: React.MouseEvent<HTMLElement>) => {
     console.log(e.target);
@@ -20,31 +26,12 @@ const AlgoFilterContainer = () => {
   };
 
   const onSearch = () => {
-    const requestConfig = {
-      url: "/api/problems/levels",
-      method: "GET"
-    }
-
-    const { isLoading, error, sendRequest } = useHttp({requestConfig});
-
-    sendRequest
-
-    /* API 호출 비동기 작업 */
-    resetAlgoProblemList();
-    setAlgoProblemList(() => {
-      return { list: algoProbDummyData, length: algoProbDummyData.length };
-    });
+  
   };
 
-  const [levelList, setLevelList] = useState([
-    { name: "골드2", value: 1 },
-    { name: "골드1", value: 0 },
-  ]);
+  const [levelList, setLevelList] = useState([]);
   const [levelFilter, setLevelFilter] = useState("");
-  const [typeList, setTypeList] = useState([
-    { name: "DP", value: 1 },
-    { name: "그리디", value: 0 },
-  ]);
+  const [typeList, setTypeList] = useState([]);
   const [typeFilter, setTypeFilter] = useState("");
   const [problemNum, setProblemNum] = useState("");
 
