@@ -12,6 +12,18 @@ const CamList = () => {
   // 현재 오디오 off 상태 담는 변수 (컴포넌트 재실행할 필요 없어서 state가 아닌 변수로 관리)
   let muted = false;
 
+  // socket
+  const socket = new WebSocket(`ws://localhost:3050`);
+
+  // socket message send 함수
+  const send = (msg) => {
+    socket.send(JSON.stringify(msg));
+  };
+
+  // webRTC
+  let config = null;
+  let peerConnection;
+
   // cam on/off 관리 함수
   const camClickHandler = () => {
     myStream.getVideoTracks().forEach((track) => {
@@ -59,8 +71,19 @@ const CamList = () => {
     }
   };
 
-  useEffect(() => {
-    getMedia();
+  // webRTC
+  const makeConnection = () => {
+    // RTC connection 객체 생성
+    peerConnection = new RTCPeerConnection(config);
+    // 다른 user(원격 user)에게 전송될 트랙들에 myStream의 오디오, 비디오 트랙을 추가
+    myStream.getTracks().forEach((track) => {
+      peerConnection.addTrack(track, myStream);
+    });
+  };
+
+  useEffect(async () => {
+    await getMedia();
+    makeConnection();
   }, [myCam]);
 
   return (
