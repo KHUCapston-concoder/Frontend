@@ -11,6 +11,7 @@ import CompileInfo from "@/components/Compile/CompileInfo";
 import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
 import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
 import LiveCode from "@/components/LiveCode/LiveCode";
+import CamList from "@/components/Cam/CamList";
 
 const Workspace = () => {
   const { themeColorset } = useTheme();
@@ -18,7 +19,9 @@ const Workspace = () => {
   return (
     <MainDiv>
       {/* Section 1 */}
-      <CamDiv></CamDiv>
+      <CamDiv>
+        <CamList></CamList>
+      </CamDiv>
       {/* Section 2 */}
       <AlgoDiv>
         <AlgoFilterDiv>
