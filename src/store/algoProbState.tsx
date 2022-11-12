@@ -1,26 +1,17 @@
+import { AlgoProbInfo } from "@/interface/AlgoProbLevel";
 import { atom } from "recoil"
 
-interface AlgoProblemType {
-  num: number;
-  title: string;
-  timeRestraint: string;
-  memoryRestraint: string;
-  problemContent: string;
-  input: string;
-  output: string;
-}
-
-export interface StateType {
-    list: Array<AlgoProblemType>
-    length: number,
-}
-
-const initialState: StateType = {
+const initialState = {
   list: [],
   length: 0,
 };
 
-export const algoProbState = atom({
-  key: "algoProblemList",
+export const algoProbListState = atom({
+  key: "algoProbList",
+  default: initialState,
+});
+
+export const algoProbLevelState = atom({
+  key: "algoProbLevel",
   default: initialState,
 });
