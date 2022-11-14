@@ -94,6 +94,17 @@ const CamList = () => {
       makeMsg("enter", "workspace01");
     };
 
+    // 다른 user가 workspace 입장 시, local user가 받을 socket message에 대한 리스너 추가 (offer 생성 및 전송을 위해)
+    if (ws != null) {
+      ws.current.onmessage = (msg) => {
+        const eventType = JSON.parse(msg.data).event;
+        switch (eventType) {
+          case "enter":
+            console.log("멤버가 입장했습니다!");
+        }
+      };
+    }
+
     makeConnection();
   }, [myCam]);
 
