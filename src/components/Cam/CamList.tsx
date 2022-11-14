@@ -25,6 +25,7 @@ const CamList = () => {
   // webRTC
   let config = null;
   let peerConnection;
+  const memCam = useRef<HTMLVideoElement | undefined>(null);
 
   // cam on/off 관리 함수
   const camClickHandler = () => {
@@ -77,6 +78,14 @@ const CamList = () => {
   const makeConnection = () => {
     // RTC connection 객체 생성
     peerConnection = new RTCPeerConnection(config);
+    // 다른 user(원격 user)에게 트랙을 받을 경우에 대해 eventListener 추가
+    peerConnection.ontrack = (event) => {
+      if (memCam != null) {
+        memCam.current.srcObject = event.streams[0];
+        memCam.current.play();
+      }
+    };
+
     // 다른 user(원격 user)에게 전송될 트랙들에 myStream의 오디오, 비디오 트랙을 추가
     myStream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, myStream);
@@ -135,7 +144,7 @@ const CamList = () => {
         }
       };
     }
-  }, [myCam]);
+  }, [myCam, memCam]);
 
   return (
     <>
@@ -147,6 +156,9 @@ const CamList = () => {
         <Button onClick={muteClickHandler} ref={muteBtn}>
           Mute
         </Button>
+      </div>
+      <div>
+        <video id="memCam" ref={memCam}></video>
       </div>
     </>
   );
