@@ -97,7 +97,9 @@ const CamList = () => {
     // 다른 user가 workspace 입장 시, local user가 받을 socket message에 대한 리스너 추가 (offer 생성 및 전송을 위해)
     if (ws != null) {
       ws.current.onmessage = async (msg) => {
-        const eventType = JSON.parse(msg.data).event;
+        const parsedMsg = JSON.parse(msg.data);
+        const eventType = parsedMsg.event;
+        const data = parsedMsg.data;
         switch (eventType) {
           case "enter":
             console.log("멤버가 입장했습니다!");
@@ -108,8 +110,14 @@ const CamList = () => {
             break;
           case "offer":
             console.log("offer 받음");
-            console.log(JSON.parse(msg.data).data);
+            peerConnection.setRemoteDescription(data);
+            const answer = await peerConnection.createAnswer();
+            makeMsg("answer", answer);
+            console.log("answer 생성 후 송신");
             break;
+          case "answer":
+            console.log("answer 수신");
+            console.log(data);
         }
       };
     }
