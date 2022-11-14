@@ -111,13 +111,16 @@ const CamList = () => {
           case "offer":
             console.log("offer 받음");
             peerConnection.setRemoteDescription(data);
+            console.log("remoteDescription 설정");
             const answer = await peerConnection.createAnswer();
+            peerConnection.setLocalDescription(answer);
             makeMsg("answer", answer);
             console.log("answer 생성 후 송신");
             break;
           case "answer":
             console.log("answer 수신");
-            console.log(data);
+            peerConnection.setRemoteDescription(data);
+            console.log("remoteDescription 설정");
         }
       };
     }
