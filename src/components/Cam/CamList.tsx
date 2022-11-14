@@ -81,6 +81,11 @@ const CamList = () => {
     myStream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, myStream);
     });
+    // iceCandidate listener 추가
+    peerConnection.onicecandidate = (event) => {
+      console.log("ice candidate 얻음");
+      makeMsg("ice", event.candidate);
+    };
   };
 
   useEffect(async () => {
@@ -93,6 +98,8 @@ const CamList = () => {
       // workspace id를 data로 담아 workspace 입장에 대한 socket msg 보냄
       makeMsg("enter", "workspace01");
     };
+
+    makeConnection();
 
     // 다른 user가 workspace 입장 시, local user가 받을 socket message에 대한 리스너 추가 (offer 생성 및 전송을 위해)
     if (ws != null) {
@@ -121,11 +128,13 @@ const CamList = () => {
             console.log("answer 수신");
             peerConnection.setRemoteDescription(data);
             console.log("remoteDescription 설정");
+          case "ice":
+            console.log("ice 수신");
+            peerConnection.addIceCandidate(data);
+            console.log("ice candidate 추가");
         }
       };
     }
-
-    makeConnection();
   }, [myCam]);
 
   return (
