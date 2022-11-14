@@ -106,6 +106,10 @@ const CamList = () => {
             makeMsg("offer", offer);
             console.log("offer 생성 후 보냄");
             break;
+          case "offer":
+            console.log("offer 받음");
+            console.log(JSON.parse(msg.data).data);
+            break;
         }
       };
     }
