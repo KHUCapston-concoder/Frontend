@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import tw from "tailwind-styled-components";
 import SnapshotBtn from "@/components/Snapshot/PopupBtn";
 import TimerBtn from "@/components/Timer/PopupBtn";
-import ChatPopupBtn from "@/components/Chat/PopupBtn";
 import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 import TestCaseList from "@/components/TestCase/TestCaseList";
@@ -17,53 +16,23 @@ import {
   algoProbLevelState,
 } from "@/store/algoProbState";
 import { useRecoilState } from "recoil";
+import { IconButton } from "@/components/_styled/Buttons";
+import { exit } from "process";
+import useFetchAlgoInfo from "@/hooks/Components/useFetchAlgoInfo";
+import ChatBox from "@/components/Chat/ChatBox";
 
 const Workspace = () => {
-  const [algoProbLevelList, setAlgoProbLevelList] =
-    useRecoilState(algoProbLevelState);
-
-  const [algoProbCategoryList, setAlgoProbCategoryList] = useRecoilState(
-    algoProbCategoryState
-  );
-
-  /* 알고리즘 문제 level 정보 fetch */
-  const saveProbLevelInfo = (levelInfoList: Array<AlgoProbLevel>) => {
-    setAlgoProbLevelList(() => {
-      return { list: levelInfoList, length: levelInfoList.length };
-    });
-  };
-
-  const { sendRequest: sendRequestProbLevel } = useGet({
-    requestConfig: {
-      url: "/api/problems/levels",
-    },
-    handleResponse: saveProbLevelInfo,
-  });
-
-  /* 알고리즘 문제 category 정보 fetch */
-  const saveProbCategoryInfo = (categoryInfoList: Array<AlgoProbCategory>) => {
-    setAlgoProbLevelList(() => {
-      return { list: categoryInfoList };
-    });
-  };
-
-  const { sendRequest: sendRequestProbCategory } = useGet({
-    requestConfig: {
-      url: "/api/problems/categories",
-    },
-    handleResponse: saveProbCategoryInfo,
-  });
-
+  const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
   useEffect(() => {
     sendRequestProbLevel();
     sendRequestProbCategory();
   }, []);
 
+  const exitWorkspace = () => {};
+
   return (
     <MainDiv>
       {/* Section 1 */}
-      <CamDiv></CamDiv>
-      {/* Section 2 */}
       <AlgoDiv>
         <AlgoFilterDiv>
           <AlgoFilterContainer />
@@ -72,7 +41,7 @@ const Workspace = () => {
           <AlgoInfo />
         </AlgoInfoDiv>
       </AlgoDiv>
-      {/* Section 3 */}
+      {/* Section 2 */}
       <CodeDiv>
         <LiveCode />
         <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
@@ -81,7 +50,7 @@ const Workspace = () => {
           <SnapshotFloatBtn />
         </FloatButtonDiv>
       </CodeDiv>
-      {/* Section 4 */}
+      {/* Section 3 */}
       <FlexDiv>
         {/* 컴파일 정보 */}
         <CompileInfoDiv>
@@ -100,10 +69,17 @@ const Workspace = () => {
             <TimerBtn />
           </UtilButtonDiv>
           <UtilButtonDiv>
-            <ChatPopupBtn />
+            <IconButton name="circle-xmark" size="lg" onClick={exitWorkspace} />
           </UtilButtonDiv>
         </UtilButtonsDiv>
       </FlexDiv>
+      {/* Section 4 */}
+      <FlexDiv2>
+        <CamDiv />
+        <ChatDiv >
+          <ChatBox/>
+        </ChatDiv>
+      </FlexDiv2>
     </MainDiv>
   );
 };
@@ -126,13 +102,27 @@ dark-1
 
 const FlexDiv = tw(CommonDiv)`
 grow-[2] flex flex-col
+bg-inherit
+`;
+
+const FlexDiv2 = tw(CommonDiv)`
+grow h-[calc(100%-30px)]
 mr-[15px]
+flex flex-col gap-[15px]
 bg-inherit
 `;
 
 /* 3.4.1 실시간 화상 회의 */
-const CamDiv = tw(CommonDiv)`
-grow h-[calc(100%-30px)]
+const CamDiv = tw.div`
+dark-2
+w-full grow-[3]
+rounded-[20px]
+`;
+
+/* 3.4.7 채팅 */
+const ChatDiv = tw.div`
+w-full grow-[4]
+rounded-[20px]
 `;
 
 /* 3.4.4 알고리즘 문제 추천 */
