@@ -76,8 +76,8 @@ const Workspace = () => {
       {/* Section 4 */}
       <FlexDiv2>
         <CamDiv />
-        <ChatDiv >
-          <ChatBox/>
+        <ChatDiv>
+          <ChatBox />
         </ChatDiv>
       </FlexDiv2>
     </MainDiv>
@@ -115,13 +115,13 @@ bg-inherit
 /* 3.4.1 실시간 화상 회의 */
 const CamDiv = tw.div`
 dark-2
-w-full grow-[3]
+w-full h-[300px] min-h-[300px]
 rounded-[20px]
 `;
 
 /* 3.4.7 채팅 */
 const ChatDiv = tw.div`
-w-full grow-[4]
+w-full h-[calc(100%-320px)]
 rounded-[20px]
 `;
 
