@@ -61,7 +61,7 @@ const LocalCam = ({ onSetLocalStream }) => {
 
   useEffect(async () => {
     await getMedia();
-    onGetLocalStream(localStream.current);
+    onSetLocalStream(localStream.current);
   }, []);
 
   return (
