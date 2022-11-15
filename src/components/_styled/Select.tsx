@@ -21,12 +21,8 @@ const SelectBox = ({
   label,
 }: PropType) => {
   const onSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target);
-
     setSelection(e.target.value);
   };
-
-  console.log("option", options);
 
   return (
     <div className="w-full py-[4px] pl-[12px]">
@@ -40,7 +36,9 @@ const SelectBox = ({
       >
         <option value={-1}>{placeholder}</option>
         {options.map((e) => (
-          <option key={e.id} value={e.id}>{e.name}</option>
+          <option key={e.id} value={e.id}>
+            {e.name}
+          </option>
         ))}
       </select>
     </div>

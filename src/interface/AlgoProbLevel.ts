@@ -1,14 +1,14 @@
-export interface AlgoProbLevel {
+export interface IAlgoProbLevel {
     id: string;
     name: string;
 }
 
-export interface AlgoProbCategory {
+export interface IAlgoProbCategory {
   id: string;
   name: string;
 }
 
-export interface AlgoProbInfo {
+export interface IAlgoProbInfo {
   number: number;
   title: string;
   averageTries: number;
@@ -19,5 +19,5 @@ export interface AlgoProbInfo {
     id: string;
     name: string;
   };
-  categories: Array<AlgoProbCategory>;
+  categories: Array<IAlgoProbCategory>;
 }
