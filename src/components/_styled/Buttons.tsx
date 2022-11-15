@@ -12,10 +12,6 @@ interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const Button = tw.button`
-
-`;
-
 export const IconButton = ({
   type = "solid", // solid, regular, light, thin, duotone
   name = "",

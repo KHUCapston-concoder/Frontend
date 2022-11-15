@@ -2,7 +2,7 @@ import React, { SetStateAction, Dispatch } from "react";
 
 interface OptionPropType {
   name: string;
-  value: number;
+  id: string;
 }
 
 interface PropType {
@@ -25,6 +25,9 @@ const SelectBox = ({
 
     setSelection(e.target.value);
   };
+
+  console.log("option", options);
+
   return (
     <div className="w-full py-[4px] pl-[12px]">
       <div className="w-full text-left text-xs font-bold">
@@ -36,8 +39,8 @@ const SelectBox = ({
         onChange={onSelectionChange}
       >
         <option value={-1}>{placeholder}</option>
-        {options.forEach((e) => (
-          <option value={e.value}>{e.name}</option>
+        {options.map((e) => (
+          <option value={e.id}>{e.name}</option>
         ))}
       </select>
     </div>
