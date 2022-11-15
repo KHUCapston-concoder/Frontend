@@ -40,7 +40,7 @@ const SelectBox = ({
       >
         <option value={-1}>{placeholder}</option>
         {options.map((e) => (
-          <option value={e.id}>{e.name}</option>
+          <option key={e.id} value={e.id}>{e.name}</option>
         ))}
       </select>
     </div>

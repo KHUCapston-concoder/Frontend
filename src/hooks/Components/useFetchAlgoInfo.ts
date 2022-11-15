@@ -5,7 +5,7 @@ import {
 } from "@/store/algoProbState";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import useGet from "@/hooks/useHttpGet";
+import { useGet } from "@/hooks/useHttp";
 
 const useFetchAlgoInfo = () => {
   const [algoProbLevelList, setAlgoProbLevelList] =

@@ -1,11 +1,11 @@
+import { MouseEventHandler } from "react";
 import tw from "tailwind-styled-components";
 
-const SnapshotFloatBtn = () => {
-  const onClick = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
-    // TODO: 스냅샷 Request 날리기
-  };
+interface PropType {
+  onClick: MouseEventHandler<HTMLButtonElement>;
+}
 
+const SnapshotFloatBtn = ({ onClick }: PropType) => {
   return (
     <button className="accent" onClick={onClick}>
       SNAPSHOT

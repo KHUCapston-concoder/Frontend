@@ -29,7 +29,7 @@ const Workspace = () => {
 
   const exitWorkspace = () => {
     navigator("/home");
-    localStorage.removeItem("workspace-id")
+    localStorage.removeItem("workspace-id");
   };
 
   return (
@@ -47,11 +47,6 @@ const Workspace = () => {
         {/* Section 2 */}
         <CodeDiv>
           <LiveCode />
-          <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
-            {/* Floating Buttons Container */}
-            <CompileFloatBtn />
-            <SnapshotFloatBtn />
-          </FloatButtonDiv>
         </CodeDiv>
         {/* Section 3 */}
         <FlexDiv>
@@ -182,17 +177,6 @@ const CodeDiv = tw(CommonDiv)`
 grow-[6]
 `;
 
-const FloatButtonDiv = tw.div`
-relative
-top-[-10%] left-[50%]
-w-fit h-[60px]
-px-[10px]
-rounded-[15px]
-dark-1
-flex gap-[10px]
-justify-around
-z-100
-`;
 
 /* 3.4.5 컴파일 정보 */
 const CompileInfoDiv = tw(CommonDiv)`

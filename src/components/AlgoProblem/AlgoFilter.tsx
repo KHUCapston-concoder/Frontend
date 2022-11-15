@@ -8,7 +8,7 @@ import {
   algoProbLevelState,
   algoProbCategoryState,
 } from "@/store/algoProbState";
-import useGet from "@/hooks/useHttpGet";
+import {useGet} from "@/hooks/useHttp";
 import Tabs from "../_styled/Tabs";
 
 const AlgoFilterContainer = () => {
