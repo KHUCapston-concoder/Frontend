@@ -9,7 +9,7 @@ type useModalType = [
 const useModal = (): useModalType => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const onClick = (e: React.MouseEvent<HTMLElement>) => {
+  const onClick = () => {
     setIsModalOpen(true);
   };
 

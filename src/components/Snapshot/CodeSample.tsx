@@ -16,8 +16,14 @@ const CodeSample = ({ code }: PropType) => {
             height="90%"
             language="c"
             theme="vs-dark"
+            read-only="true"
+            value={code}
           />
-          <button>복구</button>
+          <FooterDiv>
+            <button className="accent" style={{ width: "100px" }}>
+              복구
+            </button>
+          </FooterDiv>
         </>
       ) : (
         <PlaceholderDiv>
@@ -34,4 +40,9 @@ const PlaceholderDiv = tw.div`
 w-full h-full
 flex justify-center items-center
 text-sm text-center
+`;
+
+const FooterDiv = tw.div`
+w-full
+flex justify-end
 `;

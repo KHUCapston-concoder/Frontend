@@ -1,22 +1,22 @@
 import {
-  AlgoProbCategory,
-  AlgoProbInfo,
-  AlgoProbLevel,
+  IAlgoProbCategory,
+  IAlgoProbInfo,
+  IAlgoProbLevel,
 } from "@/interface/AlgoProbLevel";
 import { atom } from "recoil";
 
 /* initial states */
-const algoProbListInitialState: { list: Array<AlgoProbInfo>; length: number } =
+const algoProbListInitialState: { list: Array<IAlgoProbInfo>; length: number } =
   {
     list: [],
     length: 0,
   };
 
-const algoProbLevelInitialState: { list: Array<AlgoProbLevel> } = {
+const algoProbLevelInitialState: { list: Array<IAlgoProbLevel> } = {
   list: [],
 };
 
-const algoProbCategoryInitialState: { list: Array<AlgoProbCategory> } = {
+const algoProbCategoryInitialState: { list: Array<IAlgoProbCategory> } = {
   list: [],
 };
 

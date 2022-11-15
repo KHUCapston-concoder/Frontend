@@ -1,4 +1,4 @@
-import { AlgoProbCategory, AlgoProbLevel } from "@/interface/AlgoProbLevel";
+import { IAlgoProbCategory, IAlgoProbLevel } from "@/interface/AlgoProbLevel";
 import {
   algoProbCategoryState,
   algoProbLevelState,
@@ -16,7 +16,7 @@ const useFetchAlgoInfo = () => {
   );
 
   /* 알고리즘 문제 level 정보 fetch */
-  const saveProbLevelInfo = (levelInfoList: Array<AlgoProbLevel>) => {
+  const saveProbLevelInfo = (levelInfoList: Array<IAlgoProbLevel>) => {
     setAlgoProbLevelList(() => {
       return { list: levelInfoList };
     });
@@ -28,7 +28,7 @@ const useFetchAlgoInfo = () => {
   );
 
   /* 알고리즘 문제 category 정보 fetch */
-  const saveProbCategoryInfo = (categoryInfoList: Array<AlgoProbCategory>) => {
+  const saveProbCategoryInfo = (categoryInfoList: Array<IAlgoProbCategory>) => {
     setAlgoProbCategoryList(() => {
       return { list: categoryInfoList };
     });

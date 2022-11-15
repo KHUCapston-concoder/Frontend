@@ -2,17 +2,26 @@ import React, { useState } from "react";
 import tw from "tailwind-styled-components";
 import CodeSample from "@/components/Snapshot/CodeSample";
 import SnapshotInfo from "@/components/Snapshot/SnapshotInfo";
+import { ISnapshotInfo } from "@/interface/Snapshot";
+import { useRecoilState } from "recoil";
+import { snapshotState } from "@/store/snapshotState";
 
-const SnapshotListModal = () => {
+interface PropType {
+  list: Array<ISnapshotInfo>;
+}
+
+const SnapshotListModal = ({ list = [] }: PropType) => {
+  const [snapshotDetail, setSnapshotDetail] = useRecoilState(snapshotState);
+
   return (
     <MainDiv>
       <SnapshotListDiv>
-        <SnapshotInfo />
-        <SnapshotInfo />
-        <SnapshotInfo />
+        {list.map((e) => (
+          <SnapshotInfo key={e.id} data={e} />
+        ))}
       </SnapshotListDiv>
       <CodeSampleDiv>
-        <CodeSample />
+        <CodeSample  code={snapshotDetail.content}/>
       </CodeSampleDiv>
     </MainDiv>
   );
