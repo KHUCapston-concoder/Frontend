@@ -18,30 +18,26 @@ const useFetchAlgoInfo = () => {
   /* 알고리즘 문제 level 정보 fetch */
   const saveProbLevelInfo = (levelInfoList: Array<AlgoProbLevel>) => {
     setAlgoProbLevelList(() => {
-      return { list: levelInfoList, length: levelInfoList.length };
+      return { list: levelInfoList };
     });
   };
 
-  const { sendRequest: sendRequestProbLevel } = useGet({
-    requestConfig: {
-      url: "/api/problems/levels",
-    },
-    handleResponse: saveProbLevelInfo,
-  });
+  const { sendRequest: sendRequestProbLevel } = useGet(
+    { url: "/api/problems/levels" },
+    saveProbLevelInfo
+  );
 
   /* 알고리즘 문제 category 정보 fetch */
   const saveProbCategoryInfo = (categoryInfoList: Array<AlgoProbCategory>) => {
-    setAlgoProbLevelList(() => {
+    setAlgoProbCategoryList(() => {
       return { list: categoryInfoList };
     });
   };
 
-  const { sendRequest: sendRequestProbCategory } = useGet({
-    requestConfig: {
-      url: "/api/problems/categories",
-    },
-    handleResponse: saveProbCategoryInfo,
-  });
+  const { sendRequest: sendRequestProbCategory } = useGet(
+    { url: "/api/problems/categories" },
+    saveProbCategoryInfo
+  );
 
   return [sendRequestProbLevel, sendRequestProbCategory];
 };

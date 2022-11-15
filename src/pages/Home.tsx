@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
 import { useTheme } from "@/context/ThemeContext";
-import { useNavigate } from "react-router-dom";
-import { uuidv4 } from "@/utils/commonFunc/genUuid";
 import Modal from "@/hoc/Portal";
 import EnterCodeModal from "@/components/Home/EnterCodeModal";
 import useModal from "@/hooks/useModal";
+import { uuidv4 } from "@/utils/commonFunc/genUuid";
+import { generateNickname } from "@/utils/commonFunc/genNickname";
 
 const ImgURL = "https://embed.lottiefiles.com/animation/63487";
 

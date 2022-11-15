@@ -1,38 +1,35 @@
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import axios from "axios";
 interface RequestConfigType {
-  requestConfig: {
-    url: string;
-    headers?: HeadersInit;
-  };
-  handleResponse: Function;
+  url: string;
+  headers?: HeadersInit;
 }
 
-const useGet = ({ requestConfig, handleResponse }: RequestConfigType) => {
+axios.defaults.headers.common["Content-Type"] =
+  "application/x-www-form-urlencoded";
+axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+
+const useGet = (requestConfig: RequestConfigType, handleResponse: Function) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const sendRequest = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    // const url = process.env.REACT_API_HOST + requestConfig.url;
-    const url = "http://43.200.230.132" + requestConfig.url;
-
+    const url = "http://163.180.146.59" + requestConfig.url;
+    
     try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: requestConfig.headers || {},
-        mode: "no-cors",
-      });
+      axios
+        .get(url, {
+          headers: {
+            withCredentials: true,
+          },
+        })
+        .then((res) => {
+          // console.log(res.data);
 
-      if (!response.ok) {
-        throw new Error("Request failed!");
-      }
-
-      const data = response.json();
-      console.log(JSON.stringify(data));
-
-      handleResponse(data);
+          handleResponse(res.data);
+        });
     } catch (e) {
       setError(e.message);
     }
