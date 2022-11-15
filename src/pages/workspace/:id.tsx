@@ -16,6 +16,7 @@ import TimerBtn from "@/components/Timer/PopupBtn";
 import { IconButton } from "@/components/_styled/Buttons";
 import tw from "tailwind-styled-components";
 import { useNavigate } from "react-router-dom";
+import CamList from "@/components/Cam/CamList";
 
 const Workspace = () => {
   const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
@@ -73,7 +74,9 @@ const Workspace = () => {
         </FlexDiv>
         {/* Section 4 */}
         <FlexDiv2>
-          <CamDiv />
+          <CamDiv>
+            <CamList />
+          </CamDiv>
           <ChatDiv>
             <ChatBox />
           </ChatDiv>
@@ -176,7 +179,6 @@ h-[calc(80%-15px)]
 const CodeDiv = tw(CommonDiv)`
 grow-[6]
 `;
-
 
 /* 3.4.5 컴파일 정보 */
 const CompileInfoDiv = tw(CommonDiv)`

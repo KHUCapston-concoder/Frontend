@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import LocalCam from "./LocalCam";
-import RemoteCam from "./RemoteCam";
+import LocalCam from "@/components/Cam/LocalCam";
+import RemoteCam from "@/components/Cam/RemoteCam";
 
 const CamList = () => {
   const [localStream, setLocalStream] = useState<MediaStream | undefined>(null);
