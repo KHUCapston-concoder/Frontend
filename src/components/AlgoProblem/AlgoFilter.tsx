@@ -1,76 +1,63 @@
-import { useTheme } from "@/context/ThemeContext";
 import React, { useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import tw from "tailwind-styled-components";
 import SelectBox from "@/components/_styled/Select";
 import InputBox from "@/components/_styled/Input";
-import { algoProbListState } from "@/store/algoProbState";
+import {
+  algoProbListState,
+  algoProbLevelState,
+  algoProbCategoryState,
+} from "@/store/algoProbState";
 import useGet from "@/hooks/useHttpGet";
+import Tabs from "../_styled/Tabs";
 
 const AlgoFilterContainer = () => {
   const [tabNum, setTabNum] = useState(0);
-  const [algoProblemList, setAlgoProblemList] = useRecoilState(algoProbListState);
+  const [algoProbLevelList, setAlgoProbLevelList] =
+    useRecoilState(algoProbLevelState);
+  const [algoProbCategoryList, setAlgoProbCategoryList] = useRecoilState(
+    algoProbCategoryState
+  );
+  const [algoProblemList, setAlgoProblemList] =
+    useRecoilState(algoProbListState);
   const resetAlgoProblemList = useResetRecoilState(algoProbListState);
 
-  const saveRequest = () => {
-    resetAlgoProblemList();
-    setAlgoProblemList(() => {
-      return { list: [], length: 0 };
-    });
-  };
-
-  const onClickTab = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e.target);
-
-    setTabNum(e.target.id);
-  };
+  const saveSearchedProbList = () => {};
 
   const onSearch = () => {
-  
+    const url =
+      tabNum == 0
+        ? `/api/problems/random?standard=[”level” | “category” ]&id=[level id| category id]`
+        : `/api/problems?number=${problemNum}`;
+
+    const { sendRequest } = useGet({ url }, saveSearchedProbList);
   };
 
-  const [levelList, setLevelList] = useState([]);
   const [levelFilter, setLevelFilter] = useState("");
-  const [typeList, setTypeList] = useState([]);
-  const [typeFilter, setTypeFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
   const [problemNum, setProblemNum] = useState("");
 
   return (
     <>
-      <div className="tabs w-full">
-        <a
-          id="0"
-          className={`tab tab-lifted ${
-            tabNum == 0 && "tab-active font-bold"
-          } w-1/2`}
-          onClick={onClickTab}
-        >
-          필터검색
-        </a>
-        <a
-          id="1"
-          className={`tab tab-lifted ${
-            tabNum == 1 && "tab-active font-bold"
-          } w-1/2`}
-          onClick={onClickTab}
-        >
-          번호검색
-        </a>
-      </div>
+      <Tabs
+        list={["필터검색", "번호검색"]}
+        tabNum={tabNum}
+        setTabNum={setTabNum}
+      />
       <ContentDiv>
         {tabNum == 0 ? (
           <div className="flex">
             <SelectBox
-              options={levelList}
+              options={algoProbLevelList.list}
               placeholder="티어를 선택하세요"
               label="티어"
               setSelection={setLevelFilter}
             />
             <SelectBox
-              options={typeList}
+              options={algoProbCategoryList.list}
               placeholder="문제 유형을 선택하세요"
               label="유형"
-              setSelection={setTypeFilter}
+              setSelection={setCategoryFilter}
             />
           </div>
         ) : (
