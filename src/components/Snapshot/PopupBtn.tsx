@@ -35,7 +35,7 @@ const SnapshotPopupBtn = () => {
         isShowing={isModalOpen}
         close={() => setIsModalOpen(false)}
       >
-        <SnapshotListModal list={snapshotList} />
+        <SnapshotListModal list={snapshotList} setModal={setIsModalOpen}/>
       </Modal>
     </>
   );

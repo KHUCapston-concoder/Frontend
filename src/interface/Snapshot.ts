@@ -1,5 +1,5 @@
 export interface ISnapshotDetail {
-  id: string;
+  id: string | null;
   createdDate: string;
   memo: string;
   content: string;

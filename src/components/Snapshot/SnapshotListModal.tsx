@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import tw from "tailwind-styled-components";
 import CodeSample from "@/components/Snapshot/CodeSample";
 import SnapshotInfo from "@/components/Snapshot/SnapshotInfo";
@@ -8,9 +8,10 @@ import { snapshotState } from "@/store/snapshotState";
 
 interface PropType {
   list: Array<ISnapshotInfo>;
+  setModal: Dispatch<SetStateAction<boolean>>
 }
 
-const SnapshotListModal = ({ list = [] }: PropType) => {
+const SnapshotListModal = ({ list = [], setModal }: PropType) => {
   const [snapshotDetail, setSnapshotDetail] = useRecoilState(snapshotState);
 
   return (
@@ -21,7 +22,7 @@ const SnapshotListModal = ({ list = [] }: PropType) => {
         ))}
       </SnapshotListDiv>
       <CodeSampleDiv>
-        <CodeSample  code={snapshotDetail.content}/>
+        <CodeSample code={snapshotDetail.content} setModal={setModal}/>
       </CodeSampleDiv>
     </MainDiv>
   );

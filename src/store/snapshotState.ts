@@ -1,8 +1,8 @@
 import { ISnapshotDetail } from "@/interface/Snapshot";
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 const initialState: ISnapshotDetail = {
-  id: "",
+  id: null,
   memo: "",
   content: "",
   createdDate: "",

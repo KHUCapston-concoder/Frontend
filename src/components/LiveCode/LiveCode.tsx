@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import tw from "tailwind-styled-components";
-import MonacoEditor, { useMonaco, OnMount } from "@monaco-editor/react";
+import MonacoEditor, { useMonaco, OnMount, Monaco } from "@monaco-editor/react";
 import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
 import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
 import { usePost } from "@/hooks/useHttp";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { liveCodeContentSetter } from "@/store/liveCode";
 
 const LiveCode = () => {
-  const [editorValue, setEditorValue] = useState("");
   const monaco = useMonaco();
-  const monacoRef = useRef(null);
+  const monacoRef = useRef<Monaco>(null);
+  const [, setliveCodeSetter] = useRecoilState(liveCodeContentSetter);
+
   const { sendRequest: sendSnapshot } = usePost({
     url: "/api/snapshots",
-    data: editorValue,
   });
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
@@ -22,13 +24,17 @@ const LiveCode = () => {
   const onCompile = () => {};
 
   const onSnapshot = () => {
-    setEditorValue(monacoRef.current?.getValue());
-    console.log(monacoRef.current?.getValue());
-    sendSnapshot({ content: monacoRef.current?.getValue() });
+    const curContent = monacoRef.current?.getValue();
+    sendSnapshot({ content: curContent });
   };
 
   useEffect(() => {
     if (!monaco) return;
+    // console.log(monacoRef.current.setValue("hi"));
+
+    setliveCodeSetter({func: (code: string) => {
+      monacoRef.current?.setValue(code);
+    }});
   }, [monaco]);
 
   return (
