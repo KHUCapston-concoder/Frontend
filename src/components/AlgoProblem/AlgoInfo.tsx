@@ -26,7 +26,7 @@ const AlgoInfo = () => {
               onClick={() => setProbIndex(probIndex - 1)}
             />
             <TitleHolder>
-              {algoProblem.list[probIndex].num}{" "}
+              {algoProblem.list[probIndex].number}{" "}
               {algoProblem.list[probIndex].title}
             </TitleHolder>
             <IconButton
@@ -37,19 +37,19 @@ const AlgoInfo = () => {
             />
           </MenuController>
           <RestraintDiv>
-            시간 복잡도
+            평균 시도 횟수
             <RestraintHolder>
-              {algoProblem.list[probIndex].timeRestraint}
+              {algoProblem.list[probIndex].averageTries}
             </RestraintHolder>
           </RestraintDiv>
           <RestraintDiv>
-            공간 복잡도
+            티어
             <RestraintHolder>
-              {algoProblem.list[probIndex].memoryRestraint}
+              {algoProblem.list[probIndex].level.name}
             </RestraintHolder>
           </RestraintDiv>
           <TitleDiv>· 문제</TitleDiv>
-          <ContentP>{algoProblem.list[probIndex].problemContent}</ContentP>
+          <ContentP>{algoProblem.list[probIndex].description}</ContentP>
           <TitleDiv>· 입력</TitleDiv>
           <ContentP>{algoProblem.list[probIndex].input}</ContentP>
           <TitleDiv>· 출력</TitleDiv>

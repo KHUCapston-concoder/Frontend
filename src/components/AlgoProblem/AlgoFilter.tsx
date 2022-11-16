@@ -3,38 +3,39 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import tw from "tailwind-styled-components";
 import SelectBox from "@/components/_styled/Select";
 import InputBox from "@/components/_styled/Input";
-import {
-  algoProbListState,
-  algoProbLevelState,
-  algoProbCategoryState,
-} from "@/store/algoProbState";
-import {useGet} from "@/hooks/useHttp";
-import Tabs from "../_styled/Tabs";
+import Tabs from "@/components/_styled/Tabs";
+import { algoProbListState, algoProbLevelState } from "@/store/algoProbState";
+import axios from "axios";
 
 const AlgoFilterContainer = () => {
   const [tabNum, setTabNum] = useState(0);
-  const [algoProbLevelList, setAlgoProbLevelList] =
-    useRecoilState(algoProbLevelState);
-  const [algoProbCategoryList, setAlgoProbCategoryList] = useRecoilState(
-    algoProbCategoryState
-  );
-  const [algoProblemList, setAlgoProblemList] =
-    useRecoilState(algoProbListState);
+  const [algoProbLevelList] = useRecoilState(algoProbLevelState);
+  const [, setAlgoProblemList] = useRecoilState(algoProbListState);
   const resetAlgoProblemList = useResetRecoilState(algoProbListState);
 
   const saveSearchedProbList = () => {};
 
   const onSearch = () => {
+    console.log(problemNum, levelFilter);
+
     const url =
       tabNum == 0
-        ? `/api/problems/random?standard=[”level” | “category” ]&id=[level id| category id]`
+        ? `/api/problems/random?standard=level&id=${levelFilter}`
         : `/api/problems?number=${problemNum}`;
+    console.log(url);
 
-    const { sendRequest } = useGet({ url }, saveSearchedProbList);
+    axios.get("http://163.180.146.59" + url).then((res) => {
+      const { data } = res;
+
+      console.log(data);
+
+      tabNum == 0
+        ? setAlgoProblemList({ list: data, length: data.length })
+        : setAlgoProblemList({ list: [data], length: 1 });
+    });
   };
 
   const [levelFilter, setLevelFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
   const [problemNum, setProblemNum] = useState("");
 
   return (
@@ -46,7 +47,7 @@ const AlgoFilterContainer = () => {
       />
       <ContentDiv>
         {tabNum == 0 ? (
-          <div className="flex">
+          <div className="flex justify-start">
             <SelectBox
               options={algoProbLevelList.list}
               placeholder="티어를 선택하세요"
@@ -54,10 +55,10 @@ const AlgoFilterContainer = () => {
               setSelection={setLevelFilter}
             />
             <SelectBox
-              options={algoProbCategoryList.list}
-              placeholder="문제 유형을 선택하세요"
+              placeholder="준비중인 기능입니다"
               label="유형"
-              setSelection={setCategoryFilter}
+              disabled={true}
+              setSelection={() => {}}
             />
           </div>
         ) : (

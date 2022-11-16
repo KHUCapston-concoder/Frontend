@@ -11,6 +11,7 @@ interface PropType {
   placeholder?: string;
   className?: string;
   label?: string;
+  disabled?: boolean
 }
 
 const SelectBox = ({
@@ -19,6 +20,7 @@ const SelectBox = ({
   placeholder = "Select an option",
   className = "select select-xs select-ghost w-full max-w-xs",
   label,
+  disabled
 }: PropType) => {
   const onSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelection(e.target.value);
@@ -33,6 +35,7 @@ const SelectBox = ({
         defaultValue={-1}
         className={className}
         onChange={onSelectionChange}
+        disabled={disabled}
       >
         <option value={-1}>{placeholder}</option>
         {options.map((e) => (
