@@ -6,11 +6,15 @@ import {
 import { atom } from "recoil";
 
 /* initial states */
-const algoProbListInitialState: { list: Array<IAlgoProbInfo>; length: number } =
-  {
-    list: [],
-    length: 0,
-  };
+const algoProbListInitialState: {
+  list: Array<IAlgoProbInfo>;
+  length: number;
+  error: boolean;
+} = {
+  list: [],
+  length: 0,
+  error: false,
+};
 
 const algoProbLevelInitialState: { list: Array<IAlgoProbLevel> } = {
   list: [],

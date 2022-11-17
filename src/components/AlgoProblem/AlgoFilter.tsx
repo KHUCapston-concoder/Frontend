@@ -24,15 +24,22 @@ const AlgoFilterContainer = () => {
         : `/api/problems?number=${problemNum}`;
     console.log(url);
 
-    axios.get("http://163.180.146.59" + url).then((res) => {
-      const { data } = res;
+    axios
+      .get("http://163.180.146.59" + url)
+      .then((res) => {
+        const { data } = res;
 
-      console.log(data);
-
-      tabNum == 0
-        ? setAlgoProblemList({ list: data, length: data.length })
-        : setAlgoProblemList({ list: [data], length: 1 });
-    });
+        tabNum == 0
+          ? setAlgoProblemList({
+              list: data,
+              length: data.length,
+              error: false,
+            })
+          : setAlgoProblemList({ list: [data], length: 1, error: false });
+      })
+      .catch((e) => {
+        setAlgoProblemList({ list: [], length: 0, error: true });
+      });
   };
 
   const [levelFilter, setLevelFilter] = useState("");

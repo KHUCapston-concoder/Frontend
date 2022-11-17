@@ -11,7 +11,15 @@ const AlgoInfo = () => {
 
   return (
     <MainDiv>
-      {algoProblem.length == 0 ? (
+      {algoProblem.error ? (
+        <TempDiv>
+          <i className="fa-solid fa-triangle-exclamation"></i>
+          ༼;´༎ຶ ۝༎ຶ`༽ <br />
+          검색 요청에 오류가 있거나 <br />
+          해당하는 문제가 없습니다... <br />
+          검색 조건을 변경해보세요 !
+        </TempDiv>
+      ) : algoProblem.length == 0 ? (
         <TempDiv>
           <i className="fa-solid fa-circle-exclamation"></i>
           필터를 설정해서 <br /> 문제를 탐색해보세요 !
