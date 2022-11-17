@@ -45,7 +45,7 @@ const SnapshotInfo = ({ data }: PropType) => {
       onClick={onClickSnapshot}
     >
       <TimeHolder>
-        {data.createdDate}
+        {new Date(data.createdDate).toLocaleString()}
         <IconButton
           size="xs"
           width="fit-content"
