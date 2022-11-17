@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import LocalCam from "@/components/Cam/LocalCam";
 import RemoteCam from "@/components/Cam/RemoteCam";
 
+const localId = Math.random();
+
 const CamList = () => {
   const [localStream, setLocalStream] = useState<MediaStream | undefined>(null);
   const setLocalStreamHandler = (stream) => {
@@ -13,73 +15,149 @@ const CamList = () => {
   const [ws, setWs] = useState<WebSocket | undefined>(null);
 
   // socket message send 함수
-  const makeMsg = (eventType, payload) => {
-    const msg = { event: eventType, data: payload };
+  const makeMsg = (eventType, payload, from = null, to = null) => {
+    const msg = { event: eventType, data: payload, from: from, to: to };
     ws?.send(JSON.stringify(msg));
   };
 
   // webRTC
-  let config = null;
-  // let peerConnection;
-  const [peerConnection, setPeerConnection] = useState<
-    RTCPeerConnection | undefined
-  >(null);
-  const setPeerConnectionHandler = (pc) => {
-    setPeerConnection(pc);
+  // 생성된 pc 정보를 가지는 map ({pc => "user02"} 형태)
+  const [pcMap, setPcMap] = useState<
+    Map<string, RTCPeerConnection | undefined> | undefined
+  >(new Map());
+  const pcs = useRef<Object | undefined>(new Object());
+  const [pcState, setPcState] = useState<Object | undefined>(new Object());
+  const setPcStateHandler = (memId, pc) => {
+    setPcState((prev: object) => {
+      return { ...prev, [memId]: pc };
+    });
+  };
+  const delPcStateHandler = (memId) => {
+    setPcState((prev: object) => {
+      delete prev[memId];
+      return { ...prev };
+    });
+  };
+  // 생성된 dc 정보를 가지는 map
+  const [dcMap, setDcMap] = useState<
+    Map<string, RTCDataChannel | undefined> | undefined
+  >(new Map());
+
+  // test용
+  const [state, setState] = useState(0);
+  const handler = () => {
+    setState((prev) => {
+      return !prev;
+    });
+    console.log(pcMap);
   };
 
-  useEffect(async () => {
+  // remoteCam Component Ref
+  const remoteCamRef = useRef();
+
+  // window
+  const exit = () => {
+    window.addEventListener("beforeunload", (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+      makeMsg("exitPage", "exit", localId);
+      console.log("exit!!!!!");
+    });
+  };
+
+  useEffect(() => {
+    exit();
     if (localStream != null) {
       // socket 연결
       if (ws === null) {
         setWs(new WebSocket(socketUrl));
-      }
-
-      if (ws != null) {
-        // socket 연결 시, workspace에 입장했음을 socket server에 알림. (추후 server는 해당 workspace의 다른 user들에게 user 입장에 대한 socket msg 보냄)
+      } else if (ws != null) {
         ws.onopen = () => {
-          // workspace id를 data로 담아 workspace 입장에 대한 socket msg 보냄
-          makeMsg("enter", "workspace01");
+          makeMsg("enter", "workspace01", localId);
         };
 
-        if (peerConnection != null) {
-          // 다른 user가 workspace 입장 시, local user가 받을 socket message에 대한 리스너 추가 (offer 생성 및 전송을 위해)
-          ws.onmessage = async (msg) => {
-            // ws.current.onmessage = async (msg) => {
-            const parsedMsg = JSON.parse(msg.data);
-            const eventType = parsedMsg.event;
-            const data = parsedMsg.data;
-            switch (eventType) {
-              case "enter":
-                console.log("멤버가 입장했습니다!");
-                const offer = await peerConnection.createOffer();
-                peerConnection.setLocalDescription(offer);
-                makeMsg("offer", offer);
-                console.log("offer 생성 후 보냄");
-                break;
-              case "offer":
-                console.log("offer 받음");
-                peerConnection.setRemoteDescription(data);
-                console.log("remoteDescription 설정");
-                const answer = await peerConnection.createAnswer();
-                peerConnection.setLocalDescription(answer);
-                makeMsg("answer", answer);
-                console.log("answer 생성 후 송신");
-                break;
-              case "answer":
-                console.log("answer 수신");
-                peerConnection.setRemoteDescription(data);
-                console.log("remoteDescription 설정");
-              case "ice":
-                console.log("ice 수신");
-                peerConnection.addIceCandidate(data);
-                console.log("ice candidate 추가");
-            }
-          };
-        }
+        ws.onmessage = async (msg) => {
+          const parsedMsg = JSON.parse(msg.data);
+          let pc: RTCPeerConnection | undefined;
+          switch (parsedMsg.event) {
+            case "memberEnter":
+              console.log(
+                parsedMsg.from +
+                  " 멤버가" +
+                  parsedMsg.data +
+                  " 방에 입장했습니다!"
+              );
+              pc = remoteCamRef.current.makePeerConnection();
+              pcs.current[parsedMsg.from] = pc;
+              pcMap?.set(parsedMsg.from, pc);
+              setPcStateHandler(parsedMsg.from, pc);
+              pc = remoteCamRef.current.setPeerConnection(
+                pc,
+                localId,
+                parsedMsg.from
+              );
+              const offer = await pc.createOffer();
+              pc.setLocalDescription(offer);
+              makeMsg("offer", offer, localId, parsedMsg.from);
+              console.log(parsedMsg.from + " 에게 offer 생성 후 보냄");
+              break;
+            case "memList":
+              console.log("기존 멤버 리스트입니다 " + parsedMsg.data);
+              for (let mem of parsedMsg.data) {
+                pc = remoteCamRef.current.makePeerConnection();
+                pcs.current[mem] = pc;
+                pcMap?.set(mem, pc);
+                setPcStateHandler(mem, pc);
+                pc = remoteCamRef.current.setPeerConnection(pc, localId, mem);
+              }
+              break;
+            case "offer":
+              console.log(
+                parsedMsg.from + " 에게 offer 받음, offer : " + parsedMsg.data
+              );
+              pc = pcs.current[parsedMsg.from];
+              pc = pcMap?.get(parsedMsg.from);
+              // pcState[parsedMsg.from]
+              pc.setRemoteDescription(parsedMsg.data);
+              console.log(parsedMsg.from + "remoteDescription 설정");
+              const answer = await pc.createAnswer();
+              pc.setLocalDescription(answer);
+              console.log(parsedMsg.from + "locatDescription 설정");
+              makeMsg("answer", answer, localId, parsedMsg.from);
+              console.log(parsedMsg.from + "answer 생성 후 송신");
+              break;
+            case "answer":
+              console.log(
+                parsedMsg.from + " 에게 answer 받음, answer : " + parsedMsg.data
+              );
+              pc = pcs.current[parsedMsg.from];
+              pc = pcMap?.get(parsedMsg.from);
+              pc.setRemoteDescription(parsedMsg.data);
+              console.log("remoteDescription 설정");
+              break;
+            case "ice":
+              console.log("ice 수신");
+              pc = pcs.current[parsedMsg.from];
+              pc = pcMap?.get(parsedMsg.from);
+              pc.addIceCandidate(parsedMsg.data);
+              console.log("ice candidate 추가");
+              break;
+            case "memberExit":
+              console.log(parsedMsg.from + " member 나감!!");
+              delete pcs.current[parsedMsg.from];
+              delPcStateHandler(parsedMsg.from);
+              pcMap?.delete(parsedMsg.from);
+
+              break;
+          }
+        };
       }
     }
-  }, [ws, localStream, peerConnection]);
+
+    return () => {
+      ws?.close();
+    };
+  }, [localStream, ws]);
 
   return (
     <>
@@ -90,10 +168,14 @@ const CamList = () => {
         <RemoteCam
           ws={ws}
           localStream={localStream}
-          onSetPeerConnection={setPeerConnectionHandler}
+          makeMsg={makeMsg}
+          pcMap={pcMap}
+          pcs={pcs}
+          pcState={pcState}
+          ref={remoteCamRef}
         />
-        {/* <video id="memCam" ref={memCam}></video> */}
       </div>
+      <button onClick={handler}>test !!</button>
     </>
   );
 };
