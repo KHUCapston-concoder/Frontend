@@ -26,6 +26,10 @@ const requestPost = (url:string, data: any) => {
   return axios.post(url, data);
 }
 
+const requestDelete = (url:string, data?: any) => {
+  return axios.delete(url, data);
+}
+
 const useHttp = (
   requestConfig: RequestConfigType,
   handleResponse: Function,
@@ -60,6 +64,16 @@ export const useGet = (requestConfig: RequestConfigType, handleResponse: Functio
 
 export const usePost = (requestConfig: RequestConfigType) => {
   const [isLoading, error, sendRequest] = useHttp(requestConfig, () => {}, requestPost);
+
+  return { isLoading, error, sendRequest }
+};
+
+export const useDelete = (requestConfig: RequestConfigType) => {
+  const [isLoading, error, sendRequest] = useHttp(
+    requestConfig,
+    () => {},
+    requestDelete
+  );
 
   return { isLoading, error, sendRequest }
 };

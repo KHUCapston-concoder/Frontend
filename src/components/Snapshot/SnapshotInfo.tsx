@@ -1,9 +1,10 @@
-import { useGet } from "@/hooks/useHttp";
+import { useDelete, useGet } from "@/hooks/useHttp";
 import { ISnapshotDetail, ISnapshotInfo } from "@/interface/Snapshot";
-import { snapshotState } from "@/store/snapshotState";
+import { snapshotListState, snapshotState } from "@/store/snapshotState";
 import React from "react";
 import { useRecoilState } from "recoil";
 import tw from "tailwind-styled-components";
+import { IconButton } from "../_styled/Buttons";
 
 interface PropType {
   data: ISnapshotInfo;
@@ -11,17 +12,31 @@ interface PropType {
 
 const SnapshotInfo = ({ data }: PropType) => {
   const [snapshotDetail, setSnapshotDetail] = useRecoilState(snapshotState);
-  const { sendRequest } = useGet(
+  const [snapshotList, setSnapshotList] = useRecoilState(snapshotListState);
+
+  const { sendRequest: sendGet } = useGet(
     { url: `/api/snapshots/${data.id}` },
     (data: ISnapshotDetail) => {
       setSnapshotDetail(() => data);
     }
   );
 
+  const { sendRequest: sendDelete } = useDelete({
+    url: `/api/snapshots/${data.id}`,
+  });
+  const onDeleteSnapshot = (e) => {
+    e.stopPropagation();
+    sendDelete();
+    setSnapshotList(({ list }) => {
+      console.log(list);
+      list.filter((e: ISnapshotInfo) => e.id !== data.id);
+      return { list: list.filter((e: ISnapshotInfo) => e.id !== data.id) };
+    });
+  };
   const onAddMemo = () => {};
 
   const onClickSnapshot = () => {
-    sendRequest();
+    sendGet();
   };
 
   return (
@@ -29,7 +44,15 @@ const SnapshotInfo = ({ data }: PropType) => {
       style={{ background: snapshotDetail.id == data.id ? "#29303b" : "" }}
       onClick={onClickSnapshot}
     >
-      <TimeHolder>{data.createdDate}</TimeHolder>
+      <TimeHolder>
+        {data.createdDate}
+        <IconButton
+          size="xs"
+          width="fit-content"
+          name="x"
+          onClick={onDeleteSnapshot}
+        />
+      </TimeHolder>
       <MemoHolder onClick={onAddMemo}>
         {!data.memo && "메모 추가하기"}
         {/* 이부분 클릭하면 input으로 바뀐다거나.. 하는 코드 추가 */}
@@ -50,6 +73,7 @@ hover:bg-[#191f26] ease-linear
 `;
 
 const TimeHolder = tw.div`
+flex justify-between
 text-base font-bold
 `;
 

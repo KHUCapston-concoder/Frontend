@@ -6,11 +6,11 @@ import useModal from "@/hooks/useModal";
 import { ISnapshotInfo, ISnapshotDetail } from "@/interface/Snapshot";
 import { useGet } from "@/hooks/useHttp";
 import { useRecoilState, useResetRecoilState } from "recoil";
-import { snapshotState } from "@/store/snapshotState";
+import { snapshotListState, snapshotState } from "@/store/snapshotState";
 
 const SnapshotPopupBtn = () => {
   const [isModalOpen, setIsModalOpen] = useModal();
-  const [snapshotList, setSnapshotList] = useState<Array<ISnapshotInfo>>([]);
+  const [snapshotList, setSnapshotList] = useRecoilState(snapshotListState);
   const resetSelectedSnapshot = useResetRecoilState(snapshotState);
 
   const { sendRequest } = useGet(
@@ -18,7 +18,7 @@ const SnapshotPopupBtn = () => {
     (list: Array<ISnapshotInfo>) => {
       // console.log(Object.values(list));
 
-      setSnapshotList(Object.values(list));
+      setSnapshotList({list: Object.values(list)});
     }
   );
   const onClickOpen = () => {
@@ -35,7 +35,7 @@ const SnapshotPopupBtn = () => {
         isShowing={isModalOpen}
         close={() => setIsModalOpen(false)}
       >
-        <SnapshotListModal list={snapshotList} setModal={setIsModalOpen}/>
+        <SnapshotListModal list={snapshotList.list} setModal={setIsModalOpen}/>
       </Modal>
     </>
   );
