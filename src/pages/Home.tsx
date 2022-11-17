@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
 import { useTheme } from "@/context/ThemeContext";
-import { useNavigate } from "react-router-dom";
-import { uuidv4 } from "@/utils/commonFunc/genUuid";
 import Modal from "@/hoc/Portal";
 import EnterCodeModal from "@/components/Home/EnterCodeModal";
+import useModal from "@/hooks/useModal";
+import { uuidv4 } from "@/utils/commonFunc/genUuid";
+import { generateNickname } from "@/utils/commonFunc/genNickname";
 
 const ImgURL = "https://embed.lottiefiles.com/animation/63487";
 
 const Home = () => {
   const { themeColorset } = useTheme();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [isModalOpen, setIsModalOpen, onClick] = useModal();
 
   const onClickCreateWorkspace = () => {
     const wordkspaceId = uuidv4();
@@ -36,13 +38,13 @@ const Home = () => {
         </BtnDiv>
         <BtnDiv>
           초대받으셨나요?
-          <button className="styled" onClick={() => setIsModalOpen(true)}>
+          <button className="styled" onClick={onClick}>
             ENTER CODE
           </button>
         </BtnDiv>
       </BtnContainer>
       <Modal
-        className="h-[30%] w-[60%] min-w-[300px] max-w-[900px]"
+        className="h-[30%] w-[30%] min-w-[300px] max-w-[900px]"
         isShowing={isModalOpen}
         close={() => setIsModalOpen(false)}
       >

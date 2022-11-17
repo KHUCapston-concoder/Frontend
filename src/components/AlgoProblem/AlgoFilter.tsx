@@ -1,89 +1,64 @@
-import { useTheme } from "@/context/ThemeContext";
 import React, { useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import tw from "tailwind-styled-components";
 import SelectBox from "@/components/_styled/Select";
 import InputBox from "@/components/_styled/Input";
-import { algoProbState } from "@/store/algoProbState";
-import algoProbDummyData from "@/utils/dummyData/algoInfo.json";
-import useHttp from "@/hooks/useHttp";
+import Tabs from "@/components/_styled/Tabs";
+import { algoProbListState, algoProbLevelState } from "@/store/algoProbState";
+import axios from "axios";
 
 const AlgoFilterContainer = () => {
   const [tabNum, setTabNum] = useState(0);
-  const [algoProblemList, setAlgoProblemList] = useRecoilState(algoProbState);
-  const resetAlgoProblemList = useResetRecoilState(algoProbState);
+  const [algoProbLevelList] = useRecoilState(algoProbLevelState);
+  const [, setAlgoProblemList] = useRecoilState(algoProbListState);
+  const resetAlgoProblemList = useResetRecoilState(algoProbListState);
 
-  const onClickTab = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e.target);
-
-    setTabNum(e.target.id);
-  };
+  const saveSearchedProbList = () => {};
 
   const onSearch = () => {
-    const requestConfig = {
-      url: "/api/problems/levels",
-      method: "GET"
-    }
+    console.log(problemNum, levelFilter);
 
-    const { isLoading, error, sendRequest } = useHttp({requestConfig});
+    const url =
+      tabNum == 0
+        ? `/api/problems/random?standard=level&id=${levelFilter}`
+        : `/api/problems?number=${problemNum}`;
+    console.log(url);
 
-    sendRequest
+    axios.get("http://163.180.146.59" + url).then((res) => {
+      const { data } = res;
 
-    /* API 호출 비동기 작업 */
-    resetAlgoProblemList();
-    setAlgoProblemList(() => {
-      return { list: algoProbDummyData, length: algoProbDummyData.length };
+      console.log(data);
+
+      tabNum == 0
+        ? setAlgoProblemList({ list: data, length: data.length })
+        : setAlgoProblemList({ list: [data], length: 1 });
     });
   };
 
-  const [levelList, setLevelList] = useState([
-    { name: "골드2", value: 1 },
-    { name: "골드1", value: 0 },
-  ]);
   const [levelFilter, setLevelFilter] = useState("");
-  const [typeList, setTypeList] = useState([
-    { name: "DP", value: 1 },
-    { name: "그리디", value: 0 },
-  ]);
-  const [typeFilter, setTypeFilter] = useState("");
   const [problemNum, setProblemNum] = useState("");
 
   return (
     <>
-      <div className="tabs w-full">
-        <a
-          id="0"
-          className={`tab tab-lifted ${
-            tabNum == 0 && "tab-active font-bold"
-          } w-1/2`}
-          onClick={onClickTab}
-        >
-          필터검색
-        </a>
-        <a
-          id="1"
-          className={`tab tab-lifted ${
-            tabNum == 1 && "tab-active font-bold"
-          } w-1/2`}
-          onClick={onClickTab}
-        >
-          번호검색
-        </a>
-      </div>
+      <Tabs
+        list={["필터검색", "번호검색"]}
+        tabNum={tabNum}
+        setTabNum={setTabNum}
+      />
       <ContentDiv>
         {tabNum == 0 ? (
-          <div className="flex">
+          <div className="flex justify-start">
             <SelectBox
-              options={levelList}
+              options={algoProbLevelList.list}
               placeholder="티어를 선택하세요"
               label="티어"
               setSelection={setLevelFilter}
             />
             <SelectBox
-              options={typeList}
-              placeholder="문제 유형을 선택하세요"
+              placeholder="준비중인 기능입니다"
               label="유형"
-              setSelection={setTypeFilter}
+              disabled={true}
+              setSelection={() => {}}
             />
           </div>
         ) : (

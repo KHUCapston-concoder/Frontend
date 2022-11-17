@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { Button } from "../_styled/Buttons";
 
 const LocalCam = ({ onSetLocalStream }) => {
   const localStream = useRef<MediaStream | undefined>(null);
@@ -67,12 +66,12 @@ const LocalCam = ({ onSetLocalStream }) => {
   return (
     <>
       <video id="localCam" ref={localCam}></video>
-      <Button onClick={camClickHandler} ref={cameraBtn}>
+      <button onClick={camClickHandler} ref={cameraBtn}>
         Cam Off
-      </Button>
-      <Button onClick={muteClickHandler} ref={muteBtn}>
+      </button>
+      <button onClick={muteClickHandler} ref={muteBtn}>
         Mute
-      </Button>
+      </button>
     </>
   );
 };

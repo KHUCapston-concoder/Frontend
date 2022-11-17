@@ -1,9 +1,5 @@
-import React from "react";
-import tw from "tailwind-styled-components";
-import SnapshotBtn from "@/components/Snapshot/PopupBtn";
-import TimerBtn from "@/components/Timer/PopupBtn";
+import { useEffect } from "react";
 import { useTheme } from "@/context/ThemeContext";
-import ChatPopupBtn from "@/components/Chat/PopupBtn";
 import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 import TestCaseList from "@/components/TestCase/TestCaseList";
@@ -11,59 +7,103 @@ import CompileInfo from "@/components/Compile/CompileInfo";
 import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
 import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
 import LiveCode from "@/components/LiveCode/LiveCode";
+import useFetchAlgoInfo from "@/hooks/Components/useFetchAlgoInfo";
+import ChatBox from "@/components/Chat/ChatBox";
+import Modal from "@/hoc/Portal";
+import useModal from "@/hooks/useModal";
+import SnapshotBtn from "@/components/Snapshot/PopupBtn";
+import TimerBtn from "@/components/Timer/PopupBtn";
+import { IconButton } from "@/components/_styled/Buttons";
+import tw from "tailwind-styled-components";
+import { useNavigate } from "react-router-dom";
 import CamList from "@/components/Cam/CamList";
 
 const Workspace = () => {
-  const { themeColorset } = useTheme();
+  const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
+  const [isModalOpen, setIsModalOpen, onClickExit] = useModal();
+  const navigator = useNavigate();
+
+  useEffect(() => {
+    sendRequestProbLevel();
+    sendRequestProbCategory();
+  }, []);
+
+  const exitWorkspace = () => {
+    navigator("/home");
+    localStorage.removeItem("workspace-id");
+  };
 
   return (
-    <MainDiv>
-      {/* Section 1 */}
-      <CamDiv>
-        <CamList></CamList>
-      </CamDiv>
-      {/* Section 2 */}
-      <AlgoDiv>
-        <AlgoFilterDiv>
-          <AlgoFilterContainer />
-        </AlgoFilterDiv>
-        <AlgoInfoDiv>
-          <AlgoInfo />
-        </AlgoInfoDiv>
-      </AlgoDiv>
-      {/* Section 3 */}
-      <CodeDiv>
-        <LiveCode />
-        <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
-          {/* Floating Buttons Container */}
-          <CompileFloatBtn />
-          <SnapshotFloatBtn />
-        </FloatButtonDiv>
-      </CodeDiv>
-      {/* Section 4 */}
-      <FlexDiv>
-        {/* 컴파일 정보 */}
-        <CompileInfoDiv>
-          <CompileInfo />
-        </CompileInfoDiv>
-        {/* 테스트 케이스 */}
-        <TestCasaeDiv>
-          <TestCaseList />
-        </TestCasaeDiv>
-        {/* 아래 버튼 3개 */}
-        <UtilButtonsDiv>
-          <UtilButtonDiv>
-            <SnapshotBtn />
-          </UtilButtonDiv>
-          <UtilButtonDiv>
-            <TimerBtn />
-          </UtilButtonDiv>
-          <UtilButtonDiv>
-            <ChatPopupBtn />
-          </UtilButtonDiv>
-        </UtilButtonsDiv>
-      </FlexDiv>
-    </MainDiv>
+    <>
+      <MainDiv>
+        {/* Section 1 */}
+        <AlgoDiv>
+          <AlgoFilterDiv>
+            <AlgoFilterContainer />
+          </AlgoFilterDiv>
+          <AlgoInfoDiv>
+            <AlgoInfo />
+          </AlgoInfoDiv>
+        </AlgoDiv>
+        {/* Section 2 */}
+        <CodeDiv>
+          <LiveCode />
+        </CodeDiv>
+        {/* Section 3 */}
+        <FlexDiv>
+          {/* 컴파일 정보 */}
+          <CompileInfoDiv>
+            <CompileInfo />
+          </CompileInfoDiv>
+          {/* 테스트 케이스 */}
+          <TestCasaeDiv>
+            <TestCaseList />
+          </TestCasaeDiv>
+          {/* 아래 버튼 3개 */}
+          <UtilButtonsDiv>
+            <UtilButtonDiv>
+              <SnapshotBtn />
+            </UtilButtonDiv>
+            <UtilButtonDiv>
+              <TimerBtn />
+            </UtilButtonDiv>
+            <UtilButtonDiv>
+              <IconButton name="circle-xmark" size="lg" onClick={onClickExit} />
+            </UtilButtonDiv>
+          </UtilButtonsDiv>
+        </FlexDiv>
+        {/* Section 4 */}
+        <FlexDiv2>
+          <CamDiv>
+            <CamList />
+          </CamDiv>
+          <ChatDiv>
+            <ChatBox />
+          </ChatDiv>
+        </FlexDiv2>
+      </MainDiv>
+      <Modal
+        className="h-[20%] w-[20%] min-w-[200px] max-w-[900px]"
+        isShowing={isModalOpen}
+        close={() => setIsModalOpen(false)}
+      >
+        <FlexDiv3>
+          <FlexDiv4>종료하시겠습니까?</FlexDiv4>
+          <FlexDiv4 className="justify-end">
+            <ExitButton
+              style={{
+                marginTop: "0px",
+                marginBottom: "0px",
+                padding: "5px 20px",
+              }}
+              onClick={exitWorkspace}
+            >
+              종료
+            </ExitButton>
+          </FlexDiv4>
+        </FlexDiv3>
+      </Modal>
+    </>
   );
 };
 
@@ -85,13 +125,38 @@ dark-1
 
 const FlexDiv = tw(CommonDiv)`
 grow-[2] flex flex-col
-mr-[15px]
 bg-inherit
 `;
 
-/* 3.4.1 실시간 화상 회의 */
-const CamDiv = tw(CommonDiv)`
+const FlexDiv2 = tw(CommonDiv)`
 grow h-[calc(100%-30px)]
+mr-[15px]
+flex flex-col gap-[15px]
+bg-inherit
+`;
+
+const FlexDiv3 = tw.div`
+h-full
+flex flex-col
+justify-center items-center
+py-[5%]
+`;
+
+const FlexDiv4 = tw.div`
+w-full h-1/2 flex items-end justify-center
+`;
+
+/* 3.4.1 실시간 화상 회의 */
+const CamDiv = tw.div`
+dark-2
+w-full h-[300px] min-h-[300px]
+rounded-[20px]
+`;
+
+/* 3.4.7 채팅 */
+const ChatDiv = tw.div`
+w-full h-[calc(100%-320px)]
+rounded-[20px]
 `;
 
 /* 3.4.4 알고리즘 문제 추천 */
@@ -113,18 +178,6 @@ h-[calc(80%-15px)]
 /* 3.4.2 실시간 동시 코딩 */
 const CodeDiv = tw(CommonDiv)`
 grow-[6]
-`;
-
-const FloatButtonDiv = tw.div`
-relative
-top-[-10%] left-[50%]
-w-fit h-[60px]
-px-[10px]
-rounded-[15px]
-dark-1
-flex gap-[10px]
-justify-around
-z-100
 `;
 
 /* 3.4.5 컴파일 정보 */
@@ -153,4 +206,8 @@ const UtilButtonDiv = tw(CommonDiv)`
 m-0
 max-w-[60px]
 h-[60px] w-[60px]
+`;
+
+const ExitButton = tw.button`
+accent m-[10px] px-[10px]
 `;

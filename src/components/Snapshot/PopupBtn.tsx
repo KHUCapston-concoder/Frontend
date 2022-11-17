@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { IconButton } from "@/components/_styled/Buttons";
 import Modal from "@/hoc/Portal";
 import SnapshotListModal from "@/components/Snapshot/SnapshotListModal";
 import useModal from "@/hooks/useModal";
+import { ISnapshotInfo, ISnapshotDetail } from "@/interface/Snapshot";
+import { useGet } from "@/hooks/useHttp";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { snapshotState } from "@/store/snapshotState";
 
 const SnapshotPopupBtn = () => {
-  const [isModalOpen, setIsModalOpen, onClickOpen] = useModal();
+  const [isModalOpen, setIsModalOpen] = useModal();
+  const [snapshotList, setSnapshotList] = useState<Array<ISnapshotInfo>>([]);
+  const resetSelectedSnapshot = useResetRecoilState(snapshotState);
+
+  const { sendRequest } = useGet(
+    { url: "/api/snapshots" },
+    (list: Array<ISnapshotInfo>) => {
+      // console.log(Object.values(list));
+
+      setSnapshotList(Object.values(list));
+    }
+  );
+  const onClickOpen = () => {
+    resetSelectedSnapshot();
+    sendRequest();
+    setIsModalOpen(true);
+  };
 
   return (
     <>
@@ -15,7 +35,7 @@ const SnapshotPopupBtn = () => {
         isShowing={isModalOpen}
         close={() => setIsModalOpen(false)}
       >
-        <SnapshotListModal />
+        <SnapshotListModal list={snapshotList} setModal={setIsModalOpen}/>
       </Modal>
     </>
   );

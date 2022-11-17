@@ -20,8 +20,6 @@ const TestCaseList = () => {
     setIsAdding(true);
   };
 
-  console.log(testCases, sortedTestCases);
-
   return (
     <>
       <LabelTab label="테스트 케이스" />

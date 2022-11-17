@@ -2,10 +2,10 @@ import React, { Dispatch, RefObject, SetStateAction, useRef } from "react";
 
 interface PropType {
   setInput: Dispatch<SetStateAction<string>>;
-  placeholder: string;
-  className: string;
-  label: string;
-  disabled: boolean;
+  placeholder?: string;
+  className?: string;
+  label?: string;
+  disabled?: boolean;
 }
 
 const InputBox = ({

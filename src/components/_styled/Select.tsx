@@ -2,7 +2,7 @@ import React, { SetStateAction, Dispatch } from "react";
 
 interface OptionPropType {
   name: string;
-  value: number;
+  id: string;
 }
 
 interface PropType {
@@ -11,6 +11,7 @@ interface PropType {
   placeholder?: string;
   className?: string;
   label?: string;
+  disabled?: boolean
 }
 
 const SelectBox = ({
@@ -19,12 +20,12 @@ const SelectBox = ({
   placeholder = "Select an option",
   className = "select select-xs select-ghost w-full max-w-xs",
   label,
+  disabled
 }: PropType) => {
   const onSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target);
-
     setSelection(e.target.value);
   };
+
   return (
     <div className="w-full py-[4px] pl-[12px]">
       <div className="w-full text-left text-xs font-bold">
@@ -34,10 +35,13 @@ const SelectBox = ({
         defaultValue={-1}
         className={className}
         onChange={onSelectionChange}
+        disabled={disabled}
       >
         <option value={-1}>{placeholder}</option>
-        {options.forEach((e) => (
-          <option value={e.value}>{e.name}</option>
+        {options.map((e) => (
+          <option key={e.id} value={e.id}>
+            {e.name}
+          </option>
         ))}
       </select>
     </div>

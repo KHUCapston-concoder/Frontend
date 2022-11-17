@@ -1,42 +1,65 @@
-import { Dispatch, SetStateAction, useState } from "react";
-
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import axios, {AxiosResponse} from "axios";
+import { Http2ServerResponse } from "http2";
 interface RequestConfigType {
-  requestConfig: {
-    url: string;
-    method: string;
-    headers?: HeadersInit;
-    body?: string;
-  };
-  handleResponse?: Function;
+  url: string;
+  data?: Object;
+  params?: Object;
+  headers?: HeadersInit;
 }
 
-const useHttp = ({ requestConfig, handleResponse }: RequestConfigType) => {
+axios.defaults.headers.common["Content-Type"] =
+  "application/x-www-form-urlencoded";
+axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+
+const requestGet = (url:string) => {
+  return axios
+    .get(url, {
+      headers: {
+        withCredentials: true,
+      },
+    }
+  )
+}
+
+const requestPost = (url:string, data: any) => {
+  return axios.post(url, data);
+}
+
+const useHttp = (
+  requestConfig: RequestConfigType,
+  handleResponse: Function,
+  requestFunc: Function
+) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const sendRequest = async () => {
+  const sendRequest = useCallback(async (data) => {
     setIsLoading(true);
     setError(null);
-    // const url = process.env.REACT_API_HOST + requestConfig.url;
-    const url = "http://43.200.230.132" + requestConfig.url;
+    const url = "http://163.180.146.59" + requestConfig.url;
 
     try {
-      const response = await fetch(url, {
-        method: requestConfig.method,
-        headers: requestConfig.headers || {},
-        body: JSON.stringify(requestConfig.body),
-        mode: "no-cors",
+      requestFunc(url, data).then((res:any) => {
+        handleResponse(res.data);
       });
-
-      if (!response.ok) {
-        throw new Error("Request Failed");
-      }
     } catch (e) {
       setError(e.message);
     }
     setIsLoading(false);
-  };
-  return { isLoading, error, sendRequest };
+  }, [isLoading, error, requestConfig]);
+
+  return [isLoading, error, sendRequest];
 };
 
-export default useHttp;
+export const useGet = (requestConfig: RequestConfigType, handleResponse: Function) => {
+  const [isLoading, error, sendRequest] = useHttp(requestConfig, handleResponse, requestGet);
+
+  return { isLoading, error, sendRequest }
+};
+
+export const usePost = (requestConfig: RequestConfigType) => {
+  const [isLoading, error, sendRequest] = useHttp(requestConfig, () => {}, requestPost);
+
+  return { isLoading, error, sendRequest }
+};
