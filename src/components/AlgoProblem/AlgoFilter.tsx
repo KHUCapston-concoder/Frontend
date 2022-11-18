@@ -29,13 +29,18 @@ const AlgoFilterContainer = () => {
       .get("http://163.180.146.59" + url)
       .then((res) => {
         const { data } = res;
+
+        if (data == null) {
+          setAlgoProblemList({ list: [], length: 0, error: true });
+          return;
+        }
         tabNum == 0
           ? setAlgoProblemList({
               list: data,
               length: data.length,
               error: false,
             })
-          : setAlgoProblemList({ list: [data.sort], length: 1, error: false });
+          : setAlgoProblemList({ list: [data], length: 1, error: false });
       })
       .catch((e) => {
         setAlgoProblemList({ list: [], length: 0, error: true });
