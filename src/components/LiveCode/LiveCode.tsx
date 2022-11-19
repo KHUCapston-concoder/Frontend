@@ -7,35 +7,14 @@ import { usePost } from "@/hooks/useHttp";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { liveCodeContentSetter } from "@/store/liveCode";
+import useMonacoEditor from "@/hooks/Components/useMonacoEditor";
+import useCodeSnapshot from "@/hooks/Components/useCodeSnapshot";
 
 const LiveCode = () => {
-  const monaco = useMonaco();
-  const monacoRef = useRef<Monaco>(null);
-  const [, setliveCodeSetter] = useRecoilState(liveCodeContentSetter);
-
-  const { sendRequest: sendSnapshot } = usePost({
-    url: "/api/snapshots",
-  });
-
-  const handleEditorDidMount: OnMount = (editor, monaco) => {
-    monacoRef.current = editor;
-  };
+  const { monacoRef, handleEditorDidMount } = useMonacoEditor();
+  const { sendSnapshot, onSnapshot } = useCodeSnapshot(monacoRef);
 
   const onCompile = () => {};
-
-  const onSnapshot = () => {
-    const curContent = monacoRef.current?.getValue();
-    sendSnapshot({ content: curContent });
-  };
-
-  useEffect(() => {
-    if (!monaco) return;
-    // console.log(monacoRef.current.setValue("hi"));
-
-    setliveCodeSetter({func: (code: string) => {
-      monacoRef.current?.setValue(code);
-    }});
-  }, [monaco]);
 
   return (
     <MainDiv>
