@@ -46,10 +46,10 @@ const RemoteCam = forwardRef(({ ws, localStream, makeMsg, pcs }, ref) => {
       });
     };
 
-    pc.onicecandidate = (event) => {
-      console.log("ice candidate 얻음");
-      makeMsg("ice", event.candidate, from, to);
-    };
+    // pc.onicecandidate = (event) => {
+    //   console.log("ice candidate 얻음");
+    //   // makeMsg("ice", event.candidate, from, to);
+    // };
 
     return pc;
   };
