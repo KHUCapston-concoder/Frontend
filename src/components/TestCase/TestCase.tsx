@@ -11,6 +11,7 @@ interface PropType {
   outputVal?: string;
   disabled?: boolean;
   setIsAdding: Dispatch<SetStateAction<boolean>>;
+  compileResult?: string | null;
 }
 
 const TestCase = ({
@@ -18,11 +19,11 @@ const TestCase = ({
   inputVal,
   outputVal,
   disabled,
-  setIsAdding
+  setIsAdding,
+  compileResult = null,
 }: PropType) => {
   const [testCases, setTestCases] = useRecoilState(testCaseState);
 
-  const [compileResult, setCompileResult] = useState(null);
   const [isEditing, setIsEditing] = useState(true);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);

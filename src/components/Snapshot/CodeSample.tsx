@@ -26,7 +26,7 @@ const CodeSample = ({ code, setModal }: PropType) => {
           <MonacoEditor
             width="100%"
             height="88%"
-            language="c"
+            language="python"
             theme="vs-dark"
             read-only={true}
             value={code}

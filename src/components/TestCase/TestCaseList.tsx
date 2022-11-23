@@ -4,11 +4,17 @@ import TestCase from "@/components/TestCase/TestCase";
 import { IconButton } from "@/components/_styled/Buttons";
 import LabelTab from "@/components/_styled/LabelTab";
 import { useRecoilState } from "recoil";
-import { testCaseState, testCaseType } from "@/store/testCaseState";
+import {
+  testCaseResultState,
+  testCaseState,
+  testCaseType,
+} from "@/store/testCaseState";
 
 const TestCaseList = () => {
   const [testCases, setTestCases] = useRecoilState(testCaseState);
   const [isAdding, setIsAdding] = useState(false);
+  const [testCaseResultList, setTestCaseResultList] =
+    useRecoilState(testCaseResultState);
 
   const showAddBtn = () => {
     return (testCases.list.length == 0 && !isAdding) || !isAdding;
@@ -42,6 +48,7 @@ const TestCaseList = () => {
             disabled={true}
             inputVal={e.input}
             outputVal={e.output}
+            compileResult={testCaseResultList.list[idx]?.success || null}
           />
         ))}
       </MainDiv>
