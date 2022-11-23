@@ -1,14 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import TestCase from "@/components/TestCase/TestCase";
 import { IconButton } from "@/components/_styled/Buttons";
 import LabelTab from "@/components/_styled/LabelTab";
 import { useRecoilState } from "recoil";
-import {
-  testCaseResultState,
-  testCaseState,
-  testCaseType,
-} from "@/store/testCaseState";
+import { testCaseResultState, testCaseState } from "@/store/testCaseState";
 
 const TestCaseList = () => {
   const [testCases, setTestCases] = useRecoilState(testCaseState);
@@ -25,6 +21,12 @@ const TestCaseList = () => {
   const onAddTestCase = () => {
     setIsAdding(true);
   };
+
+  useEffect(() => {
+    setTestCaseResultList({ list: [] });
+  }, [testCases]);
+
+  console.log(testCaseResultList);
 
   return (
     <>
@@ -48,7 +50,11 @@ const TestCaseList = () => {
             disabled={true}
             inputVal={e.input}
             outputVal={e.output}
-            compileResult={testCaseResultList.list[idx]?.success || null}
+            compileResult={
+              testCaseResultList.list[
+                testCaseResultList.list.length - 1 - idx
+              ] || null
+            }
           />
         ))}
       </MainDiv>

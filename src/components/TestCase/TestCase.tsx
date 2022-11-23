@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
 import Textarea from "@/components/_styled/TextArea";
@@ -53,13 +59,18 @@ const TestCase = ({
     setIsAdding(false);
   };
 
+  useEffect(() => {
+    compileResult = null;
+  }, [isEditing]);
+
   return (
     <MainDiv>
       <MenuBar>
         <div className="flex items-center gap-[8px]">
           {`#${testCaseNo + 1}`}
           {/* 테스트 케이스 컴파일 성공 여부 */}
-          {!isEditing && (
+          {/* {compileResult} */}
+          {
             <>
               {compileResult == "success" && (
                 <CompileResultDiv>
@@ -74,7 +85,7 @@ const TestCase = ({
                 </CompileResultDiv>
               )}
             </>
-          )}
+          }
         </div>
         {/* 삭제/저장 버튼 */}
         <div className="flex gap-[14px]">
@@ -136,7 +147,7 @@ w-fit h-fit
 p-[0_6px]
 rounded-[10px]
 bg-accent
-text-neutral font-bold text-2xs 
+text-neutral font-bold text-[7px]
 `;
 
 const DropdownA = tw.a`

@@ -39,6 +39,7 @@ const LiveCode = () => {
           e.output == testCaseList.list[idx].output ? "success" : "fail"
         );
         setTestCaseResultList({ list: successResults });
+        console.log(successResults);
       });
   };
 
