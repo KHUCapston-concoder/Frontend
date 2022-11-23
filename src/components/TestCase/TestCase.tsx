@@ -79,7 +79,7 @@ const TestCase = ({
                 </CompileResultDiv>
               )}
               {compileResult == "fail" && (
-                <CompileResultDiv>
+                <CompileResultDiv style={{ backgroundColor: "tomato" }}>
                   <i className="fa-solid fa-triangle-exclamation" />
                   {"  "}컴파일 실패
                 </CompileResultDiv>
