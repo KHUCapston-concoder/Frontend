@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import tw from "tailwind-styled-components";
 import CodeSample from "@/components/Snapshot/CodeSample";
 import SnapshotInfo from "@/components/Snapshot/SnapshotInfo";
-import { ISnapshotInfo } from "@/interface/Snapshot";
+import { ISnapshotInfo } from "@/interface/ISnapshot";
 import { useRecoilState } from "recoil";
 import { snapshotState } from "@/store/snapshotState";
 

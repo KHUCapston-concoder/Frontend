@@ -3,7 +3,7 @@ import { IconButton } from "@/components/_styled/Buttons";
 import Modal from "@/hoc/Portal";
 import SnapshotListModal from "@/components/Snapshot/SnapshotListModal";
 import useModal from "@/hooks/useModal";
-import { ISnapshotInfo, ISnapshotDetail } from "@/interface/Snapshot";
+import { ISnapshotInfo, ISnapshotDetail } from "@/interface/ISnapshot";
 import { useGet } from "@/hooks/useHttp";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { snapshotListState, snapshotState } from "@/store/snapshotState";

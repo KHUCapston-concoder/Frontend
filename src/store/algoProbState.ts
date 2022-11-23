@@ -2,7 +2,7 @@ import {
   IAlgoProbCategory,
   IAlgoProbInfo,
   IAlgoProbLevel,
-} from "@/interface/AlgoProbLevel";
+} from "@/interface/IAlgoProbLevel";
 import { atom } from "recoil";
 
 /* initial states */
