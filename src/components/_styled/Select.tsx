@@ -11,7 +11,7 @@ interface PropType {
   placeholder?: string;
   className?: string;
   label?: string;
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 const SelectBox = ({

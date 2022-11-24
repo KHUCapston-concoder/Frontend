@@ -10,44 +10,48 @@ import { liveCodeContentSetter } from "@/store/liveCode";
 import useMonacoEditor from "@/hooks/Components/useMonacoEditor";
 import useCodeSnapshot from "@/hooks/Components/useCodeSnapshot";
 import { testCaseResultState, testCaseState } from "@/store/testCaseState";
+import SelectBox from "../_styled/Select";
 
 const LiveCode = () => {
+  const handleCompileResult = (res: any) => {
+    const data = res;
+    const successResults = data.map((e: any, idx: number) =>
+      e.output == testCaseList.list[idx].output ? "success" : "fail"
+    );
+    setTestCaseResultList({ list: successResults });
+    console.log(successResults);
+  };
+
   const { monacoRef, handleEditorDidMount } = useMonacoEditor();
   const { sendSnapshot, onSnapshot } = useCodeSnapshot(monacoRef);
-  const { isLoading, error, sendRequest } = usePost({ url: "/api/compile" });
+  const { isLoading, error, sendRequest } = usePost(
+    { url: "/api/compile" },
+    handleCompileResult
+  );
   const [testCaseList] = useRecoilState(testCaseState);
-  const [testCaseResultList, setTestCaseResultList] =
-    useRecoilState(testCaseResultState);
+  const [, setTestCaseResultList] = useRecoilState(testCaseResultState);
 
   const onCompile = () => {
-    console.log(monacoRef.current?.getValue());
     const code = monacoRef.current?.getValue();
-
-    // console.log(testCaseList);
-    // console.log(testCaseList.list.map((e) => e?.input));
     const inputList = testCaseList.list.map((e) => e?.input);
 
-    axios
-      .post("http://163.180.146.59/api/compile", {
-        code,
-        inputs: inputList,
-      })
-      .then((res) => {
-        console.log("res", res);
-        const data = res.data;
-        const successResults = data.map((e: any, idx: number) =>
-          e.output == testCaseList.list[idx].output ? "success" : "fail"
-        );
-        setTestCaseResultList({ list: successResults });
-        console.log(successResults);
-      });
+    sendRequest({
+      code,
+      inputs: inputList,
+    });
   };
 
   return (
     <MainDiv>
+      <SelectBox
+        setSelection={() => {}}
+        disabled={true}
+        placeholder="python"
+        className="select select-ghost select-xs h-[30px] w-[120px]"
+      />
       <MonacoEditor
         width="100%"
-        height="100%"
+        height="calc(100% - 35px)"
         language="python"
         theme="vs-dark"
         ref={monacoRef}

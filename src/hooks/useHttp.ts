@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
-import axios, {AxiosResponse} from "axios";
+import axios, { AxiosResponse } from "axios";
 import { Http2ServerResponse } from "http2";
 interface RequestConfigType {
   url: string;
@@ -12,23 +12,21 @@ axios.defaults.headers.common["Content-Type"] =
   "application/x-www-form-urlencoded";
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
-const requestGet = (url:string) => {
-  return axios
-    .get(url, {
-      headers: {
-        withCredentials: true,
-      },
-    }
-  )
-}
+const requestGet = (url: string) => {
+  return axios.get(url, {
+    headers: {
+      withCredentials: true,
+    },
+  });
+};
 
-const requestPost = (url:string, data: any) => {
+const requestPost = (url: string, data: any) => {
   return axios.post(url, data);
-}
+};
 
-const requestDelete = (url:string, data?: any) => {
+const requestDelete = (url: string, data?: any) => {
   return axios.delete(url, data);
-}
+};
 
 const useHttp = (
   requestConfig: RequestConfigType,
@@ -48,7 +46,7 @@ const useHttp = (
         requestFunc(url, data).then((res: any) => {
           handleResponse(res.data);
         });
-      } catch (e:any) {
+      } catch (e: any) {
         setError(e.message);
       }
       setIsLoading(false);
@@ -72,10 +70,17 @@ export const useGet = (
   return { isLoading, error, sendRequest };
 };
 
-export const usePost = (requestConfig: RequestConfigType) => {
-  const [isLoading, error, sendRequest] = useHttp(requestConfig, () => {}, requestPost);
+export const usePost = (
+  requestConfig: RequestConfigType,
+  handleResponse: (pararm: any) => any
+) => {
+  const [isLoading, error, sendRequest] = useHttp(
+    requestConfig,
+    handleResponse,
+    requestPost
+  );
 
-  return { isLoading, error, sendRequest }
+  return { isLoading, error, sendRequest };
 };
 
 export const useDelete = (requestConfig: RequestConfigType) => {
@@ -85,5 +90,5 @@ export const useDelete = (requestConfig: RequestConfigType) => {
     requestDelete
   );
 
-  return { isLoading, error, sendRequest }
+  return { isLoading, error, sendRequest };
 };
