@@ -26,8 +26,6 @@ const TestCaseList = () => {
     setTestCaseResultList({ list: [] });
   }, [testCases]);
 
-  console.log(testCaseResultList);
-
   return (
     <>
       <LabelTab label="테스트 케이스" />

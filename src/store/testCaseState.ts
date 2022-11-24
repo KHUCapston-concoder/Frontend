@@ -4,15 +4,12 @@ export interface testCase {
   input: string;
   output: string;
 }
-export interface testCaseResult {
-  success: string;
-}
 
 export interface StateType {
   list: Array<testCase>;
 }
 export interface StateType2 {
-  list: Array<testCaseResult>;
+  list: Array<string>;
 }
 
 const initialState1: StateType = {

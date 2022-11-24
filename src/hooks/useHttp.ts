@@ -32,34 +32,44 @@ const requestDelete = (url:string, data?: any) => {
 
 const useHttp = (
   requestConfig: RequestConfigType,
-  handleResponse: Function,
-  requestFunc: Function
+  handleResponse: (pararm: any) => any,
+  requestFunc: (url: string, data: any) => Promise<AxiosResponse<any, any>>
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const sendRequest = useCallback(async (data) => {
-    setIsLoading(true);
-    setError(null);
-    const url = "http://163.180.146.59" + requestConfig.url;
+  const sendRequest = useCallback(
+    async (data) => {
+      setIsLoading(true);
+      setError(null);
+      const url = "http://163.180.146.59" + requestConfig.url;
 
-    try {
-      requestFunc(url, data).then((res:any) => {
-        handleResponse(res.data);
-      });
-    } catch (e) {
-      setError(e.message);
-    }
-    setIsLoading(false);
-  }, [isLoading, error, requestConfig]);
+      try {
+        requestFunc(url, data).then((res: any) => {
+          handleResponse(res.data);
+        });
+      } catch (e:any) {
+        setError(e.message);
+      }
+      setIsLoading(false);
+    },
+    [isLoading, error, requestConfig]
+  );
 
   return [isLoading, error, sendRequest];
 };
 
-export const useGet = (requestConfig: RequestConfigType, handleResponse: Function) => {
-  const [isLoading, error, sendRequest] = useHttp(requestConfig, handleResponse, requestGet);
+export const useGet = (
+  requestConfig: RequestConfigType,
+  handleResponse: (pararm: any) => any
+) => {
+  const [isLoading, error, sendRequest] = useHttp(
+    requestConfig,
+    handleResponse,
+    requestGet
+  );
 
-  return { isLoading, error, sendRequest }
+  return { isLoading, error, sendRequest };
 };
 
 export const usePost = (requestConfig: RequestConfigType) => {
