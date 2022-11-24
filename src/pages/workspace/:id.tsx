@@ -177,7 +177,7 @@ h-[calc(80%-15px)]
 
 /* 3.4.2 실시간 동시 코딩 */
 const CodeDiv = tw(CommonDiv)`
-grow-[6]
+grow-[6] bg-[#1E1E1E]
 `;
 
 /* 3.4.5 컴파일 정보 */
