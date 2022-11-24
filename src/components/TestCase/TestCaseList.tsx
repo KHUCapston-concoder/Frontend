@@ -40,6 +40,7 @@ const TestCaseList = () => {
         {isAdding && (
           <TestCase
             testCaseNo={sortedTestCases.length}
+            isAdding={isAdding}
             setIsAdding={setIsAdding}
           />
         )}
@@ -50,11 +51,9 @@ const TestCaseList = () => {
             disabled={true}
             inputVal={e.input}
             outputVal={e.output}
-            compileResult={
-              testCaseResultList.list[
-                testCaseResultList.list.length - 1 - idx
-              ] || null
-            }
+            compileResult={testCaseResultList.list.reverse()[idx] || null}
+            isAdding={false}
+            setIsAdding={() => {}}
           />
         ))}
       </MainDiv>

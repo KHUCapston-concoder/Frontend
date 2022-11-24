@@ -16,6 +16,7 @@ interface PropType {
   inputVal?: string;
   outputVal?: string;
   disabled?: boolean;
+  isAdding: boolean;
   setIsAdding: Dispatch<SetStateAction<boolean>>;
   compileResult?: string | null;
 }
@@ -25,12 +26,11 @@ const TestCase = ({
   inputVal,
   outputVal,
   disabled,
+  isAdding,
   setIsAdding,
   compileResult = null,
 }: PropType) => {
   const [testCases, setTestCases] = useRecoilState(testCaseState);
-
-  const [isEditing, setIsEditing] = useState(true);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const outputRef = useRef<HTMLTextAreaElement>(null);
@@ -43,8 +43,6 @@ const TestCase = ({
   };
 
   const onSaveTestCase = () => {
-    console.log(inputRef.current?.value, outputRef.current?.value);
-
     const newObj = {
       input: inputRef.current?.value,
       output: outputRef.current?.value,
@@ -52,16 +50,13 @@ const TestCase = ({
 
     const newList = [...testCases.list, newObj];
 
-    console.log(newList);
-
     setTestCases({ list: newList });
-    setIsEditing(false);
     setIsAdding(false);
   };
 
   useEffect(() => {
     compileResult = null;
-  }, [isEditing]);
+  }, [isAdding]);
 
   return (
     <MainDiv>
@@ -89,7 +84,7 @@ const TestCase = ({
         </div>
         {/* 삭제/저장 버튼 */}
         <div className="flex gap-[14px]">
-          {isEditing && (
+          {isAdding && (
             <IconButton
               name="check"
               width="fit-content"
@@ -107,19 +102,19 @@ const TestCase = ({
       <Textarea
         label="입력"
         className="h-fit w-full"
-        disabled={!isEditing || disabled}
+        disabled={!isAdding || disabled}
         placeholder={inputVal}
         ref={inputRef}
       />
       <Textarea
         label="출력"
         className="h-fit w-full"
-        disabled={!isEditing || disabled}
+        disabled={!isAdding || disabled}
         placeholder={outputVal}
         ref={outputRef}
       />
       {/* 취소 & 저장 버튼 */}
-      {isEditing && <></>}
+      {isAdding && <></>}
     </MainDiv>
   );
 };
