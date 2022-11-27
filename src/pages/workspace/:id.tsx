@@ -17,6 +17,7 @@ import { IconButton } from "@/components/_styled/Buttons";
 import tw from "tailwind-styled-components";
 import { useNavigate } from "react-router-dom";
 import CamList from "@/components/Cam/CamList";
+import Toast from "@/components/_styled/Toast";
 
 const Workspace = () => {
   const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
@@ -103,6 +104,7 @@ const Workspace = () => {
           </FlexDiv4>
         </FlexDiv3>
       </Modal>
+      <Toast/>
     </>
   );
 };
