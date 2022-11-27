@@ -21,3 +21,8 @@ export const snapshotListState = atom({
   key: "snapshotListState",
   default: initialListState,
 });
+
+export const snapshotLengthState = atom({
+  key: "snapshotLengthState",
+  default: 0,
+})
