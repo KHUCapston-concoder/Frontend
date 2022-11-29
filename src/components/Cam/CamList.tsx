@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import LocalCam from "@/components/Cam/LocalCam";
 import RemoteCam from "@/components/Cam/RemoteCam";
+import SignalingConnect from "./SignalingConnect";
 
 const localId = Math.random();
 
@@ -162,6 +163,7 @@ const CamList = () => {
 
   return (
     <>
+      <SignalingConnect />
       <div>
         <LocalCam onSetLocalStream={setLocalStreamHandler} />
       </div>
