@@ -36,26 +36,32 @@ const LiveCode = () => {
   const { onSnapshot } = useCodeSnapshot(view);
 
   return (
-    <MainDiv>
-      <SelectBox
-        setSelection={() => {}}
-        disabled={true}
-        placeholder="python"
-        className="select select-xs mb-[4px] h-[30px] w-[120px]"
-      />
-      <div
-        style={{ width: "100%", height: "calc(100%-40px)", maxWidth: "640px" }}
-        className="cm-s-abbott"
-        ref={editorRef}
-        id="code-editor"
-      />
+    <>
+      <MainDiv>
+        <SelectBox
+          setSelection={() => {}}
+          disabled={true}
+          placeholder="python"
+          className="select select-xs mb-[4px] h-[30px] w-[120px]"
+        />
+        <div
+          style={{
+            width: "100%",
+            height: "calc(100%-40px)",
+            maxWidth: "640px",
+          }}
+          className="cm-s-abbott"
+          ref={editorRef}
+          id="code-editor"
+        />
+      </MainDiv>
       <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
         <CompileFloatBtn
-          onClick={() => onCompile(view.state.doc?.toString())}
+          onClick={() => onCompile({ code: view.state.doc.toString() })}
         />
         <SnapshotFloatBtn onClick={onSnapshot} />
       </FloatButtonDiv>
-    </MainDiv>
+    </>
   );
 };
 
@@ -67,7 +73,7 @@ w-full h-full
 
 const FloatButtonDiv = tw.div`
 relative
-bottom-[-80%] left-[50%]
+bottom-[60px] left-[50%]
 w-fit h-[60px]
 px-[10px]
 rounded-[15px]

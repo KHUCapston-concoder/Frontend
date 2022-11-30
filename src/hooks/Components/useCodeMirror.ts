@@ -1,11 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-import { basicSetup, EditorView, EditorState } from "codemirror";
 import {
-  markdown,
-  markdownKeymap,
-  markdownLanguage,
-} from "@codemirror/lang-markdown";
-import { keymap } from "@codemirror/view";
+  drawSelection,
+  highlightActiveLine,
+  highlightSpecialChars,
+  keymap,
+} from "@codemirror/view";
+import { history } from "@codemirror/history";
+import { indentOnInput } from "@codemirror/language";
+import { highlightActiveLineGutter, lineNumbers } from "@codemirror/gutter";
+import { highlightSelectionMatches } from "@codemirror/search";
+import { defaultHighlightStyle } from "@codemirror/highlight";
+import { stex } from "@codemirror/legacy-modes/mode/stex";
+import { basicSetup, EditorView } from "codemirror";
+import { markdownKeymap } from "@codemirror/lang-markdown";
+import { EditorState, Compartment } from "@codemirror/state";
+import { python } from "@codemirror/lang-python";
+import { StreamLanguage } from "@codemirror/stream-parser";
+
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import { liveCodeContentSetter } from "@/store/liveCode";
 
@@ -19,18 +30,33 @@ const useCodeMirror = ({ updateHandler }: PropType) => {
 
   const editorRef = useRef();
 
+  const language = new Compartment();
+  const extensions = [
+    basicSetup,
+    language.of(python()),
+    keymap.of(markdownKeymap),
+    updateHandler,
+    // lineNumbers(),
+    // highlightActiveLineGutter(),
+    // highlightSpecialChars(),
+    // history(),
+    // drawSelection(),
+    // EditorState.allowMultipleSelections.of(true),
+    // indentOnInput(),
+    // defaultHighlightStyle.fallback,
+    // highlightActiveLine(),
+    // highlightSelectionMatches(),
+  ];
+  const state = EditorState.create({
+    doc: "",
+    extensions,
+  });
+
   useEffect(() => {
     if (!view) {
       const view = new EditorView({
-        doc: "",
-        extensions: [
-          basicSetup,
-          markdown({ base: markdownLanguage }),
-          keymap.of(markdownKeymap),
-          updateHandler,
-        ],
+        state,
         parent: editorRef.current,
-        // mode: "python",
       });
       setView(view);
     }
