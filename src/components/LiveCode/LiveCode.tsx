@@ -9,9 +9,30 @@ import SelectBox from "../_styled/Select";
 import useCompile from "@/hooks/Components/useCompile";
 
 const LiveCode = () => {
-  const { monacoRef, handleEditorDidMount } = useMonacoEditor();
-  const { sendSnapshot, onSnapshot } = useCodeSnapshot(monacoRef);
   const { onCompile } = useCompile();
+  const updateHandler = EditorView.updateListener.of((viewUpdate) => {
+    if (viewUpdate.docChanged) {
+      for (const tr of viewUpdate.transactions) {
+        const events = ["select", "input", "delete", "move", "undo", "redo"];
+        if (!events.map((event) => tr.isUserEvent(event)).some(Boolean)) {
+          continue;
+        }
+        if (tr.annotation(Transaction.remote)) {
+          continue;
+        }
+        tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
+          console.log(fromA, toA, inserted);
+
+          doc.update((root) => {
+            root.content?.edit(fromA, toA, inserted.toJSON().join("\n"));
+          }, "코드 에디터에 문제가 있습니다.");
+        });
+      }
+    }
+  });
+
+  const { view, editorRef } = useCodeMirror({ updateHandler });
+  const { onSnapshot } = useCodeSnapshot(view);
 
   return (
     <MainDiv>
@@ -21,17 +42,15 @@ const LiveCode = () => {
         placeholder="python"
         className="select select-xs mb-[4px] h-[30px] w-[120px]"
       />
-      <MonacoEditor
-        width="100%"
-        height="calc(100% - 60px)"
-        language="python"
-        theme="vs-dark"
-        ref={monacoRef}
-        onMount={handleEditorDidMount}
+      <div
+        style={{ width: "100%", height: "100%" }}
+        className="cm-s-abbott"
+        ref={editorRef}
+        id="code-editor"
       />
-      <FloatButtonDiv style={{ transform: "translate(-50%, 30px)" }}>
+      <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
         <CompileFloatBtn
-          onClick={() => onCompile(monacoRef?.current.getValue())}
+          onClick={() => onCompile(view.state.doc?.toString())}
         />
         <SnapshotFloatBtn onClick={onSnapshot} />
       </FloatButtonDiv>
@@ -51,7 +70,7 @@ top-[-10%] left-[50%]
 w-fit h-[60px]
 px-[10px]
 rounded-[15px]
-dark-2
+dark-1
 flex gap-[10px]
 justify-around
 z-100
