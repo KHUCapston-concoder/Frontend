@@ -6,6 +6,7 @@ import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
 import useMonacoEditor from "@/hooks/Components/useMonacoEditor";
 import useCodeSnapshot from "@/hooks/Components/useCodeSnapshot";
 import SelectBox from "../_styled/Select";
+import useCodeMirror from "@/hooks/Components/useCodeMirror";
 import useCompile from "@/hooks/Components/useCompile";
 
 const LiveCode = () => {
@@ -43,7 +44,7 @@ const LiveCode = () => {
         className="select select-xs mb-[4px] h-[30px] w-[120px]"
       />
       <div
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "calc(100%-40px)", maxWidth: "640px" }}
         className="cm-s-abbott"
         ref={editorRef}
         id="code-editor"
@@ -66,7 +67,7 @@ w-full h-full
 
 const FloatButtonDiv = tw.div`
 relative
-top-[-10%] left-[50%]
+bottom-[-80%] left-[50%]
 w-fit h-[60px]
 px-[10px]
 rounded-[15px]

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { basicSetup, EditorView } from "codemirror";
+import { basicSetup, EditorView, EditorState } from "codemirror";
 import {
   markdown,
   markdownKeymap,
   markdownLanguage,
 } from "@codemirror/lang-markdown";
 import { keymap } from "@codemirror/view";
+import { useRecoilState } from "recoil";
+import { liveCodeContentSetter } from "@/store/liveCode";
 
 interface PropType {
   updateHandler: any;
@@ -13,6 +15,7 @@ interface PropType {
 
 const useCodeMirror = ({ updateHandler }: PropType) => {
   const [view, setView] = useState<EditorView | null>(null);
+  const [, setliveCodeSetter] = useRecoilState(liveCodeContentSetter);
 
   const editorRef = useRef();
 
@@ -27,10 +30,22 @@ const useCodeMirror = ({ updateHandler }: PropType) => {
           updateHandler,
         ],
         parent: editorRef.current,
+        // mode: "python",
       });
       setView(view);
     }
-  }, []);
+
+    setliveCodeSetter({
+      func: (code: string) => {
+        console.log(code);
+        console.log(view);
+
+        view.dispatch({
+          changes: [{ from: 0, to: view.state.doc.length, insert: code }],
+        });
+      },
+    });
+  }, [view]);
 
   return { view, editorRef, setView };
 };
