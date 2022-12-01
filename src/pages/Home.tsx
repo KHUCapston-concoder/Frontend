@@ -6,6 +6,9 @@ import EnterCodeModal from "@/components/Home/EnterCodeModal";
 import useModal from "@/hooks/useModal";
 import { uuidv4 } from "@/utils/commonFunc/genUuid";
 import { generateNickname } from "@/utils/commonFunc/genNickname";
+import { usePost } from "@/hooks/useHttp";
+import { userInfoState } from "@/store/userInfoState";
+import { useRecoilState } from "recoil";
 
 const ImgURL = "https://embed.lottiefiles.com/animation/63487";
 
@@ -13,14 +16,38 @@ const Home = () => {
   const { themeColorset } = useTheme();
 
   const [isModalOpen, setIsModalOpen, onClick] = useModal();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+  const setIdHandler = (res: any) => {
+    const workspaceId = res.rooms[0].id;
+    const userId = res.users[0].id;
+    setUserInfo((prev) => {
+      let newInfo = { ...prev };
+      newInfo.userId = userId;
+      newInfo.workspaceId = workspaceId;
+      return newInfo;
+    });
+
+    localStorage.setItem("workspace-id", workspaceId);
+  };
+
+  const { isLoading, error, sendRequest } = usePost(
+    {
+      url: "/api/video",
+    },
+    setIdHandler
+  );
 
   const onClickCreateWorkspace = () => {
-    const wordkspaceId = uuidv4();
     const nickname = generateNickname();
-    localStorage.setItem("workspace-id", wordkspaceId);
     localStorage.setItem("nickname", nickname);
-    // @todo: workspace id 서버로 넘기기
-    console.log(wordkspaceId);
+
+    setUserInfo((prev) => {
+      let newInfo = { ...prev };
+      newInfo.username = nickname;
+      return newInfo;
+    });
+    sendRequest({ username: nickname });
   };
 
   return (
