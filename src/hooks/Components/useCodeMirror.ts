@@ -9,7 +9,6 @@ import { indentOnInput } from "@codemirror/language";
 import { highlightActiveLineGutter, lineNumbers } from "@codemirror/gutter";
 import { highlightSelectionMatches } from "@codemirror/search";
 import { defaultHighlightStyle } from "@codemirror/highlight";
-import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { basicSetup, EditorView } from "codemirror";
 import { markdownKeymap } from "@codemirror/lang-markdown";
 import { EditorState, Compartment } from "@codemirror/state";
