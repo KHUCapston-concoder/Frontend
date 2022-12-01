@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import TestCase from "@/components/TestCase/TestCase";
 import { IconButton } from "@/components/_styled/Buttons";
 import LabelTab from "@/components/_styled/LabelTab";
 import { useRecoilState } from "recoil";
-import { testCaseState, testCaseType } from "@/store/testCaseState";
+import { testCaseResultState, testCaseState } from "@/store/testCaseState";
 
 const TestCaseList = () => {
   const [testCases, setTestCases] = useRecoilState(testCaseState);
   const [isAdding, setIsAdding] = useState(false);
+  const [testCaseResultList, setTestCaseResultList] =
+    useRecoilState(testCaseResultState);
 
   const showAddBtn = () => {
     return (testCases.list.length == 0 && !isAdding) || !isAdding;
@@ -19,6 +21,10 @@ const TestCaseList = () => {
   const onAddTestCase = () => {
     setIsAdding(true);
   };
+
+  useEffect(() => {
+    setTestCaseResultList({ list: [] });
+  }, [testCases]);
 
   return (
     <>
@@ -32,18 +38,29 @@ const TestCaseList = () => {
         {isAdding && (
           <TestCase
             testCaseNo={sortedTestCases.length}
+            isAdding={isAdding}
             setIsAdding={setIsAdding}
           />
         )}
-        {sortedTestCases.map((e, idx) => (
-          <TestCase
-            key={sortedTestCases.length - idx}
-            testCaseNo={sortedTestCases.length - 1 - idx}
-            disabled={true}
-            inputVal={e.input}
-            outputVal={e.output}
-          />
-        ))}
+        {sortedTestCases.map((e, idx) => {
+
+          const compileResult =
+            testCaseResultList.list?.[
+              testCaseResultList?.list?.length - idx - 1
+            ] || null;
+          return (
+            <TestCase
+              key={sortedTestCases.length - idx}
+              testCaseNo={sortedTestCases.length - 1 - idx}
+              disabled={true}
+              inputVal={e.input}
+              outputVal={e.output}
+              compileResult={compileResult}
+              isAdding={false}
+              setIsAdding={() => {}}
+            />
+          );
+        })}
       </MainDiv>
     </>
   );

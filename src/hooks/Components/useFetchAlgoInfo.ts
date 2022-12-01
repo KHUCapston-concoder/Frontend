@@ -1,4 +1,4 @@
-import { IAlgoProbCategory, IAlgoProbLevel } from "@/interface/AlgoProbLevel";
+import { IAlgoProbCategory, IAlgoProbLevel } from "@/interface/IAlgoProbLevel";
 import {
   algoProbCategoryState,
   algoProbLevelState,

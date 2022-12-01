@@ -1,26 +1,42 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import tw from "tailwind-styled-components";
+import { useRecoilState } from "recoil";
+import { snapshotState } from "@/store/snapshotState";
+import { liveCodeContentSetter } from "@/store/liveCode";
 
 interface PropType {
   code: string;
+  setModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const CodeSample = ({ code }: PropType) => {
+const CodeSample = ({ code, setModal }: PropType) => {
+  const [snapshotDetail, setSnapshotDetail] = useRecoilState(snapshotState);
+  const [liveCodeSetter] = useRecoilState(liveCodeContentSetter);
+
+  const restoreSnapshot = () => {
+    liveCodeSetter.func(code);
+    setModal(false);
+  };
+
   return (
     <>
-      {code ? (
+      {snapshotDetail.id ? (
         <>
           <MonacoEditor
             width="100%"
-            height="90%"
-            language="c"
+            height="88%"
+            language="python"
             theme="vs-dark"
-            read-only="true"
+            read-only={true}
             value={code}
           />
           <FooterDiv>
-            <button className="accent" style={{ width: "100px" }}>
+            <button
+              className="accent"
+              style={{ width: "100px" }}
+              onClick={restoreSnapshot}
+            >
               복구
             </button>
           </FooterDiv>
@@ -45,4 +61,5 @@ text-sm text-center
 const FooterDiv = tw.div`
 w-full
 flex justify-end
+pt-[10px]
 `;
