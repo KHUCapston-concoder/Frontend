@@ -8,6 +8,7 @@ import useCodeSnapshot from "@/hooks/Components/useCodeSnapshot";
 import SelectBox from "../_styled/Select";
 import useCodeMirror from "@/hooks/Components/useCodeMirror";
 import useCompile from "@/hooks/Components/useCompile";
+import {EditorView} from "codemirror"
 
 const LiveCode = () => {
   const { onCompile } = useCompile();
