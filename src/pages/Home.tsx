@@ -18,35 +18,29 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen, onClick] = useModal();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
-  const setIdHandler = (res: any) => {
+  const setUserInfoHandler = (res: any) => {
     const workspaceId = res.rooms[0].id;
     const userId = res.users[0].id;
-    setUserInfo((prev) => {
-      let newInfo = { ...prev };
-      newInfo.userId = userId;
-      newInfo.workspaceId = workspaceId;
-      return newInfo;
+    const username = res.users[0].name;
+    setUserInfo({
+      userId: userId,
+      username: username,
+      workspaceId: workspaceId,
     });
 
     localStorage.setItem("workspace-id", workspaceId);
+    localStorage.setItem("nickname", username);
   };
 
   const { isLoading, error, sendRequest } = usePost(
     {
       url: "/api/video",
     },
-    setIdHandler
+    setUserInfoHandler
   );
 
   const onClickCreateWorkspace = () => {
     const nickname = generateNickname();
-    localStorage.setItem("nickname", nickname);
-
-    setUserInfo((prev) => {
-      let newInfo = { ...prev };
-      newInfo.username = nickname;
-      return newInfo;
-    });
     sendRequest({ username: nickname });
   };
 
