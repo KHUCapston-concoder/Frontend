@@ -1,4 +1,10 @@
-import React from "react";
+import React, {
+  LegacyRef,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import tw from "tailwind-styled-components";
 import MonacoEditor from "@monaco-editor/react";
 import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
@@ -6,11 +12,27 @@ import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
 import useMonacoEditor from "@/hooks/Components/useMonacoEditor";
 import useCodeSnapshot from "@/hooks/Components/useCodeSnapshot";
 import SelectBox from "../_styled/Select";
+import yorkie, {
+  Document,
+  JSONArray,
+  Text as YorkieText,
+  TextChange,
+} from "yorkie-js-sdk";
+import { Transaction, type ChangeSpec } from "@codemirror/state";
+import { basicSetup, EditorView } from "codemirror";
 import useCodeMirror from "@/hooks/Components/useCodeMirror";
 import useCompile from "@/hooks/Components/useCompile";
 
+type YorkieDoc = {
+  content: YorkieText;
+};
+
 const LiveCode = () => {
   const { onCompile } = useCompile();
+  const [doc] = useState<Document<YorkieDoc>>(
+    new yorkie.Document<YorkieDoc>("codemirror")
+  );
+
   const updateHandler = EditorView.updateListener.of((viewUpdate) => {
     if (viewUpdate.docChanged) {
       for (const tr of viewUpdate.transactions) {
@@ -34,6 +56,48 @@ const LiveCode = () => {
 
   const { view, editorRef } = useCodeMirror({ updateHandler });
   const { onSnapshot } = useCodeSnapshot(view);
+
+  useEffect(async () => {
+    // yorkie 서버 부트
+    const client = new yorkie.Client("http://localhost:8080");
+    await client.activate();
+    await client.attach(doc);
+
+    // document 초기값 설정
+    doc.update((root) => {
+      console.log("initialize", root.content);
+
+      if (!root.content) {
+        root.content = new yorkie.Text();
+      }
+      console.log(root.content);
+    }, "create content if not exists");
+
+    const changeEventHandler = (changes: Array<TextChange>) => {
+      const clientId = client.getID();
+      console.log("changes", changes);
+
+      const changeSpecs: Array<ChangeSpec> = changes
+        //content
+        .filter(
+          (change) => change.type === "content" && change.actor !== clientId
+        )
+        .map((change) => ({
+          from: Math.max(0, change.from),
+          to: Math.max(0, change.to),
+          insert: change.content,
+        }));
+      console.log("changeSpecs", changeSpecs);
+
+      view?.dispatch({
+        changes: changeSpecs,
+        annotations: [Transaction.remote.of(true)],
+      });
+    };
+
+    const text = doc.getRoot().content;
+    text.onChanges(changeEventHandler);
+  }, []);
 
   return (
     <>

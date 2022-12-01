@@ -5,21 +5,22 @@ import { toastMsgState } from "@/store/toastMsgState";
 import { useRecoilState } from "recoil";
 
 const useCodeSnapshot = (editorRef: EditorView) => {
-  const { sendRequest: sendSnapshot } = usePost({
-    url: "/api/snapshots",
-  });
+  const { error, sendRequest: sendSnapshot } = usePost(
+    { url: "/api/snapshots" },
+    () => {
+      setSnapshotLength(snapshotLength + 1);
+      setToastObj({ msg: "스냅샷 저장 완료", show: true });
+    }
+  );
   const [toastObj, setToastObj] = useRecoilState(toastMsgState);
 
   const [snapshotLength, setSnapshotLength] =
     useRecoilState(snapshotLengthState);
 
-  const onSnapshot = () => {
+  const onSnapshot = async () => {
     const curContent = editorRef.state.doc.toString();
 
-    setToastObj({ msg: "스냅샷 저장 완료", show: true });
-    sendSnapshot({ content: curContent }).then(() => {
-      setSnapshotLength(snapshotLength + 1);
-    });
+    sendSnapshot({ content: curContent });
   };
 
   return { sendSnapshot, onSnapshot };

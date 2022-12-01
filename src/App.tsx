@@ -1,14 +1,10 @@
 /* libraries */
 import { useEffect, useState } from "react";
-
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
 /* router */
 import AppRouter from "@/components/_router/router";
 /* context */
 import { useTheme } from "@/context/ThemeContext";
-/* state */
-import { workspaceState } from "@/store/workspaceState";
 
 function App() {
   const { themeColorset } = useTheme();
