@@ -42,18 +42,25 @@ const TestCaseList = () => {
             setIsAdding={setIsAdding}
           />
         )}
-        {sortedTestCases.map((e, idx) => (
-          <TestCase
-            key={sortedTestCases.length - idx}
-            testCaseNo={sortedTestCases.length - 1 - idx}
-            disabled={true}
-            inputVal={e.input}
-            outputVal={e.output}
-            compileResult={testCaseResultList.list.reverse()[idx] || null}
-            isAdding={false}
-            setIsAdding={() => {}}
-          />
-        ))}
+        {sortedTestCases.map((e, idx) => {
+
+          const compileResult =
+            testCaseResultList.list?.[
+              testCaseResultList?.list?.length - idx - 1
+            ] || null;
+          return (
+            <TestCase
+              key={sortedTestCases.length - idx}
+              testCaseNo={sortedTestCases.length - 1 - idx}
+              disabled={true}
+              inputVal={e.input}
+              outputVal={e.output}
+              compileResult={compileResult}
+              isAdding={false}
+              setIsAdding={() => {}}
+            />
+          );
+        })}
       </MainDiv>
     </>
   );
