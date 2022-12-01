@@ -6,21 +6,46 @@ import EnterCodeModal from "@/components/Home/EnterCodeModal";
 import useModal from "@/hooks/useModal";
 import { uuidv4 } from "@/utils/commonFunc/genUuid";
 import { generateNickname } from "@/utils/commonFunc/genNickname";
+import { usePost } from "@/hooks/useHttp";
+import { userInfoState } from "@/store/userInfoState";
+import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 
 const ImgURL = "https://embed.lottiefiles.com/animation/63487";
 
 const Home = () => {
   const { themeColorset } = useTheme();
-
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen, onClick] = useModal();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+  const setUserInfoHandler = (res: any) => {
+    console.log("res", res);
+
+    const workspaceId = res.rooms[0].id;
+    const userId = res.users[0].id;
+    const username = res.users[0].name;
+    setUserInfo({
+      userId: userId,
+      username: username,
+      workspaceId: workspaceId,
+    });
+
+    localStorage.setItem("workspace-id", workspaceId);
+    localStorage.setItem("nickname", username);
+    navigate(`/workspace/${workspaceId}`);
+  };
+
+  const { sendRequest } = usePost(
+    {
+      url: "/api/video",
+    },
+    setUserInfoHandler
+  );
 
   const onClickCreateWorkspace = () => {
-    const wordkspaceId = uuidv4();
     const nickname = generateNickname();
-    localStorage.setItem("workspace-id", wordkspaceId);
-    localStorage.setItem("nickname", nickname);
-    // @todo: workspace id 서버로 넘기기
-    console.log(wordkspaceId);
+    sendRequest({ username: nickname });
   };
 
   return (
