@@ -1,14 +1,15 @@
 import { useDelete, useGet } from "@/hooks/useHttp";
-import { ISnapshotDetail, ISnapshotInfo } from "@/interface/Snapshot";
+import { ISnapshotDetail, ISnapshotInfo } from "@/interface/ISnapshot";
 import {
-  snapshotLengthState,
   snapshotListState,
   snapshotState,
+  snapshotLengthState,
 } from "@/store/snapshotState";
-import React from "react";
+import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
+import InputBox from "../_styled/Input";
 
 interface PropType {
   data: ISnapshotInfo;
@@ -17,6 +18,8 @@ interface PropType {
 const SnapshotInfo = ({ data }: PropType) => {
   const [snapshotDetail, setSnapshotDetail] = useRecoilState(snapshotState);
   const [snapshotList, setSnapshotList] = useRecoilState(snapshotListState);
+  const [editingMemo, setEditingMemo] = useState(false);
+  const [memo, setMemo] = useState("");
   const [snapshotLength, setSnapshotLength] =
     useRecoilState(snapshotLengthState);
 
@@ -30,7 +33,7 @@ const SnapshotInfo = ({ data }: PropType) => {
   const { sendRequest: sendDelete } = useDelete({
     url: `/api/snapshots/${data.id}`,
   });
-  const onDeleteSnapshot = (e) => {
+  const onDeleteSnapshot = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     sendDelete();
     setSnapshotList(({ list }) => {
@@ -40,7 +43,10 @@ const SnapshotInfo = ({ data }: PropType) => {
     });
     setSnapshotLength(snapshotLength - 1);
   };
-  const onAddMemo = () => {};
+  const onAddMemo = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setEditingMemo(true);
+  };
 
   const onClickSnapshot = () => {
     sendGet();
@@ -60,11 +66,15 @@ const SnapshotInfo = ({ data }: PropType) => {
           onClick={onDeleteSnapshot}
         />
       </TimeHolder>
-      <MemoHolder onClick={onAddMemo}>
-        {!data.memo && "메모 추가하기"}
-        {/* 이부분 클릭하면 input으로 바뀐다거나.. 하는 코드 추가 */}
-        <i className="fa-solid fa-pen"></i>
-      </MemoHolder>
+      {editingMemo ? (
+        <InputBox setInput={setMemo} />
+      ) : (
+        <MemoHolder onClick={onAddMemo}>
+          {!data.memo && "메모 추가하기"}
+          {/* 이부분 클릭하면 input으로 바뀐다거나.. 하는 코드 추가 */}
+          <i className="fa-solid fa-pen"></i>
+        </MemoHolder>
+      )}
     </MainDiv>
   );
 };
@@ -85,6 +95,7 @@ text-base font-bold
 `;
 
 const MemoHolder = tw.div`
+w-fit
 text-xs
 flex items-center gap-[6px]
 `;
