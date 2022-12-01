@@ -21,6 +21,9 @@ const EnterCodeModal = () => {
       username: nickname,
       workspaceId: workspaceId,
     });
+
+    localStorage.setItem("nickname", nickname);
+    localStorage.setItem("workspace-id", workspaceId);
   };
 
   const { isLoading, error, sendRequest } = usePost(
@@ -46,8 +49,6 @@ const EnterCodeModal = () => {
     /* @todo 이 코드의 방이 있는지 확인*/
     sendRequest({ username: nickname });
 
-    localStorage.setItem("nickname", nickname);
-    localStorage.setItem("workspace-id", workspaceId);
     navigate(`/workspace/${workspaceId}`);
   };
 
