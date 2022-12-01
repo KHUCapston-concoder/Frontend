@@ -17,6 +17,8 @@ import { IconButton } from "@/components/_styled/Buttons";
 import tw from "tailwind-styled-components";
 import { useNavigate } from "react-router-dom";
 import CamList from "@/components/Cam/CamList";
+import Toast from "@/components/_styled/Toast";
+import WebSocketContext from "@/context/WebSocketContext";
 
 const Workspace = () => {
   const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
@@ -35,74 +37,81 @@ const Workspace = () => {
 
   return (
     <>
-      <MainDiv>
-        {/* Section 1 */}
-        <AlgoDiv>
-          <AlgoFilterDiv>
-            <AlgoFilterContainer />
-          </AlgoFilterDiv>
-          <AlgoInfoDiv>
-            <AlgoInfo />
-          </AlgoInfoDiv>
-        </AlgoDiv>
-        {/* Section 2 */}
-        <CodeDiv>
-          <LiveCode />
-        </CodeDiv>
-        {/* Section 3 */}
-        <FlexDiv>
-          {/* 컴파일 정보 */}
-          <CompileInfoDiv>
-            <CompileInfo />
-          </CompileInfoDiv>
-          {/* 테스트 케이스 */}
-          <TestCasaeDiv>
-            <TestCaseList />
-          </TestCasaeDiv>
-          {/* 아래 버튼 3개 */}
-          <UtilButtonsDiv>
-            <UtilButtonDiv>
-              <SnapshotBtn />
-            </UtilButtonDiv>
-            <UtilButtonDiv>
-              <TimerBtn />
-            </UtilButtonDiv>
-            <UtilButtonDiv>
-              <IconButton name="circle-xmark" size="lg" onClick={onClickExit} />
-            </UtilButtonDiv>
-          </UtilButtonsDiv>
-        </FlexDiv>
-        {/* Section 4 */}
-        <FlexDiv2>
-          <CamDiv>
-            <CamList />
-          </CamDiv>
-          <ChatDiv>
-            <ChatBox />
-          </ChatDiv>
-        </FlexDiv2>
-      </MainDiv>
-      <Modal
-        className="h-[20%] w-[20%] min-w-[200px] max-w-[900px]"
-        isShowing={isModalOpen}
-        close={() => setIsModalOpen(false)}
-      >
-        <FlexDiv3>
-          <FlexDiv4>종료하시겠습니까?</FlexDiv4>
-          <FlexDiv4 className="justify-end">
-            <ExitButton
-              style={{
-                marginTop: "0px",
-                marginBottom: "0px",
-                padding: "5px 20px",
-              }}
-              onClick={exitWorkspace}
-            >
-              종료
-            </ExitButton>
-          </FlexDiv4>
-        </FlexDiv3>
-      </Modal>
+      <WebSocketContext>
+        <MainDiv>
+          {/* Section 1 */}
+          <AlgoDiv>
+            <AlgoFilterDiv>
+              <AlgoFilterContainer />
+            </AlgoFilterDiv>
+            <AlgoInfoDiv>
+              <AlgoInfo />
+            </AlgoInfoDiv>
+          </AlgoDiv>
+          {/* Section 2 */}
+          <CodeDiv>
+            <LiveCode />
+          </CodeDiv>
+          {/* Section 3 */}
+          <FlexDiv>
+            {/* 컴파일 정보 */}
+            <CompileInfoDiv>
+              <CompileInfo />
+            </CompileInfoDiv>
+            {/* 테스트 케이스 */}
+            <TestCasaeDiv>
+              <TestCaseList />
+            </TestCasaeDiv>
+            {/* 아래 버튼 3개 */}
+            <UtilButtonsDiv>
+              <UtilButtonDiv>
+                <SnapshotBtn />
+              </UtilButtonDiv>
+              <UtilButtonDiv>
+                <TimerBtn />
+              </UtilButtonDiv>
+              <UtilButtonDiv>
+                <IconButton
+                  name="circle-xmark"
+                  size="lg"
+                  onClick={onClickExit}
+                />
+              </UtilButtonDiv>
+            </UtilButtonsDiv>
+          </FlexDiv>
+          {/* Section 4 */}
+          <FlexDiv2>
+            <CamDiv>
+              <CamList />
+            </CamDiv>
+            <ChatDiv>
+              <ChatBox />
+            </ChatDiv>
+          </FlexDiv2>
+        </MainDiv>
+        <Modal
+          className="h-[20%] w-[20%] min-w-[200px] max-w-[900px]"
+          isShowing={isModalOpen}
+          close={() => setIsModalOpen(false)}
+        >
+          <FlexDiv3>
+            <FlexDiv4>종료하시겠습니까?</FlexDiv4>
+            <FlexDiv4 className="justify-end">
+              <ExitButton
+                style={{
+                  marginTop: "0px",
+                  marginBottom: "0px",
+                  padding: "5px 20px",
+                }}
+                onClick={exitWorkspace}
+              >
+                종료
+              </ExitButton>
+            </FlexDiv4>
+          </FlexDiv3>
+        </Modal>
+        <Toast />
+      </WebSocketContext>
     </>
   );
 };
@@ -177,7 +186,7 @@ h-[calc(80%-15px)]
 
 /* 3.4.2 실시간 동시 코딩 */
 const CodeDiv = tw(CommonDiv)`
-grow-[6]
+grow-[6] bg-[#1E1E1E]
 `;
 
 /* 3.4.5 컴파일 정보 */

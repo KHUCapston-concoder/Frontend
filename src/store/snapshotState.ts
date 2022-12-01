@@ -1,4 +1,4 @@
-import { ISnapshotDetail, ISnapshotInfo } from "@/interface/Snapshot";
+import { ISnapshotDetail, ISnapshotInfo } from "@/interface/ISnapshot";
 import { atom, selector } from "recoil";
 
 const initialState: ISnapshotDetail = {
@@ -21,3 +21,8 @@ export const snapshotListState = atom({
   key: "snapshotListState",
   default: initialListState,
 });
+
+export const snapshotLengthState = atom({
+  key: "snapshotLengthState",
+  default: 0,
+})

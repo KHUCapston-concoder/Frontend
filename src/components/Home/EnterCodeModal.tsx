@@ -3,12 +3,35 @@ import { generateNickname } from "@/utils/commonFunc/genNickname";
 import tw from "tailwind-styled-components";
 import InputBox from "@/components/_styled/Input";
 import { useNavigate } from "react-router-dom";
+import { usePost } from "@/hooks/useHttp";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "@/store/userInfoState";
 
 const EnterCodeModal = () => {
   const [nickname, setNickname] = useState<string>("");
   const [workspaceId, setWorkspaceId] = useState<string>("");
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const navigate = useNavigate();
+
+  const setUserInfoHandler = (res: any) => {
+    const userId = res.id;
+    setUserInfo({
+      userId: userId,
+      username: nickname,
+      workspaceId: workspaceId,
+    });
+
+    localStorage.setItem("nickname", nickname);
+    localStorage.setItem("workspace-id", workspaceId);
+  };
+
+  const { isLoading, error, sendRequest } = usePost(
+    {
+      url: "/api/video/user",
+    },
+    setUserInfoHandler
+  );
 
   useEffect(() => {
     const savedNickname = localStorage.getItem("nickname") || "";
@@ -24,9 +47,8 @@ const EnterCodeModal = () => {
 
   const enterWorkspace = () => {
     /* @todo 이 코드의 방이 있는지 확인*/
-    console.log(workspaceId);
+    sendRequest({ username: nickname });
 
-    localStorage.setItem("nickname", nickname);
     navigate(`/workspace/${workspaceId}`);
   };
 

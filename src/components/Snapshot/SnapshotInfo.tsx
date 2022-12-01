@@ -1,6 +1,10 @@
 import { useDelete, useGet } from "@/hooks/useHttp";
 import { ISnapshotDetail, ISnapshotInfo } from "@/interface/Snapshot";
-import { snapshotListState, snapshotState } from "@/store/snapshotState";
+import {
+  snapshotLengthState,
+  snapshotListState,
+  snapshotState,
+} from "@/store/snapshotState";
 import React from "react";
 import { useRecoilState } from "recoil";
 import tw from "tailwind-styled-components";
@@ -13,6 +17,8 @@ interface PropType {
 const SnapshotInfo = ({ data }: PropType) => {
   const [snapshotDetail, setSnapshotDetail] = useRecoilState(snapshotState);
   const [snapshotList, setSnapshotList] = useRecoilState(snapshotListState);
+  const [snapshotLength, setSnapshotLength] =
+    useRecoilState(snapshotLengthState);
 
   const { sendRequest: sendGet } = useGet(
     { url: `/api/snapshots/${data.id}` },
@@ -32,6 +38,7 @@ const SnapshotInfo = ({ data }: PropType) => {
       list.filter((e: ISnapshotInfo) => e.id !== data.id);
       return { list: list.filter((e: ISnapshotInfo) => e.id !== data.id) };
     });
+    setSnapshotLength(snapshotLength - 1);
   };
   const onAddMemo = () => {};
 

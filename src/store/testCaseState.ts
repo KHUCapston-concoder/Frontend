@@ -8,12 +8,24 @@ export interface testCase {
 export interface StateType {
   list: Array<testCase>;
 }
+export interface StateType2 {
+  list: Array<string>;
+}
 
-const initialState: StateType = {
+const initialState1: StateType = {
+  list: [],
+};
+
+const initialState2: StateType2 = {
   list: [],
 };
 
 export const testCaseState = atom({
   key: "testCaseState",
-  default: initialState,
+  default: initialState1,
+});
+
+export const testCaseResultState = atom({
+  key: "testCaseResultState",
+  default: initialState2,
 });

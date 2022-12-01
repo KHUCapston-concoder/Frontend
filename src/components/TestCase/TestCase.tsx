@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
 import Textarea from "@/components/_styled/TextArea";
@@ -10,7 +16,9 @@ interface PropType {
   inputVal?: string;
   outputVal?: string;
   disabled?: boolean;
+  isAdding: boolean;
   setIsAdding: Dispatch<SetStateAction<boolean>>;
+  compileResult?: string | null;
 }
 
 const TestCase = ({
@@ -18,12 +26,11 @@ const TestCase = ({
   inputVal,
   outputVal,
   disabled,
-  setIsAdding
+  isAdding,
+  setIsAdding,
+  compileResult = null,
 }: PropType) => {
   const [testCases, setTestCases] = useRecoilState(testCaseState);
-
-  const [compileResult, setCompileResult] = useState(null);
-  const [isEditing, setIsEditing] = useState(true);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const outputRef = useRef<HTMLTextAreaElement>(null);
@@ -36,8 +43,6 @@ const TestCase = ({
   };
 
   const onSaveTestCase = () => {
-    console.log(inputRef.current?.value, outputRef.current?.value);
-
     const newObj = {
       input: inputRef.current?.value,
       output: outputRef.current?.value,
@@ -45,12 +50,13 @@ const TestCase = ({
 
     const newList = [...testCases.list, newObj];
 
-    console.log(newList);
-
     setTestCases({ list: newList });
-    setIsEditing(false);
     setIsAdding(false);
   };
+
+  useEffect(() => {
+    compileResult = null;
+  }, [isAdding]);
 
   return (
     <MainDiv>
@@ -58,7 +64,8 @@ const TestCase = ({
         <div className="flex items-center gap-[8px]">
           {`#${testCaseNo + 1}`}
           {/* 테스트 케이스 컴파일 성공 여부 */}
-          {!isEditing && (
+          {/* {compileResult} */}
+          {
             <>
               {compileResult == "success" && (
                 <CompileResultDiv>
@@ -67,17 +74,17 @@ const TestCase = ({
                 </CompileResultDiv>
               )}
               {compileResult == "fail" && (
-                <CompileResultDiv>
+                <CompileResultDiv style={{ backgroundColor: "tomato" }}>
                   <i className="fa-solid fa-triangle-exclamation" />
                   {"  "}컴파일 실패
                 </CompileResultDiv>
               )}
             </>
-          )}
+          }
         </div>
         {/* 삭제/저장 버튼 */}
         <div className="flex gap-[14px]">
-          {isEditing && (
+          {isAdding && (
             <IconButton
               name="check"
               width="fit-content"
@@ -95,19 +102,19 @@ const TestCase = ({
       <Textarea
         label="입력"
         className="h-fit w-full"
-        disabled={!isEditing || disabled}
+        disabled={!isAdding || disabled}
         placeholder={inputVal}
         ref={inputRef}
       />
       <Textarea
         label="출력"
         className="h-fit w-full"
-        disabled={!isEditing || disabled}
+        disabled={!isAdding || disabled}
         placeholder={outputVal}
         ref={outputRef}
       />
       {/* 취소 & 저장 버튼 */}
-      {isEditing && <></>}
+      {isAdding && <></>}
     </MainDiv>
   );
 };
@@ -135,7 +142,7 @@ w-fit h-fit
 p-[0_6px]
 rounded-[10px]
 bg-accent
-text-neutral font-bold text-2xs 
+text-neutral font-bold text-[7px]
 `;
 
 const DropdownA = tw.a`
