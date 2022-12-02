@@ -4,13 +4,11 @@ import RemoteCam from "@/components/Cam/RemoteCam";
 
 // stomp, sockJS
 import SockJS from "sockjs-client";
-import Stomp from "webstomp-client";
-import { constants } from "buffer";
-import { v4 as uuid } from "uuid";
-import { uuidv4 } from "@/utils/commonFunc/genUuid";
-import axios from "axios";
+import Stomp, { Client } from "webstomp-client";
 
-// const localId = uuidv4();
+import { userInfoState } from "@/store/userInfoState";
+import { useRecoilState } from "recoil";
+import WebSocketContext from "@/context/WebSocketContext";
 
 const CamList = () => {
   const [localStream, setLocalStream] = useState<MediaStream | undefined>(null);
@@ -21,29 +19,14 @@ const CamList = () => {
   // socket
   const socketUrl = `http://163.180.146.59/api/ws-connection`;
   const [ws, setWs] = useState<WebSocket | undefined>(null);
-  // sockjs
-  let socket;
-  let stomp;
-  const [input, setInput] = useState(null);
-  const setInputHandler = (event) => {
-    setInput(event.target.value);
-  };
-  const [userId, setUserId] = useState(null);
-  const [roomId, setRoomId] = useState(null);
-  const setUserIdHandler = (num) => {
-    axios
-      .post("http://163.180.146.59/api/dummy", {})
-      .then((res) => {
-        const { data } = res;
-        // console.log(data.users[num].id);
-        // console.log(data.rooms[0].id);
-        setUserId(data.users[num].id);
-        setRoomId(data.rooms[0].id);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+
+  // stomp
+  // const [stompClient, setStompClient] = useState<Client | null>(null);
+
+  // userInfo
+  // const [userId, setUserId] = useState(null);
+  // const [roomId, setRoomId] = useState(null);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   // socket message send 함수
   const makeMsg = (eventType, payload, from = null, to = null) => {
@@ -80,20 +63,10 @@ const CamList = () => {
 
   useEffect(() => {
     let pc;
-    if (
-      localStream != null &&
-      input != null &&
-      userId == null &&
-      roomId == null
-    ) {
-      setUserIdHandler(input);
+    if (localStream !== null) {
+      // TODO: stompClient 가져와서 RTC 커넥트 진행
     }
-    if (
-      localStream != null &&
-      input != null &&
-      userId != null &&
-      roomId != null
-    ) {
+    if (localStream !== null && false) {
       console.log(userId);
       console.log(roomId);
 
@@ -299,7 +272,7 @@ const CamList = () => {
     //       memberExitHandler(parsedMsg);
     //       break;
     //   }
-  }, [localStream, input, userId, roomId]);
+  }, [localStream]);
 
   return (
     <>
@@ -316,7 +289,6 @@ const CamList = () => {
         />
       </div>
       <button onClick={handler}>test !!</button>
-      <input onChange={setInputHandler}></input>
     </>
   );
 };
