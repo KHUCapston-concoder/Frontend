@@ -13,6 +13,8 @@
     "@codemirror/lang-python": "^6.1.0",
     "@codemirror/legacy-modes": "^6.3.1",
     "@codemirror/stream-parser": "^0.19.9",
+    "@codemirror/stream-parser": "^0.19.9",
+    "@codemirror/view": "^6.6.0",
     "@fortawesome/fontawesome-free": "^6.2.0",
     "@monaco-editor/react": "^4.4.6",
     "@types/node": "^18.8.3",
@@ -26,6 +28,7 @@
     "recoil": "^0.7.5",
     "sass": "^1.55.0",
     "styled-components": "^5.3.6",
+    "webstomp-client": "^1.2.6"
     "yorkie-js-sdk": "^0.2.19"
   },
   "devDependencies": {

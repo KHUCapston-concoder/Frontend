@@ -22,6 +22,7 @@ import { Transaction, type ChangeSpec } from "@codemirror/state";
 import { basicSetup, EditorView } from "codemirror";
 import useCodeMirror from "@/hooks/Components/useCodeMirror";
 import useCompile from "@/hooks/Components/useCompile";
+import {EditorView} from "codemirror"
 
 type YorkieDoc = {
   content: YorkieText;
@@ -34,24 +35,24 @@ const LiveCode = () => {
   );
 
   const updateHandler = EditorView.updateListener.of((viewUpdate) => {
-    if (viewUpdate.docChanged) {
-      for (const tr of viewUpdate.transactions) {
-        const events = ["select", "input", "delete", "move", "undo", "redo"];
-        if (!events.map((event) => tr.isUserEvent(event)).some(Boolean)) {
-          continue;
-        }
-        if (tr.annotation(Transaction.remote)) {
-          continue;
-        }
-        tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
-          console.log(fromA, toA, inserted);
+    // if (viewUpdate.docChanged) {
+    //   for (const tr of viewUpdate.transactions) {
+    //     const events = ["select", "input", "delete", "move", "undo", "redo"];
+    //     if (!events.map((event) => tr.isUserEvent(event)).some(Boolean)) {
+    //       continue;
+    //     }
+    //     if (tr.annotation(Transaction.remote)) {
+    //       continue;
+    //     }
+    //     tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
+    //       console.log(fromA, toA, inserted);
 
-          doc.update((root) => {
-            root.content?.edit(fromA, toA, inserted.toJSON().join("\n"));
-          }, "코드 에디터에 문제가 있습니다.");
-        });
-      }
-    }
+    //       doc.update((root) => {
+    //         root.content?.edit(fromA, toA, inserted.toJSON().join("\n"));
+    //       }, "코드 에디터에 문제가 있습니다.");
+    //     });
+    //   }
+    // }
   });
 
   const { view, editorRef } = useCodeMirror({ updateHandler });

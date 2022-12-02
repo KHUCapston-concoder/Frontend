@@ -1,46 +1,34 @@
-import { useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import tw from "tailwind-styled-components";
+import { IconButton } from "../_styled/Buttons";
 
-const LocalCam = ({ onSetLocalStream }) => {
+interface PropType {
+  onSetLocalStream: (stream: any) => void;
+}
+
+const LocalCam = ({ onSetLocalStream }: PropType) => {
   const localStream = useRef<MediaStream | undefined>(null);
   const localCam = useRef<HTMLVideoElement | undefined>(null);
   const cameraBtn = useRef<HTMLButtonElement | undefined>(null);
   const muteBtn = useRef<HTMLButtonElement | undefined>(null);
 
-  // 현재 카메라 off 상태 담는 변수 (컴포넌트 재실행할 필요 없어서 state가 아닌 변수로 관리)
-  let cameraOff = false;
-  // 현재 오디오 off 상태 담는 변수 (컴포넌트 재실행할 필요 없어서 state가 아닌 변수로 관리)
-  let muted = false;
+  const [cameraOff, setCameraOff] = useState(false);
+  const [mute, setMute] = useState(false);
 
   // cam on/off 관리 함수
   const camClickHandler = () => {
     localStream.current?.getVideoTracks().forEach((track) => {
-      track.enabled = !track.enabled;
+      track.enabled = cameraOff;
     });
-    if (cameraBtn.current != null) {
-      if (cameraOff) {
-        cameraBtn.current.innerText = "Cam Off";
-        cameraOff = false;
-      } else {
-        cameraBtn.current.innerText = "Cam On";
-        cameraOff = true;
-      }
-    }
+    setCameraOff(!cameraOff);
   };
 
   // audio on/off 관리 함수
   const muteClickHandler = () => {
     localStream.current?.getAudioTracks().forEach((track) => {
-      track.enabled = !track.enabled;
+      track.enabled = mute;
     });
-    if (muteBtn.current != null) {
-      if (muted) {
-        muteBtn.current.innerText = "Mute";
-        muted = false;
-      } else {
-        muteBtn.current.innerText = "Unmute";
-        muted = true;
-      }
-    }
+    setMute(!mute);
   };
 
   const getMedia = async () => {
@@ -66,14 +54,50 @@ const LocalCam = ({ onSetLocalStream }) => {
   return (
     <>
       <video id="localCam" ref={localCam}></video>
-      <button onClick={camClickHandler} ref={cameraBtn}>
-        Cam Off
-      </button>
-      <button onClick={muteClickHandler} ref={muteBtn}>
-        Mute
-      </button>
+      {/* 원래 아래 부붙 className 동적으로 생성할 수 있는데 
+      fontAwesome 측의 버그로 이런식으로 해야 재렌더링이 됨 .. 
+      나중에 바꿀것 @todo */}
+      <ButtonsDiv>
+        {cameraOff ? (
+          <span>
+            <span />
+            <IconButton
+              name="video-slash"
+              size="sm"
+              onClick={camClickHandler}
+            />
+          </span>
+        ) : (
+          <div>
+            <IconButton name="video" size="sm" onClick={camClickHandler} />
+          </div>
+        )}
+        {mute ? (
+          <span>
+            <span />
+            <IconButton
+              name="volume-slash"
+              size="xs"
+              onClick={muteClickHandler}
+            />
+          </span>
+        ) : (
+          <span>
+            <IconButton name="volume" size="xs" onClick={muteClickHandler} />
+          </span>
+        )}
+      </ButtonsDiv>
     </>
   );
 };
 
 export default LocalCam;
+
+const ButtonsDiv = tw.div`
+w-fit 
+float-right
+relative bottom-[30px] right-[5px]
+px-[12px] py-[5px]
+flex gap-[10px] justify-end
+rounded-[5px] bg-neutral
+`;
