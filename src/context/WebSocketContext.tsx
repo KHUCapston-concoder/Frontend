@@ -1,41 +1,28 @@
 import { userInfoState } from "@/store/userInfoState";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import Stomp, { Client } from "webstomp-client";
 
-const WebSocketContext = React.createContext<any>(null);
+const webSocketUrl = "ws://163.180.146.59/api/ws-connection";
+
+const WebSocketContext = React.createContext<any>(
+  Stomp.over(new WebSocket(webSocketUrl))
+);
 export { WebSocketContext };
 
 export default ({ children }: { children: React.ReactNode }) => {
-  const webSocketUrl = "ws://163.180.146.59/api/ws-connection";
-
-  const [stompClient, setStompClient] = useState<Client | null>(null);
   const userInfo = useRecoilValue(userInfoState);
-
-  const createStomp = async () => {
-    try {
-      if (!stompClient) {
-        const stompObj = await Stomp.over(new WebSocket(webSocketUrl), {
-          debug: true,
-        });
-        setStompClient(stompObj);
-      } else {
-        sendRoomInfo();
-      }
-    } catch (e) {
-      console.error("Can't Create Stomp");
-    }
-  };
+  const stompClient = useContext(WebSocketContext);
 
   const disconnectStomp = () => {};
 
   const sendRoomInfo = () => {
     console.log(stompClient);
 
-    stompClient?.connect(
+    stompClient.current.connect(
       {},
       () => {
-        stompClient.send(
+        stompClient.current.send(
           `/video/joined-room-info/${userInfo.workspaceId}`,
           JSON.stringify({
             sessionId: userInfo.userId,
@@ -49,10 +36,6 @@ export default ({ children }: { children: React.ReactNode }) => {
       }
     );
   };
-
-  useEffect(() => {
-    createStomp();
-  }, [stompClient]);
 
   return (
     <WebSocketContext.Provider value={stompClient}>
