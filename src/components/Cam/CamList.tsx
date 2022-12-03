@@ -23,9 +23,12 @@ const CamList = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   // socket message send 함수
-  const makeMsg = (eventType, payload, from = null, to = null) => {
-    const msg = { event: eventType, data: payload, from: from, to: to };
-    ws?.send(JSON.stringify(msg));
+  const sendMsg = (endpoint: string, data: object) => {
+    const payload = { ...data };
+    stompClient?.send(
+      `${endpoint}/${userInfo.workspaceId}`,
+      JSON.stringify(payload)
+    );
   };
 
   // webRTC
@@ -55,18 +58,15 @@ const CamList = () => {
   // remoteCam Component Ref
   const remoteCamRef = useRef();
 
-  // user exit (브라우저 창 끄기)
+  // user exit (브라우저 창 새로고침)
   const exit = () => {
     window.onbeforeunload = (event) => {
       event.preventDefault();
       event.returnValue = "";
-      stompClient?.send(
-        `/pub/video/unjoined-room-info/${userInfo.workspaceId}`,
-        JSON.stringify({
-          userId: userInfo.userId,
-          sessionId: userInfo.userId,
-        })
-      );
+      sendMsg("/pub/video/unjoined-room-info", {
+        userId: userInfo.userId,
+        sessionId: userInfo.userId,
+      });
     };
   };
 
@@ -85,14 +85,14 @@ const CamList = () => {
         () => {
           stompClient.subscribe(
             `/sub/video/joined-room-info/${userInfo.workspaceId}`,
-            async (data) => {
-              let users = JSON.parse(data.body).userResponses;
+            async (msg) => {
+              let users = JSON.parse(msg.body).userResponses;
               let topIdx = users.length - 1;
-              let joinedId = users[topIdx].id;
+              let newUserId = users[topIdx].id;
               // workspace에 본인밖에 없음
               if (topIdx <= 0) return;
               // (본인이) workspace에 들어왔을 때 다른 멤버가 존재
-              if (joinedId === userInfo.userId) {
+              if (newUserId === userInfo.userId) {
                 users.pop();
                 console.log("기존 멤버 리스트입니다 " + users);
                 for (let mem of users) {
@@ -106,56 +106,44 @@ const CamList = () => {
                   );
                   pc.onicecandidate = (event) => {
                     console.log("ice candidate 얻음");
-                    // makeMsg("ice", event.candidate, from, to);
-                    stompClient.send(
-                      `/pub/video/caller-info/${userInfo.workspaceId}`,
-                      JSON.stringify({
-                        from: userInfo.userId,
-                        to: mem.id,
-                        signal: event.candidate,
-                        type: "ice",
-                      })
-                    );
+                    sendMsg("/pub/video/caller-info", {
+                      from: userInfo.userId,
+                      to: mem.id,
+                      signal: event.candidate,
+                      type: "ice",
+                    });
                   };
                 }
                 return;
               }
               // workspace에 새로운 멤버가 들어왔을 때
-              console.log(joinedId + " 멤버가 방에 입장했습니다!");
+              console.log(newUserId + " 멤버가 방에 입장했습니다!");
               pc = remoteCamRef.current.makePeerConnection();
-              pcRef.current[joinedId] = pc;
-              setPcsHandler(joinedId, pc);
+              pcRef.current[newUserId] = pc;
+              setPcsHandler(newUserId, pc);
               pc = remoteCamRef.current.setPeerConnection(
                 pc,
                 userInfo.userId,
-                joinedId
+                newUserId
               );
               pc.onicecandidate = (event) => {
                 console.log("ice candidate 얻음");
-                // makeMsg("ice", event.candidate, from, to);
-                stompClient.send(
-                  `/pub/video/caller-info/${userInfo.workspaceId}`,
-                  JSON.stringify({
-                    from: userInfo.userId,
-                    to: joinedId,
-                    signal: event.candidate,
-                    type: "ice",
-                  })
-                );
+                sendMsg("/pub/video/caller-info", {
+                  from: userInfo.userId,
+                  to: newUserId,
+                  signal: event.candidate,
+                  type: "ice",
+                });
               };
               const offer = await pc.createOffer();
               pc.setLocalDescription(offer);
-              // makeMsg("offer", offer, localId, joinedId);
-              stompClient.send(
-                `/pub/video/caller-info/${userInfo.workspaceId}`,
-                JSON.stringify({
-                  from: userInfo.userId,
-                  to: joinedId,
-                  signal: offer,
-                  type: "offer",
-                })
-              );
-              console.log(joinedId + " 에게 offer 생성 후 보냄");
+              sendMsg("/pub/video/caller-info", {
+                from: userInfo.userId,
+                to: newUserId,
+                signal: offer,
+                type: "offer",
+              });
+              console.log(newUserId + " 에게 offer 생성 후 보냄");
             }
           );
 
@@ -164,8 +152,9 @@ const CamList = () => {
             async (msg) => {
               let data = JSON.parse(msg.body);
               let caller = data.from;
+              let callee = data.to;
 
-              if (caller === userInfo.userId || data.to !== userInfo.userId)
+              if (caller === userInfo.userId || callee !== userInfo.userId)
                 return;
               if (data.type === "offer") {
                 let offer = data.signal;
@@ -176,15 +165,11 @@ const CamList = () => {
                 const answer = await pc.createAnswer();
                 pc.setLocalDescription(answer);
                 console.log("locatDescription 설정");
-                // makeMsg("answer", answer, localId, data.from);
-                stompClient.send(
-                  `/pub/video/callee-info/${userInfo.workspaceId}`,
-                  JSON.stringify({
-                    from: userInfo.userId,
-                    to: caller,
-                    signal: answer,
-                  })
-                );
+                sendMsg("/pub/video/callee-info", {
+                  from: userInfo.userId,
+                  to: caller,
+                  signal: answer,
+                });
                 console.log(caller + " answer 생성 후 송신");
               } else if (data.type === "ice") {
                 console.log("ice 수신");
@@ -224,13 +209,10 @@ const CamList = () => {
           );
 
           // connect되면 해당 endpoint로 메세지 전달 (입장 정보 전달)
-          stompClient.send(
-            `/pub/video/joined-room-info/${userInfo.workspaceId}`,
-            JSON.stringify({
-              userId: userInfo.userId,
-              sessionId: userInfo.userId,
-            })
-          );
+          sendMsg("/pub/video/joined-room-info", {
+            userId: userInfo.userId,
+            sessionId: userInfo.userId,
+          });
         },
         () => {
           console.log("error has occurred while trying to connect stompClient");
