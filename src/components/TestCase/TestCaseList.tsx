@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import TestCase from "@/components/TestCase/TestCase";
 import { IconButton } from "@/components/_styled/Buttons";
 import LabelTab from "@/components/_styled/LabelTab";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { testCaseResultState, testCaseState } from "@/store/testCaseState";
+import { WebSocketContext } from "@/context/WebSocketContext";
+import { userInfoState } from "@/store/userInfoState";
 
 const TestCaseList = () => {
   const [testCases, setTestCases] = useRecoilState(testCaseState);
   const [isAdding, setIsAdding] = useState(false);
   const [testCaseResultList, setTestCaseResultList] =
     useRecoilState(testCaseResultState);
+
+  const stompClient = useContext(WebSocketContext);
+  const userInfo = useRecoilValue(userInfoState);
 
   const showAddBtn = () => {
     return (testCases.list.length == 0 && !isAdding) || !isAdding;
@@ -25,6 +30,21 @@ const TestCaseList = () => {
   useEffect(() => {
     setTestCaseResultList({ list: [] });
   }, [testCases]);
+
+  useEffect(() => {
+    if (stompClient.connected) {
+      console.log("subscribe");
+
+      stompClient.subscribe(
+        `/sub/testcases/create/${userInfo.workspaceId}`,
+        (res) => {
+          const data = JSON.parse(res.body);
+          console.log("지민아 안녕 subscribe", data);
+          setTestCases({ list: [...testCases.list, data] });
+        }
+      );
+    }
+  }, [stompClient.connected]);
 
   return (
     <>
@@ -43,7 +63,6 @@ const TestCaseList = () => {
           />
         )}
         {sortedTestCases.map((e, idx) => {
-
           const compileResult =
             testCaseResultList.list?.[
               testCaseResultList?.list?.length - idx - 1

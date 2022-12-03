@@ -1,6 +1,7 @@
 import React, {
   Dispatch,
   SetStateAction,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -8,8 +9,11 @@ import React, {
 import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
 import Textarea from "@/components/_styled/TextArea";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { testCaseState } from "@/store/testCaseState";
+import { WebSocketContext } from "@/context/WebSocketContext";
+import { userInfo } from "os";
+import { userInfoState } from "@/store/userInfoState";
 
 interface PropType {
   testCaseNo: number;
@@ -35,6 +39,9 @@ const TestCase = ({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const outputRef = useRef<HTMLTextAreaElement>(null);
 
+  const userInfo = useRecoilValue(userInfoState);
+  const stompClient = useContext(WebSocketContext);
+
   const onDeleteTestCase = () => {
     const newList = testCases.list.filter((item, idx) => idx !== testCaseNo);
 
@@ -47,6 +54,13 @@ const TestCase = ({
       input: inputRef.current?.value,
       output: outputRef.current?.value,
     };
+
+    if (stompClient.connected) {
+      stompClient.send(
+        `/pub/testcases/create/${userInfo.workspaceId}`,
+        JSON.stringify(newObj)
+      );
+    }
 
     const newList = [...testCases.list, newObj];
 
