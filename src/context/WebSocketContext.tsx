@@ -16,13 +16,25 @@ export default ({ children }: { children: React.ReactNode }) => {
 
   const disconnectStomp = () => {};
 
+  const connectStomp = () => {
+    stompClient.connect(
+      {},
+      () => {
+        console.log("connect");
+      },
+      () => {
+        console.error("Can't Connect Stomp");
+      }
+    );
+  };
+
   const sendRoomInfo = () => {
     console.log(stompClient);
 
-    stompClient.current.connect(
+    stompClient.connect(
       {},
       () => {
-        stompClient.current.send(
+        stompClient.send(
           `/video/joined-room-info/${userInfo.workspaceId}`,
           JSON.stringify({
             sessionId: userInfo.userId,
@@ -36,6 +48,12 @@ export default ({ children }: { children: React.ReactNode }) => {
       }
     );
   };
+
+  useEffect(() => {
+    if (stompClient.connected === false) {
+      connectStomp();
+    }
+  }, []);
 
   return (
     <WebSocketContext.Provider value={stompClient}>
