@@ -96,7 +96,6 @@ const CamList = () => {
                   );
                   pc.onicecandidate = (event) => {
                     console.log("ice candidate 얻음");
-                    console.log(event.candidate);
                     // makeMsg("ice", event.candidate, from, to);
                     stompClient.send(
                       `/pub/video/caller-info/${userInfo.workspaceId}`,
@@ -123,7 +122,6 @@ const CamList = () => {
               );
               pc.onicecandidate = (event) => {
                 console.log("ice candidate 얻음");
-                console.log(event.candidate);
                 // makeMsg("ice", event.candidate, from, to);
                 stompClient.send(
                   `/pub/video/caller-info/${userInfo.workspaceId}`,
@@ -181,7 +179,6 @@ const CamList = () => {
               } else if (data.type === "ice") {
                 console.log("ice 수신");
                 if (data.signal === null) {
-                  console.log(data);
                   return;
                 }
                 pc = pcRef.current[caller];
@@ -193,8 +190,16 @@ const CamList = () => {
 
           stompClient.subscribe(
             `/sub/video/callee-info/${userInfo.workspaceId}`,
-            (data) => {
-              // console.log(JSON.parse(data.body));
+            (msg) => {
+              let data = JSON.parse(msg.body);
+              let from = data.from;
+              if (from === userInfo.userId || data.to !== userInfo.userId)
+                return;
+              let answer = data.signal;
+              console.log(from + " 에게 answer 받음, answer : " + answer);
+              pc = pcRef.current[from];
+              pc.setRemoteDescription(answer);
+              console.log("remoteDescription 설정");
             }
           );
 
@@ -370,9 +375,8 @@ const CamList = () => {
       </div>
       <div>
         <RemoteCam
-          ws={ws}
+          stompClient={stompClient}
           localStream={localStream}
-          makeMsg={makeMsg}
           pcs={pcs}
           ref={remoteCamRef}
         />

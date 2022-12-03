@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 
-const RemoteCam = forwardRef(({ ws, localStream, makeMsg, pcs }, ref) => {
+const RemoteCam = forwardRef(({ stompClient, localStream, pcs }, ref) => {
   const memList = useRef<HTMLDivElement | undefined>(null);
   const [remoteStreams, setRemoteStreams] = useState(new Object());
   const delremoteStreamsHandler = (memId) => {
@@ -76,7 +76,7 @@ const RemoteCam = forwardRef(({ ws, localStream, makeMsg, pcs }, ref) => {
   };
 
   useEffect(() => {
-    if (ws != null) {
+    if (stompClient != null) {
       connectRemoteCam();
     }
   }, [remoteStreams]);
