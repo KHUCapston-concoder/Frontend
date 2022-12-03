@@ -31,10 +31,8 @@
   "devDependencies": {
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
-    "@types/sockjs-client": "^1.5.1",
     "@types/styled-components": "^5.1.26",
     "@vitejs/plugin-react": "^1.0.7",
-    "http-proxy-middleware": "^2.0.6",
     "prettier": "^2.5.1",
     "prettier-plugin-tailwindcss": "^0.1.5",
     "tailwind-styled-components": "^2.2.0",
