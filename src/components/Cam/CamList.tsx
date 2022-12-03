@@ -96,6 +96,7 @@ const CamList = () => {
                   );
                   pc.onicecandidate = (event) => {
                     console.log("ice candidate 얻음");
+                    console.log(event.candidate);
                     // makeMsg("ice", event.candidate, from, to);
                     stompClient.send(
                       `/pub/video/caller-info/${userInfo.workspaceId}`,
@@ -122,8 +123,8 @@ const CamList = () => {
               );
               pc.onicecandidate = (event) => {
                 console.log("ice candidate 얻음");
-                // makeMsg("ice", event.candidate, from, to);
                 console.log(event.candidate);
+                // makeMsg("ice", event.candidate, from, to);
                 stompClient.send(
                   `/pub/video/caller-info/${userInfo.workspaceId}`,
                   JSON.stringify({
@@ -153,44 +154,47 @@ const CamList = () => {
           stompClient.subscribe(
             `/sub/video/caller-info/${userInfo.workspaceId}`,
             async (msg) => {
-              console.log(JSON.parse(msg.body));
-              //   let data = JSON.parse(msg.body);
-              //   let caller = data.from;
+              let data = JSON.parse(msg.body);
+              let caller = data.from;
 
-              //   if (caller === userInfo.userId || data.to !== userInfo.userId)
-              //     return;
-              //   if (data.type === "offer") {
-              //     let offer = data.signal;
-              //     console.log(caller + " 에게 offer 받음, offer : " + offer);
-              //     pc = pcRef.current[caller];
-              //     pc.setRemoteDescription(offer);
-              //     console.log("remoteDescription 설정");
-              //     const answer = await pc.createAnswer();
-              //     pc.setLocalDescription(answer);
-              //     console.log("locatDescription 설정");
-              //     // makeMsg("answer", answer, localId, data.from);
-              //     stompClient.send(
-              //       `/pub/video/callee-info/${userInfo.workspaceId}`,
-              //       JSON.stringify({
-              //         from: userInfo.userId,
-              //         to: caller,
-              //         signal: answer,
-              //       })
-              //     );
-              //     console.log(caller + "answer 생성 후 송신");
-              //   } else if (data.type === "ice") {
-              //     console.log("ice 수신");
-              //     pc = pcRef.current[caller];
-              //     pc.addIceCandidate(data.signal);
-              //     console.log("ice candidate 추가");
-              //   }
+              if (caller === userInfo.userId || data.to !== userInfo.userId)
+                return;
+              if (data.type === "offer") {
+                let offer = data.signal;
+                console.log(caller + " 에게 offer 받음, offer : " + offer);
+                pc = pcRef.current[caller];
+                pc.setRemoteDescription(offer);
+                console.log("remoteDescription 설정");
+                const answer = await pc.createAnswer();
+                pc.setLocalDescription(answer);
+                console.log("locatDescription 설정");
+                // makeMsg("answer", answer, localId, data.from);
+                stompClient.send(
+                  `/pub/video/callee-info/${userInfo.workspaceId}`,
+                  JSON.stringify({
+                    from: userInfo.userId,
+                    to: caller,
+                    signal: answer,
+                  })
+                );
+                console.log(caller + " answer 생성 후 송신");
+              } else if (data.type === "ice") {
+                console.log("ice 수신");
+                if (data.signal === null) {
+                  console.log(data);
+                  return;
+                }
+                pc = pcRef.current[caller];
+                pc.addIceCandidate(data.signal);
+                console.log("ice candidate 추가");
+              }
             }
           );
 
           stompClient.subscribe(
             `/sub/video/callee-info/${userInfo.workspaceId}`,
             (data) => {
-              console.log(JSON.parse(data.body));
+              // console.log(JSON.parse(data.body));
             }
           );
 
