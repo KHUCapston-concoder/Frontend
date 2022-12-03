@@ -20,8 +20,6 @@ const Home = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const setUserInfoHandler = (res: any) => {
-    console.log("res", res);
-
     const workspaceId = res.rooms[0].id;
     const userId = res.users[0].id;
     const username = res.users[0].name;
