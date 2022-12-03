@@ -67,7 +67,7 @@ const CamList = () => {
 
   // 본인이 입장했을 때 (workspace에 이미 다른 멤버들 존재할 때)
   const enterHandler = (users, pc) => {
-    console.log("기존 멤버 리스트입니다 " + users);
+    console.log("기존 멤버 리스트: " + users);
     for (let mem of users) {
       pc = remoteCamRef.current.makePeerConnection();
       pcRef.current[mem.id] = pc;
@@ -221,7 +221,7 @@ const CamList = () => {
           ref={remoteCamRef}
         />
       </div>
-      <button onClick={handler}>test !!</button>
+      {/* <button onClick={handler}>test !!</button> */}
     </>
   );
 };
