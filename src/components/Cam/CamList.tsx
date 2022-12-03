@@ -70,6 +70,74 @@ const CamList = () => {
     };
   };
 
+  // 본인이 입장했을 때 (workspace에 이미 다른 멤버들 존재할 때)
+  const enterHandler = (users, pc) => {
+    console.log("기존 멤버 리스트입니다 " + users);
+    for (let mem of users) {
+      pc = remoteCamRef.current.makePeerConnection();
+      pcRef.current[mem.id] = pc;
+      setPcsHandler(mem.id, pc);
+      pc = remoteCamRef.current.setPeerConnection(pc, userInfo.userId, mem.id);
+    }
+  };
+
+  // 다른 멤버가 입장했을 때
+  const memEnterHandler = async (newUserId, pc) => {
+    console.log(newUserId + " 멤버가 방에 입장했습니다!");
+    pc = remoteCamRef.current.makePeerConnection();
+    pcRef.current[newUserId] = pc;
+    setPcsHandler(newUserId, pc);
+    pc = remoteCamRef.current.setPeerConnection(pc, userInfo.userId, newUserId);
+    const offer = await pc.createOffer();
+    pc.setLocalDescription(offer);
+    sendMsg("/pub/video/caller-info", {
+      from: userInfo.userId,
+      to: newUserId,
+      signal: offer,
+      type: "offer",
+    });
+    console.log(newUserId + " 에게 offer 생성 후 보냄");
+  };
+
+  // offer 받았을 때
+  const getOfferHandler = async (caller, offer, pc) => {
+    console.log(caller + " 에게 offer 받음, offer : " + offer);
+    pc = pcRef.current[caller];
+    pc.setRemoteDescription(offer);
+    console.log("remoteDescription 설정");
+    const answer = await pc.createAnswer();
+    pc.setLocalDescription(answer);
+    console.log("locatDescription 설정");
+    sendMsg("/pub/video/callee-info", {
+      from: userInfo.userId,
+      to: caller,
+      signal: answer,
+    });
+    console.log(caller + " answer 생성 후 송신");
+  };
+
+  // ice 받았을 때
+  const getIceHandler = (caller, ice, pc) => {
+    console.log("ice 수신");
+    pc = pcRef.current[caller];
+    pc.addIceCandidate(ice);
+    console.log("ice candidate 추가");
+  };
+
+  // answer 받았을 때
+  const getAnswerHandler = (caller, answer, pc) => {
+    console.log(caller + " 에게 answer 받음, answer : " + answer);
+    pc = pcRef.current[caller];
+    pc.setRemoteDescription(answer);
+    console.log("remoteDescription 설정");
+  };
+
+  // 다른 멤버가 나갔을 때
+  const memExitHandler = (exitedUserId) => {
+    delete pcRef.current[exitedUserId];
+    delPcsHandler(exitedUserId);
+  };
+
   useEffect(() => {
     let pc;
 
@@ -85,7 +153,7 @@ const CamList = () => {
         () => {
           stompClient.subscribe(
             `/sub/video/joined-room-info/${userInfo.workspaceId}`,
-            async (msg) => {
+            (msg) => {
               let users = JSON.parse(msg.body).userResponses;
               let topIdx = users.length - 1;
               let newUserId = users[topIdx].id;
@@ -94,73 +162,29 @@ const CamList = () => {
               // (본인이) workspace에 들어왔을 때 다른 멤버가 존재
               if (newUserId === userInfo.userId) {
                 users.pop();
-                console.log("기존 멤버 리스트입니다 " + users);
-                for (let mem of users) {
-                  pc = remoteCamRef.current.makePeerConnection();
-                  pcRef.current[mem.id] = pc;
-                  setPcsHandler(mem.id, pc);
-                  pc = remoteCamRef.current.setPeerConnection(
-                    pc,
-                    userInfo.userId,
-                    mem.id
-                  );
-                }
+                enterHandler(users, pc);
                 return;
               }
               // workspace에 새로운 멤버가 들어왔을 때
-              console.log(newUserId + " 멤버가 방에 입장했습니다!");
-              pc = remoteCamRef.current.makePeerConnection();
-              pcRef.current[newUserId] = pc;
-              setPcsHandler(newUserId, pc);
-              pc = remoteCamRef.current.setPeerConnection(
-                pc,
-                userInfo.userId,
-                newUserId
-              );
-              const offer = await pc.createOffer();
-              pc.setLocalDescription(offer);
-              sendMsg("/pub/video/caller-info", {
-                from: userInfo.userId,
-                to: newUserId,
-                signal: offer,
-                type: "offer",
-              });
-              console.log(newUserId + " 에게 offer 생성 후 보냄");
+              memEnterHandler(newUserId, pc);
             }
           );
 
           stompClient.subscribe(
             `/sub/video/caller-info/${userInfo.workspaceId}`,
-            async (msg) => {
+            (msg) => {
               let data = JSON.parse(msg.body);
               let caller = data.from;
               let callee = data.to;
+              let payload = data.signal;
 
               if (caller === userInfo.userId || callee !== userInfo.userId)
                 return;
+
               if (data.type === "offer") {
-                let offer = data.signal;
-                console.log(caller + " 에게 offer 받음, offer : " + offer);
-                pc = pcRef.current[caller];
-                pc.setRemoteDescription(offer);
-                console.log("remoteDescription 설정");
-                const answer = await pc.createAnswer();
-                pc.setLocalDescription(answer);
-                console.log("locatDescription 설정");
-                sendMsg("/pub/video/callee-info", {
-                  from: userInfo.userId,
-                  to: caller,
-                  signal: answer,
-                });
-                console.log(caller + " answer 생성 후 송신");
+                getOfferHandler(caller, payload, pc);
               } else if (data.type === "ice") {
-                console.log("ice 수신");
-                if (data.signal === null) {
-                  return;
-                }
-                pc = pcRef.current[caller];
-                pc.addIceCandidate(data.signal);
-                console.log("ice candidate 추가");
+                getIceHandler(caller, payload, pc);
               }
             }
           );
@@ -169,14 +193,13 @@ const CamList = () => {
             `/sub/video/callee-info/${userInfo.workspaceId}`,
             (msg) => {
               let data = JSON.parse(msg.body);
-              let from = data.from;
-              if (from === userInfo.userId || data.to !== userInfo.userId)
-                return;
+              let caller = data.from;
               let answer = data.signal;
-              console.log(from + " 에게 answer 받음, answer : " + answer);
-              pc = pcRef.current[from];
-              pc.setRemoteDescription(answer);
-              console.log("remoteDescription 설정");
+
+              if (caller === userInfo.userId || data.to !== userInfo.userId)
+                return;
+
+              getAnswerHandler(caller, answer, pc);
             }
           );
 
@@ -185,8 +208,8 @@ const CamList = () => {
             (msg) => {
               let data = JSON.parse(msg.body);
               let exitedUserId = data.userId;
-              delete pcRef.current[exitedUserId];
-              delPcsHandler(exitedUserId);
+
+              memExitHandler(exitedUserId);
             }
           );
 
@@ -202,34 +225,6 @@ const CamList = () => {
       );
       exit();
     }
-
-    // ws.onopen = () => {
-    //   makeMsg("enter", "workspace01", localId);
-    // };
-
-    // ws.onmessage = async (msg) => {
-    //   const parsedMsg = JSON.parse(msg.data);
-    //   let pc: RTCPeerConnection | undefined;
-    //   switch (parsedMsg.event) {
-    //     case "memberEnter":
-    //       memberEnterHandler(parsedMsg, pc);
-    //       break;
-    //     case "memList":
-    //       memListHandler(parsedMsg, pc);
-    //       break;
-    //     case "offer":
-    //       offerHandler(parsedMsg, pc);
-    //       break;
-    //     case "answer":
-    //       answerHandler(parsedMsg, pc);
-    //       break;
-    //     case "ice":
-    //       iceHandler(parsedMsg, pc);
-    //       break;
-    //     case "memberExit":
-    //       memberExitHandler(parsedMsg);
-    //       break;
-    //   }
   }, [localStream, stompClient]);
 
   return (
