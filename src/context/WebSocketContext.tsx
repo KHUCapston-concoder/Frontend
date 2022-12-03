@@ -6,7 +6,7 @@ import Stomp, { Client } from "webstomp-client";
 const webSocketUrl = "ws://163.180.146.59/api/ws-connection";
 
 const WebSocketContext = React.createContext<any>(
-  Stomp.over(new WebSocket(webSocketUrl))
+  Stomp.over(new WebSocket(webSocketUrl), { debug: false })
 );
 export { WebSocketContext };
 
@@ -20,7 +20,7 @@ export default ({ children }: { children: React.ReactNode }) => {
     stompClient.connect(
       {},
       () => {
-        console.log("connect");
+        // connect 완료
       },
       () => {
         console.error("Can't Connect Stomp");
