@@ -104,15 +104,6 @@ const CamList = () => {
                     userInfo.userId,
                     mem.id
                   );
-                  pc.onicecandidate = (event) => {
-                    console.log("ice candidate 얻음");
-                    sendMsg("/pub/video/caller-info", {
-                      from: userInfo.userId,
-                      to: mem.id,
-                      signal: event.candidate,
-                      type: "ice",
-                    });
-                  };
                 }
                 return;
               }
@@ -126,15 +117,6 @@ const CamList = () => {
                 userInfo.userId,
                 newUserId
               );
-              pc.onicecandidate = (event) => {
-                console.log("ice candidate 얻음");
-                sendMsg("/pub/video/caller-info", {
-                  from: userInfo.userId,
-                  to: newUserId,
-                  signal: event.candidate,
-                  type: "ice",
-                });
-              };
               const offer = await pc.createOffer();
               pc.setLocalDescription(offer);
               sendMsg("/pub/video/caller-info", {
@@ -258,6 +240,7 @@ const CamList = () => {
       <div>
         <RemoteCam
           stompClient={stompClient}
+          sendMsg={sendMsg}
           localStream={localStream}
           pcs={pcs}
           ref={remoteCamRef}
