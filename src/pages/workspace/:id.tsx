@@ -15,19 +15,29 @@ import SnapshotBtn from "@/components/Snapshot/PopupBtn";
 import TimerBtn from "@/components/Timer/PopupBtn";
 import { IconButton } from "@/components/_styled/Buttons";
 import tw from "tailwind-styled-components";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CamList from "@/components/Cam/CamList";
 import Toast from "@/components/_styled/Toast";
 import WebSocketContext from "@/context/WebSocketContext";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "@/store/userInfoState";
 
 const Workspace = () => {
   const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
   const [isModalOpen, setIsModalOpen, onClickExit] = useModal();
   const navigator = useNavigate();
+  const location = useLocation();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   useEffect(() => {
     sendRequestProbLevel();
     sendRequestProbCategory();
+
+    setUserInfo({
+      userId: userInfo.userId || "",
+      username: userInfo.username || "",
+      workspaceId: userInfo.workspaceId || location.pathname.split("/")[2],
+    });
   }, []);
 
   const exitWorkspace = () => {
