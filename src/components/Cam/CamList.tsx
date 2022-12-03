@@ -1,14 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import LocalCam from "@/components/Cam/LocalCam";
 import RemoteCam from "@/components/Cam/RemoteCam";
-
-// stomp, sockJS
-import SockJS from "sockjs-client";
-import Stomp, { Client } from "webstomp-client";
-
 import { userInfoState } from "@/store/userInfoState";
 import { useRecoilState } from "recoil";
-// import { useStompClient } from "@/context/WebSocketContext";
+import { WebSocketContext } from "@/context/WebSocketContext";
 
 const CamList = () => {
   const [localStream, setLocalStream] = useState<MediaStream | undefined>(null);
@@ -17,7 +12,7 @@ const CamList = () => {
   };
 
   // stomp
-  const [stompClient, setStompClient] = useState<Client | null>(null);
+  const stompClient = useContext(WebSocketContext);
 
   // userInfo
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
@@ -141,91 +136,76 @@ const CamList = () => {
   useEffect(() => {
     let pc;
 
-    if (localStream !== null && stompClient === null) {
-      setStompClient(
-        Stomp.over(new WebSocket("ws://163.180.146.59/api/ws-connection"), {
-          debug: false,
-        })
-      );
-    } else if (localStream !== null && stompClient !== null) {
-      stompClient.connect(
-        {},
-        () => {
-          stompClient.subscribe(
-            `/sub/video/joined-room-info/${userInfo.workspaceId}`,
-            (msg) => {
-              let users = JSON.parse(msg.body).userResponses;
-              let topIdx = users.length - 1;
-              let newUserId = users[topIdx].id;
-              // workspace에 본인밖에 없음
-              if (topIdx <= 0) return;
-              // (본인이) workspace에 들어왔을 때 다른 멤버가 존재
-              if (newUserId === userInfo.userId) {
-                users.pop();
-                enterHandler(users, pc);
-                return;
-              }
-              // workspace에 새로운 멤버가 들어왔을 때
-              memEnterHandler(newUserId, pc);
-            }
-          );
-
-          stompClient.subscribe(
-            `/sub/video/caller-info/${userInfo.workspaceId}`,
-            (msg) => {
-              let data = JSON.parse(msg.body);
-              let caller = data.from;
-              let callee = data.to;
-              let payload = data.signal;
-
-              if (caller === userInfo.userId || callee !== userInfo.userId)
-                return;
-
-              if (data.type === "offer") {
-                getOfferHandler(caller, payload, pc);
-              } else if (data.type === "ice") {
-                getIceHandler(caller, payload, pc);
-              }
-            }
-          );
-
-          stompClient.subscribe(
-            `/sub/video/callee-info/${userInfo.workspaceId}`,
-            (msg) => {
-              let data = JSON.parse(msg.body);
-              let caller = data.from;
-              let answer = data.signal;
-
-              if (caller === userInfo.userId || data.to !== userInfo.userId)
-                return;
-
-              getAnswerHandler(caller, answer, pc);
-            }
-          );
-
-          stompClient.subscribe(
-            `/sub/video/unjoined-room-info/${userInfo.workspaceId}`,
-            (msg) => {
-              let data = JSON.parse(msg.body);
-              let exitedUserId = data.userId;
-
-              memExitHandler(exitedUserId);
-            }
-          );
-
-          // connect되면 해당 endpoint로 메세지 전달 (입장 정보 전달)
-          sendMsg("/pub/video/joined-room-info", {
-            userId: userInfo.userId,
-            sessionId: userInfo.userId,
-          });
-        },
-        () => {
-          console.log("error has occurred while trying to connect stompClient");
+    if (localStream !== null && stompClient.connected === true) {
+      stompClient.subscribe(
+        `/sub/video/joined-room-info/${userInfo.workspaceId}`,
+        (msg) => {
+          let users = JSON.parse(msg.body).userResponses;
+          let topIdx = users.length - 1;
+          let newUserId = users[topIdx].id;
+          // workspace에 본인밖에 없음
+          if (topIdx <= 0) return;
+          // (본인이) workspace에 들어왔을 때 다른 멤버가 존재
+          if (newUserId === userInfo.userId) {
+            users.pop();
+            enterHandler(users, pc);
+            return;
+          }
+          // workspace에 새로운 멤버가 들어왔을 때
+          memEnterHandler(newUserId, pc);
         }
       );
+
+      stompClient.subscribe(
+        `/sub/video/caller-info/${userInfo.workspaceId}`,
+        (msg) => {
+          let data = JSON.parse(msg.body);
+          let caller = data.from;
+          let callee = data.to;
+          let payload = data.signal;
+
+          if (caller === userInfo.userId || callee !== userInfo.userId) return;
+
+          if (data.type === "offer") {
+            getOfferHandler(caller, payload, pc);
+          } else if (data.type === "ice") {
+            getIceHandler(caller, payload, pc);
+          }
+        }
+      );
+
+      stompClient.subscribe(
+        `/sub/video/callee-info/${userInfo.workspaceId}`,
+        (msg) => {
+          let data = JSON.parse(msg.body);
+          let caller = data.from;
+          let answer = data.signal;
+
+          if (caller === userInfo.userId || data.to !== userInfo.userId) return;
+
+          getAnswerHandler(caller, answer, pc);
+        }
+      );
+
+      stompClient.subscribe(
+        `/sub/video/unjoined-room-info/${userInfo.workspaceId}`,
+        (msg) => {
+          let data = JSON.parse(msg.body);
+          let exitedUserId = data.userId;
+
+          memExitHandler(exitedUserId);
+        }
+      );
+
+      // connect되면 해당 endpoint로 메세지 전달 (입장 정보 전달)
+      sendMsg("/pub/video/joined-room-info", {
+        userId: userInfo.userId,
+        sessionId: userInfo.userId,
+      });
+
       exit();
     }
-  }, [localStream, stompClient]);
+  }, [localStream]); // stompClient도 의존성으로 추가해야하는가? -> 우선 state가 변할 일이 없으니 빼놓고 진행
 
   return (
     <>
