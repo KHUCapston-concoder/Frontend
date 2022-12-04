@@ -41,8 +41,6 @@ const TestCaseList = () => {
           });
         }
       );
-        }
-      );
     }
   }, [stompClient.connected]);
 
