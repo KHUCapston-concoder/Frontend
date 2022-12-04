@@ -28,19 +28,19 @@ const TestCaseList = () => {
   };
 
   useEffect(() => {
-    setTestCaseResultList({ list: [] });
-  }, [testCases]);
-
-  useEffect(() => {
     if (stompClient.connected) {
-      console.log("subscribe");
-
       stompClient.subscribe(
         `/sub/testcases/create/${userInfo.workspaceId}`,
-        (res) => {
-          const data = JSON.parse(res.body);
-          console.log("지민아 안녕 subscribe", data);
-          setTestCases({ list: [...testCases.list, data] });
+        async (res: any) => {
+          const data = await JSON.parse(res.body);
+
+          const newList = [...testCases.list, data];
+
+          setTestCases({
+            list: newList,
+          });
+        }
+      );
         }
       );
     }

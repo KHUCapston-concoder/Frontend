@@ -1,8 +1,9 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 export interface testCase {
   input: string;
   output: string;
+  testCaseId: string;
 }
 
 export interface StateType {
