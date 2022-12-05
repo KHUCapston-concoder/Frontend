@@ -7,10 +7,12 @@ const Toast = () => {
   const [toastObj, setToastObj] = useRecoilState(toastMsgState);
 
   useEffect(() => {
-    setTimeout(() => {
-      setToastObj({ msg: "", show: false });
-    }, 4000);
-  }, [toastObj]);
+    if (toastObj.show)
+      setTimeout(() => {
+        setToastObj({ msg: "", show: false });
+        console.log(toastObj.show);
+      }, 2000);
+  }, [toastObj.show]);
 
   return (
     <ToastDiv className="toast" style={{ transform: "translate(-50%, -50%)" }}>

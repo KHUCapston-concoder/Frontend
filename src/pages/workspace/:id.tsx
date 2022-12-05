@@ -18,13 +18,27 @@ import Toast from "@/components/_styled/Toast";
 import WebSocketContext from "@/context/WebSocketContext";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
+import Tooltip from "@/components/_styled/Tooltip";
+import { toastMsgState } from "@/store/toastMsgState";
+import React from "react";
 
 const Workspace = () => {
   const [sendRequestProbLevel, sendRequestProbCategory] = useFetchAlgoInfo();
   const [isModalOpen, setIsModalOpen, onClickExit] = useModal();
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [, setToastObj] = useRecoilState(toastMsgState);
+
+  const onClickShare = async () => {
+    try {
+      await navigator.clipboard.writeText(userInfo.workspaceId);
+      setToastObj({
+        msg: `클립보드에 복사되었습니다 \n (${userInfo.workspaceId})`,
+        show: true,
+      });
+    } catch (e) {}
+  };
 
   useEffect(() => {
     sendRequestProbLevel();
@@ -39,7 +53,7 @@ const Workspace = () => {
   }, []);
 
   const exitWorkspace = () => {
-    navigator("/home");
+    navigate("/home");
     localStorage.removeItem("workspace-id");
   };
 
@@ -72,19 +86,30 @@ const Workspace = () => {
             </TestCasaeDiv>
             {/* 아래 버튼 3개 */}
             <UtilButtonsDiv>
-              <UtilButtonDiv>
-                <SnapshotBtn />
-              </UtilButtonDiv>
-              <UtilButtonDiv>
-                <TimerBtn />
-              </UtilButtonDiv>
-              <UtilButtonDiv>
-                <IconButton
-                  name="circle-xmark"
-                  size="lg"
-                  onClick={onClickExit}
-                />
-              </UtilButtonDiv>
+              <Tooltip direction="top" tip="워크스페이스 코드 복사">
+                <UtilButtonDiv>
+                  <IconButton name="copy" size="lg" onClick={onClickShare} />
+                </UtilButtonDiv>
+              </Tooltip>
+              <Tooltip direction="top" tip="스냅샷">
+                <UtilButtonDiv>
+                  <SnapshotBtn />
+                </UtilButtonDiv>
+              </Tooltip>
+              <Tooltip direction="top" tip="타이머">
+                <UtilButtonDiv>
+                  <TimerBtn />
+                </UtilButtonDiv>
+              </Tooltip>
+              <Tooltip direction="top" tip="나가기">
+                <UtilButtonDiv>
+                  <IconButton
+                    name="circle-xmark"
+                    size="lg"
+                    onClick={onClickExit}
+                  />
+                </UtilButtonDiv>
+              </Tooltip>
             </UtilButtonsDiv>
           </FlexDiv>
           {/* Section 4 */}
