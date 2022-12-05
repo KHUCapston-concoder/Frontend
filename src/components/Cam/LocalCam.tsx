@@ -1,4 +1,6 @@
+import { userInfoState } from "@/store/userInfoState";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
 
@@ -11,6 +13,7 @@ const LocalCam = ({ onSetLocalStream }: PropType) => {
   const localCam = useRef<HTMLVideoElement | undefined>(null);
   const cameraBtn = useRef<HTMLButtonElement | undefined>(null);
   const muteBtn = useRef<HTMLButtonElement | undefined>(null);
+  const userInfo = useRecoilValue(userInfoState);
 
   const [cameraOff, setCameraOff] = useState(false);
   const [mute, setMute] = useState(false);
@@ -57,46 +60,56 @@ const LocalCam = ({ onSetLocalStream }: PropType) => {
       {/* 원래 아래 부붙 className 동적으로 생성할 수 있는데 
       fontAwesome 측의 버그로 이런식으로 해야 재렌더링이 됨 .. 
       나중에 바꿀것 @todo */}
-      <ButtonsDiv>
-        {cameraOff ? (
-          <span>
-            <span />
-            <IconButton
-              name="video-slash"
-              size="sm"
-              onClick={camClickHandler}
-            />
-          </span>
-        ) : (
-          <div>
-            <IconButton name="video" size="sm" onClick={camClickHandler} />
-          </div>
-        )}
-        {mute ? (
-          <span>
-            <span />
-            <IconButton
-              name="volume-slash"
-              size="xs"
-              onClick={muteClickHandler}
-            />
-          </span>
-        ) : (
-          <span>
-            <IconButton name="volume" size="xs" onClick={muteClickHandler} />
-          </span>
-        )}
-      </ButtonsDiv>
+      <FlexDiv>
+        <NicknameHolder>{userInfo.username} (나)</NicknameHolder>
+        <ButtonsDiv>
+          {cameraOff ? (
+            <span>
+              <span />
+              <IconButton
+                name="video-slash"
+                size="sm"
+                onClick={camClickHandler}
+              />
+            </span>
+          ) : (
+            <div>
+              <IconButton name="video" size="sm" onClick={camClickHandler} />
+            </div>
+          )}
+          {mute ? (
+            <span>
+              <span />
+              <IconButton
+                name="volume-slash"
+                size="xs"
+                onClick={muteClickHandler}
+              />
+            </span>
+          ) : (
+            <span>
+              <IconButton name="volume" size="xs" onClick={muteClickHandler} />
+            </span>
+          )}
+        </ButtonsDiv>
+      </FlexDiv>
     </>
   );
 };
 
 export default LocalCam;
 
+const FlexDiv = tw.div`
+flex justify-between items-center 
+px-[5px]
+relative bottom-[30px]
+`;
+const NicknameHolder = tw.div`
+text-[10px]
+`;
+
 const ButtonsDiv = tw.div`
 w-fit 
-float-right
-relative bottom-[30px] right-[5px]
 px-[12px] py-[5px]
 flex gap-[10px] justify-end
 rounded-[5px] bg-neutral
