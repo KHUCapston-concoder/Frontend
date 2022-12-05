@@ -6,38 +6,19 @@ import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
 import useMonacoEditor from "@/hooks/Components/useMonacoEditor";
 import useCodeSnapshot from "@/hooks/Components/useCodeSnapshot";
 import SelectBox from "../_styled/Select";
-import useCodeMirror from "@/hooks/Components/useCodeMirror";
 import useCompile from "@/hooks/Components/useCompile";
 import { EditorView } from "codemirror";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
+import Tooltip from "../_styled/Tooltip";
 
 const LiveCode = () => {
   const { onCompile } = useCompile();
   const [isEditable, setIsEditable] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
-  const updateHandler = EditorView.updateListener.of((viewUpdate) => {
-    // if (viewUpdate.docChanged) {
-    //   for (const tr of viewUpdate.transactions) {
-    //     const events = ["select", "input", "delete", "move", "undo", "redo"];
-    //     if (!events.map((event) => tr.isUserEvent(event)).some(Boolean)) {
-    //       continue;
-    //     }
-    //     if (tr.annotation(Transaction.remote)) {
-    //       continue;
-    //     }
-    //     tr.changes.iterChanges((fromA, toA, _, __, inserted) => {
-    //       console.log(fromA, toA, inserted);
-    //       doc.update((root) => {
-    //         root.content?.edit(fromA, toA, inserted.toJSON().join("\n"));
-    //       }, "코드 에디터에 문제가 있습니다.");
-    //     });
-    //   }
-    // }
-  });
-
-  const { view, editorRef } = useCodeMirror({ updateHandler });
-  const { onSnapshot } = useCodeSnapshot(view);
+  const { monaco, monacoRef, setliveCodeSetter, handleEditorDidMount } =
+    useMonacoEditor();
+  const { onSnapshot } = useCodeSnapshot(monacoRef);
 
   return (
     <>
@@ -69,15 +50,14 @@ const LiveCode = () => {
             />
           </div>
         </FlexDiv>
-        <div
-          style={{
-            width: "100%",
-            height: "calc(100%-40px)",
-            maxWidth: "640px",
-          }}
-          className="cm-s-abbott"
-          ref={editorRef}
-          id="code-editor"
+        <MonacoEditor
+          width="100%"
+          height="calc(100% - 60px)"
+          language="python"
+          theme="vs-dark"
+          // disabled={}
+          ref={monacoRef}
+          onMount={handleEditorDidMount}
         />
       </MainDiv>
       <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>

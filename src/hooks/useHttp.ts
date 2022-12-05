@@ -72,7 +72,7 @@ export const useGet = (
 
 export const usePost = (
   requestConfig: RequestConfigType,
-  handleResponse: (pararm: any) => any
+  handleResponse: (pararm: any) => any = () => {}
 ) => {
   const [isLoading, error, sendRequest] = useHttp(
     requestConfig,
