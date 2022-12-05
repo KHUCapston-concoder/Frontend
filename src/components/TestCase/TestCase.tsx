@@ -12,7 +12,6 @@ import Textarea from "@/components/_styled/TextArea";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { testCaseState } from "@/store/testCaseState";
 import { WebSocketContext } from "@/context/WebSocketContext";
-import { userInfo } from "os";
 import { userInfoState } from "@/store/userInfoState";
 
 interface PropType {
@@ -44,28 +43,36 @@ const TestCase = ({
 
   const onDeleteTestCase = () => {
     const newList = testCases.list.filter((item, idx) => idx !== testCaseNo);
+    const objToDelete = { testCaseId: testCases.list[testCaseNo].testCaseId };
+
+    if (stompClient.connected) {
+      stompClient.send(
+        `/pub/testcases/delete/${userInfo.workspaceId}`,
+        JSON.stringify(objToDelete)
+      );
+    }
 
     setTestCases({ list: newList });
     setIsAdding(false);
   };
 
   const onSaveTestCase = () => {
-    const newObj = {
+    const objToAdd = {
       input: inputRef.current?.value,
       output: outputRef.current?.value,
     };
 
+    const newList = [...testCases.list, objToAdd];
+    setTestCases({ list: newList });
+    setIsAdding(false);
+
     if (stompClient.connected) {
       stompClient.send(
         `/pub/testcases/create/${userInfo.workspaceId}`,
-        JSON.stringify(newObj)
+        JSON.stringify(objToAdd)
       );
     }
 
-    const newList = [...testCases.list, newObj];
-
-    setTestCases({ list: newList });
-    setIsAdding(false);
   };
 
   useEffect(() => {

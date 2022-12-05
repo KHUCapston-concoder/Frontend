@@ -41,8 +41,26 @@ const TestCaseList = () => {
           });
         }
       );
+
+      stompClient.subscribe(
+        `/sub/testcases/delete/${userInfo.workspaceId}`,
+        async (res: any) => {
+          const data = await JSON.parse(res.body);
+          const newList = testCases.list.filter(
+            (e) => e.testCaseId != data.testCaseId
+          );
+          setTestCases({
+            list: newList,
+          });
+        }
+      );
     }
-  }, [stompClient.connected]);
+  }, [stompClient.connected, testCases.list]);
+
+  useEffect(() => {
+    setTestCaseResultList({ list: [] });
+    console.log("watching", testCases.list);
+  }, [testCases]);
 
   return (
     <>
