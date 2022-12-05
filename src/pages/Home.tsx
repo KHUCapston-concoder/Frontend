@@ -31,7 +31,9 @@ const Home = () => {
     });
 
     localStorage.setItem("workspace-id", workspaceId);
+    localStorage.setItem("user-id", userId);
     localStorage.setItem("nickname", username);
+    localStorage.setItem("host", "true");
     navigate(`/workspace/${workspaceId}`);
   };
 

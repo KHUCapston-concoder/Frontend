@@ -23,8 +23,10 @@ const EnterCodeModal = () => {
       host: false,
     });
 
-    localStorage.setItem("nickname", nickname);
     localStorage.setItem("workspace-id", workspaceId);
+    localStorage.setItem("user-id", userId);
+    localStorage.setItem("nickname", nickname);
+    localStorage.setItem("host", "false");
     navigate(`/workspace/${workspaceId}`);
   };
 

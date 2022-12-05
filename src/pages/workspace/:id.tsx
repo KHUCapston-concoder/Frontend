@@ -45,10 +45,11 @@ const Workspace = () => {
     sendRequestProbCategory();
 
     setUserInfo({
-      userId: userInfo.userId || "",
-      username: userInfo.username || "",
+      userId: localStorage.getItem("user-id") || userInfo.userId || "",
+      username: localStorage.getItem("nickname") || userInfo.username || "",
       workspaceId: userInfo.workspaceId || location.pathname.split("/")[2],
-      host: userInfo.host,
+      host:
+        localStorage.getItem("host") == "true" ? true : false || userInfo.host,
     });
   }, []);
 
