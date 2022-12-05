@@ -1,11 +1,8 @@
 import { useEffect } from "react";
-import { useTheme } from "@/context/ThemeContext";
 import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 import TestCaseList from "@/components/TestCase/TestCaseList";
 import CompileInfo from "@/components/Compile/CompileInfo";
-import SnapshotFloatBtn from "@/components/LiveCode/SnapshotBtn";
-import CompileFloatBtn from "@/components/LiveCode/CompileBtn";
 import LiveCode from "@/components/LiveCode/LiveCode";
 import useFetchAlgoInfo from "@/hooks/Components/useFetchAlgoInfo";
 import ChatBox from "@/components/Chat/ChatBox";
@@ -37,6 +34,7 @@ const Workspace = () => {
       userId: userInfo.userId || "",
       username: userInfo.username || "",
       workspaceId: userInfo.workspaceId || location.pathname.split("/")[2],
+      host: userInfo.host,
     });
   }, []);
 

@@ -27,6 +27,7 @@ const Home = () => {
       userId: userId,
       username: username,
       workspaceId: workspaceId,
+      host: true,
     });
 
     localStorage.setItem("workspace-id", workspaceId);

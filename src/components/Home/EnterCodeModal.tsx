@@ -20,6 +20,7 @@ const EnterCodeModal = () => {
       userId: userId,
       username: nickname,
       workspaceId: workspaceId,
+      host: false,
     });
 
     localStorage.setItem("nickname", nickname);
