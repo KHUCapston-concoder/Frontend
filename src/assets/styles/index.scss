@@ -109,6 +109,12 @@ button.styled {
   }
 }
 
+.tooltip {
+  &::before {
+    z-index: 100;
+  }
+}
+
 #home-lottie-player {
   a {
     display: none;

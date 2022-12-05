@@ -24,21 +24,15 @@ const LiveCode = () => {
     <>
       <MainDiv>
         <FlexDiv>
-          <div
-            className="tooltip tooltip-bottom"
-            data-tip="다른 언어는 준비중입니다."
-          >
+          <Tooltip tip="다른 언어는 준비중입니다.">
             <SelectBox
               setSelection={() => {}}
               disabled={true}
               placeholder="python"
               className="select select-xs mb-[4px] h-[30px] w-fit"
             />
-          </div>
-          <div
-            className="tooltip tooltip-bottom"
-            data-tip="호스트만 사용할 수 있는 기능입니다."
-          >
+          </Tooltip>
+          <Tooltip tip="호스트만 사용할 수 있는 기능입니다.">
             <input
               type="checkbox"
               className="toggle"
@@ -48,7 +42,7 @@ const LiveCode = () => {
                 setIsEditable(!isEditable);
               }}
             />
-          </div>
+          </Tooltip>
         </FlexDiv>
         <MonacoEditor
           width="100%"
