@@ -78,9 +78,9 @@ const Workspace = () => {
           {/* Section 3 */}
           <FlexDiv>
             {/* 컴파일 정보 */}
-            <CompileInfoDiv>
+            {/* <CompileInfoDiv>
               <CompileInfo />
-            </CompileInfoDiv>
+            </CompileInfoDiv> */}
             {/* 테스트 케이스 */}
             <TestCasaeDiv>
               <TestCaseList />
@@ -233,7 +233,7 @@ basis-auto
 /* 3.4.6 테스트 케이스 */
 const TestCasaeDiv = tw(CommonDiv)`
 m-0 mb-[15px] dark-1
-w-full h-[80%] min-h-[420px]
+w-full h-full min-h-[420px]
 basis-auto
 `;
 
