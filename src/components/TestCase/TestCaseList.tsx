@@ -18,10 +18,10 @@ const TestCaseList = () => {
   const userInfo = useRecoilValue(userInfoState);
 
   const showAddBtn = () => {
-    return (testCases.list.length == 0 && !isAdding) || !isAdding;
+    return (testCases.length == 0 && !isAdding) || !isAdding;
   };
 
-  const sortedTestCases = [...testCases.list].reverse();
+  const sortedTestCases = [...testCases].reverse();
 
   const onAddTestCase = () => {
     setIsAdding(true);
@@ -34,11 +34,9 @@ const TestCaseList = () => {
         async (res: any) => {
           const data = await JSON.parse(res.body);
 
-          const newList = [...testCases.list, data];
+          const newList = [...testCases, data];
 
-          setTestCases({
-            list: newList,
-          });
+          setTestCases(newList)
         }
       );
 
@@ -46,20 +44,18 @@ const TestCaseList = () => {
         `/sub/testcases/delete/${userInfo.workspaceId}`,
         async (res: any) => {
           const data = await JSON.parse(res.body);
-          const newList = testCases.list.filter(
+          const newList = testCases.filter(
             (e) => e.testCaseId != data.testCaseId
           );
-          setTestCases({
-            list: newList,
-          });
+          setTestCases(newList);
         }
       );
     }
-  }, [stompClient.connected, testCases.list]);
+  }, [stompClient.connected, testCases]);
 
   useEffect(() => {
-    setTestCaseResultList({ list: [] });
-    console.log("watching", testCases.list);
+    setTestCaseResultList([]);
+    console.log("watching", testCases);
   }, [testCases]);
 
   return (
@@ -80,8 +76,8 @@ const TestCaseList = () => {
         )}
         {sortedTestCases.map((e, idx) => {
           const compileResult =
-            testCaseResultList.list?.[
-              testCaseResultList?.list?.length - idx - 1
+            testCaseResultList?.[
+              testCaseResultList?.length - idx - 1
             ] || null;
           return (
             <TestCase

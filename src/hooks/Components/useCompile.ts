@@ -14,10 +14,12 @@ const useCompile = () => {
   const [, setTestCaseResultList] = useRecoilState(testCaseResultState);
   const handleCompileResult = (res: any) => {
     const data = res;
-    const successResults = data.map((e: any, idx: number) =>
-      e.output == testCaseList.list[idx].output ? "success" : "fail"
+    const successResults = data.map((result: any, idx: number) =>
+      result.output == testCaseList[idx].output
+        ? { ...result, success: true }
+        : { ...result, success: false }
     );
-    setTestCaseResultList({ list: successResults });
+    setTestCaseResultList(successResults);
   };
 
   const { isLoading, error, sendRequest } = usePost(
@@ -26,7 +28,7 @@ const useCompile = () => {
   );
 
   const onCompile = ({ code }: PropType) => {
-    const inputList = testCaseList.list.map((e) => e?.input);
+    const inputList = testCaseList.map((e) => e?.input);
 
     if (!code || code.length == 0) {
       setToastObj({ show: true, msg: "코드를 입력하세요." });
@@ -40,8 +42,7 @@ const useCompile = () => {
     }
   };
 
-  useEffect(() => {
-  }, [isLoading]);
+  useEffect(() => {}, [isLoading]);
 
   return { isLoading, error, onCompile };
 };

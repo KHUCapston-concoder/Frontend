@@ -1,32 +1,26 @@
 import { atom, selector } from "recoil";
 
-export interface testCase {
+export interface ITestCase {
   input: string;
   output: string;
+  testCaseId?: string;
+}
+export interface ITestCaseResult{
   testCaseId: string;
+  success: boolean;
+  output: string;
+  time: number;
 }
 
-export interface StateType {
-  list: Array<testCase>;
-}
-export interface StateType2 {
-  list: Array<string>;
-}
-
-const initialState1: StateType = {
-  list: [],
-};
-
-const initialState2: StateType2 = {
-  list: [],
-};
+const testCaseInitialState: Array<ITestCase> = []
+const testCaseResultInitialState: Array<ITestCaseResult> = []
 
 export const testCaseState = atom({
   key: "testCaseState",
-  default: initialState1,
+  default: testCaseInitialState,
 });
 
 export const testCaseResultState = atom({
   key: "testCaseResultState",
-  default: initialState2,
+  default: testCaseResultInitialState,
 });

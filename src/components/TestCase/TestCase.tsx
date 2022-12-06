@@ -10,7 +10,7 @@ import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
 import Textarea from "@/components/_styled/TextArea";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { testCaseState } from "@/store/testCaseState";
+import { ITestCaseResult, testCaseState } from "@/store/testCaseState";
 import { WebSocketContext } from "@/context/WebSocketContext";
 import { userInfoState } from "@/store/userInfoState";
 
@@ -21,7 +21,7 @@ interface PropType {
   disabled?: boolean;
   isAdding: boolean;
   setIsAdding: Dispatch<SetStateAction<boolean>>;
-  compileResult?: string | null;
+  compileResult?: ITestCaseResult | null;
 }
 
 const TestCase = ({
@@ -31,7 +31,7 @@ const TestCase = ({
   disabled,
   isAdding,
   setIsAdding,
-  compileResult = null,
+  compileResult,
 }: PropType) => {
   const [testCases, setTestCases] = useRecoilState(testCaseState);
 
@@ -42,8 +42,8 @@ const TestCase = ({
   const stompClient = useContext(WebSocketContext);
 
   const onDeleteTestCase = () => {
-    const newList = testCases.list.filter((item, idx) => idx !== testCaseNo);
-    const objToDelete = { testCaseId: testCases.list[testCaseNo].testCaseId };
+    const newList = testCases.filter((item, idx) => idx !== testCaseNo);
+    const objToDelete = { testCaseId: testCases[testCaseNo].testCaseId };
 
     if (stompClient.connected) {
       stompClient.send(
@@ -52,18 +52,18 @@ const TestCase = ({
       );
     }
 
-    setTestCases({ list: newList });
+    setTestCases(newList);
     setIsAdding(false);
   };
 
   const onSaveTestCase = () => {
     const objToAdd = {
-      input: inputRef.current?.value,
-      output: outputRef.current?.value,
+      input: inputRef.current?.value || "",
+      output: outputRef.current?.value || "",
     };
 
-    const newList = [...testCases.list, objToAdd];
-    setTestCases({ list: newList });
+    const newList = [...testCases, objToAdd];
+    setTestCases(newList);
     setIsAdding(false);
 
     if (stompClient.connected) {
@@ -72,7 +72,6 @@ const TestCase = ({
         JSON.stringify(objToAdd)
       );
     }
-
   };
 
   useEffect(() => {
@@ -88,17 +87,21 @@ const TestCase = ({
           {/* {compileResult} */}
           {
             <>
-              {compileResult == "success" && (
-                <CompileResultDiv>
-                  <i className="fa-solid fa-check" />
-                  {"  "} 컴파일 성공
-                </CompileResultDiv>
-              )}
-              {compileResult == "fail" && (
-                <CompileResultDiv style={{ backgroundColor: "tomato" }}>
-                  <i className="fa-solid fa-triangle-exclamation" />
-                  {"  "}컴파일 실패
-                </CompileResultDiv>
+              {compileResult && (
+                <>
+                  {compileResult.success ? (
+                    <CompileResultDiv>
+                      <i className="fa-solid fa-check" />
+                      {"  "} 컴파일 성공
+                    </CompileResultDiv>
+                  ) : (
+                    <CompileResultDiv style={{ backgroundColor: "tomato" }}>
+                      <i className="fa-solid fa-triangle-exclamation" />
+                      {"  "}컴파일 실패
+                    </CompileResultDiv>
+                  )}
+                  <TimeResultDiv>{compileResult.time}ms</TimeResultDiv>
+                </>
               )}
             </>
           }
@@ -168,4 +171,11 @@ text-neutral font-bold text-[7px]
 
 const DropdownA = tw.a`
 py-[4px]
+`;
+
+const TimeResultDiv = tw.div`
+p-[0_6px] mx-[6px]
+rounded-[10px]
+bg-base-100 text-white text-[10px]
+font-semibold
 `;
