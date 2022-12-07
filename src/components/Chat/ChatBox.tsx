@@ -18,8 +18,9 @@ const ChatBox = () => {
   const [chatContent, setChatContent] = useState<string>("");
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const stompClient = useContext(WebSocketContext);
-  const chatListDiv = useRef<HTMLDivElement | undefined>(null);
   const [chatList, setChatList] = useState<ChatPropType[]>([]);
+  const scrollRef = useRef<HTMLDivElement | undefined>(null);
+  const [editDone, setEditDone] = useState<boolean>(false);
 
   const sendChat = () => {
     stompClient.send(
@@ -43,11 +44,17 @@ const ChatBox = () => {
     }
   }, [stompClient.connected]);
 
+  // TODO: 채팅 input박스에 값 입력할 때마다 chatContent state 변화 -> 아래의 editDone이 true여서 콜백함수가 계속 실행됨. 다른 방법 모색해보기
+  useEffect(() => {
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    setEditDone(false);
+  }, [editDone === true]);
+
   return (
     <>
       <LabelTab label="채팅" />
       <MainDiv>
-        <ChatList ref={chatListDiv}>
+        <ChatList ref={scrollRef}>
           {chatList.map((chat: ChatPropType) => {
             return (
               <ChatBubble
@@ -55,6 +62,7 @@ const ChatBox = () => {
                 username={chat.username}
                 content={chat.content}
                 mine={chat.mine}
+                onEditDone={setEditDone}
               />
             );
           })}

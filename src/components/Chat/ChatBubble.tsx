@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import tw from "tailwind-styled-components";
 
@@ -6,9 +6,14 @@ interface PropType {
   username: string;
   content: string;
   mine?: boolean;
+  onEditDone: Function;
 }
 
-const ChatBubble = ({ username, content, mine }: PropType) => {
+const ChatBubble = ({ username, content, mine, onEditDone }: PropType) => {
+  useEffect(() => {
+    onEditDone(true);
+  }, []);
+
   return (
     <>
       {mine ? (
