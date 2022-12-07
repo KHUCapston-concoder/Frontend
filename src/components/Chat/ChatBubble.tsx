@@ -3,35 +3,29 @@ import styled from "styled-components";
 import tw from "tailwind-styled-components";
 
 interface PropType {
+  username: string;
+  content: string;
   mine?: boolean;
 }
 
-const ChatBubble = ({ mine = false }: PropType) => {
+const ChatBubble = ({ username, content, mine }: PropType) => {
   return (
     <>
       {mine ? (
         <>
           <NicknameHolder className="text-right">
-            나 (깜찍한 고양이)
+            나 ({username})
           </NicknameHolder>
           <FlexDiv1>
-            <BubbleDiv>
-              국회의원과 정부는 법률안을 제출할 수 있다. 국가유공자·상이군경 및
-              전몰군경의 유가족은 법률이 정하는 바에 의하여 우선적으로 근로의
-              기회를 부여받는다.
-            </BubbleDiv>
+            <BubbleDiv>{content}</BubbleDiv>
             <TimeHolder>11:20</TimeHolder>
           </FlexDiv1>
         </>
       ) : (
         <>
-          <NicknameHolder>귀여운 오소리</NicknameHolder>
+          <NicknameHolder>{username}</NicknameHolder>
           <FlexDiv2>
-            <BubbleDiv>
-              국회의원과 정부는 법률안을 제출할 수 있다. 국가유공자·상이군경 및
-              전몰군경의 유가족은 법률이 정하는 바에 의하여 우선적으로 근로의
-              기회를 부여받는다.
-            </BubbleDiv>
+            <BubbleDiv>{content}</BubbleDiv>
             <TimeHolder>11:20</TimeHolder>
           </FlexDiv2>
         </>
@@ -61,7 +55,7 @@ px-[5px] text-[5px] text-base-200
 `;
 
 const BubbleDiv = tw.div`
-    w-[100px] h-fit min-h-[40px]
+    w-[100px] h-fit min-h-[25px]
     bg-neutral 
     rounded-[5px]
     px-[8px] py-[5px]
