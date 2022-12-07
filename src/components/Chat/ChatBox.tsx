@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import LabelTab from "@/components/_styled/LabelTab";
 import tw from "tailwind-styled-components";
 import ChatBubble from "./ChatBubble";
@@ -7,10 +7,19 @@ import { userInfoState } from "@/store/userInfoState";
 import { useRecoilState } from "recoil";
 import { WebSocketContext } from "@/context/WebSocketContext";
 
+interface ChatPropType {
+  userId: string;
+  username: string;
+  content: string;
+  mine: boolean;
+}
+
 const ChatBox = () => {
   const [chatContent, setChatContent] = useState<string>("");
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const stompClient = useContext(WebSocketContext);
+  const chatListDiv = useRef<HTMLDivElement | undefined>(null);
+  const [chatList, setChatList] = useState<ChatPropType[]>([]);
 
   const sendChat = () => {
     stompClient.send(
@@ -24,7 +33,11 @@ const ChatBox = () => {
       stompClient.subscribe(
         `/sub/video/chat/${userInfo.workspaceId}`,
         (msg) => {
-          console.log(JSON.parse(msg.body));
+          let data = JSON.parse(msg.body);
+          let isMine = data.userId === userInfo.userId ? true : false;
+          setChatList((prev) => {
+            return [...prev, { ...data, mine: isMine }];
+          });
         }
       );
     }
@@ -34,13 +47,17 @@ const ChatBox = () => {
     <>
       <LabelTab label="채팅" />
       <MainDiv>
-        <ChatList>
-          <ChatBubble />
-          <ChatBubble />
-          <ChatBubble />
-          <ChatBubble />
-          <ChatBubble />
-          <ChatBubble mine={true} />
+        <ChatList ref={chatListDiv}>
+          {chatList.map((chat: ChatPropType) => {
+            return (
+              <ChatBubble
+                key={Math.random()}
+                username={chat.username}
+                content={chat.content}
+                mine={chat.mine}
+              />
+            );
+          })}
         </ChatList>
         <InputChatBox
           placeholder="채팅을 입력해주세요."
