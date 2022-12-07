@@ -34,8 +34,8 @@ const AlgoInfo = () => {
               onClick={() => setProbIndex(probIndex - 1)}
             />
             <TitleHolder>
-              {algoProblem.list[probIndex].number}{" "}
-              {algoProblem.list[probIndex].title}
+              {algoProblem.list[probIndex]?.number}{" "}
+              {algoProblem.list[probIndex]?.title}
             </TitleHolder>
             <IconButton
               name="angle-right"
@@ -53,7 +53,7 @@ const AlgoInfo = () => {
           <RestraintDiv>
             티어
             <RestraintHolder>
-              {algoProblem.list[probIndex].level.name}
+              {algoProblem.list[probIndex].level?.name}
             </RestraintHolder>
           </RestraintDiv>
           <TitleDiv>· 문제</TitleDiv>
