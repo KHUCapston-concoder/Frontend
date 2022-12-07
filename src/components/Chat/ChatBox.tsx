@@ -1,11 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import LabelTab from "@/components/_styled/LabelTab";
 import tw from "tailwind-styled-components";
 import ChatBubble from "./ChatBubble";
-import InputBox from "../_styled/Input";
+import { InputChatBox } from "../_styled/Input";
+import { userInfoState } from "@/store/userInfoState";
+import { useRecoilState } from "recoil";
+import { WebSocketContext } from "@/context/WebSocketContext";
 
 const ChatBox = () => {
   const [chatContent, setChatContent] = useState<string>("");
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const stompClient = useContext(WebSocketContext);
+
+  const sendChat = () => {
+    stompClient.send(
+      `/pub/video/chat/${userInfo.workspaceId}`,
+      JSON.stringify({ userId: userInfo.userId, content: chatContent })
+    );
+  };
+
+  useEffect(() => {
+    if (stompClient.connected === true) {
+      stompClient.subscribe(
+        `/sub/video/chat/${userInfo.workspaceId}`,
+        (msg) => {
+          console.log(JSON.parse(msg.body));
+        }
+      );
+    }
+  }, [stompClient.connected]);
 
   return (
     <>
@@ -19,9 +42,10 @@ const ChatBox = () => {
           <ChatBubble />
           <ChatBubble mine={true} />
         </ChatList>
-        <InputBox
+        <InputChatBox
           placeholder="채팅을 입력해주세요."
           setInput={setChatContent}
+          enterHandler={sendChat}
         />
       </MainDiv>
     </>
