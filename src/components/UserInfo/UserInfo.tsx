@@ -1,27 +1,20 @@
 import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import LabelTab from "@/components/_styled/LabelTab";
+import { useRecoilValue } from "recoil";
+import { userInfoState } from "@/store/userInfoState";
 
 const CompileInfo = () => {
-  const [time, setTime] = useState(0);
-  const [memory, setMemory] = useState(0);
-
-  useEffect(() =>
-    // TODO: 컴파일 완료 후 Response data Setting하기
-    {}, [time, memory]);
+  const userInfo = useRecoilValue(userInfoState);
 
   return (
     <>
-      <LabelTab label="컴파일 정보" />
+      <LabelTab label="유저 정보" />
       <MainDiv>
         <InfoList>
           <Info>
-            <InfoTitle>시간</InfoTitle>
-            <InfoData>{time}s</InfoData>
-          </Info>
-          <Info>
-            <InfoTitle>메모리</InfoTitle>
-            <InfoData>{memory}KB</InfoData>
+            <InfoTitle>{userInfo.host ? "호스트" : "참여자"}</InfoTitle>
+            <InfoData>{userInfo.username}</InfoData>
           </Info>
         </InfoList>
       </MainDiv>

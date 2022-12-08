@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import AlgoFilterContainer from "@/components/AlgoProblem/AlgoFilter";
 import AlgoInfo from "@/components/AlgoProblem/AlgoInfo";
 import TestCaseList from "@/components/TestCase/TestCaseList";
-import CompileInfo from "@/components/Compile/CompileInfo";
+import CompileInfo from "@/components/UserInfo/UserInfo";
 import LiveCode from "@/components/LiveCode/LiveCode";
 import useFetchAlgoInfo from "@/hooks/Components/useFetchAlgoInfo";
 import ChatBox from "@/components/Chat/ChatBox";
@@ -77,10 +77,10 @@ const Workspace = () => {
           </CodeDiv>
           {/* Section 3 */}
           <FlexDiv>
-            {/* 컴파일 정보 */}
-            {/* <CompileInfoDiv>
+            {/* 유저 정보 */}
+            <UserInfoDiv>
               <CompileInfo />
-            </CompileInfoDiv> */}
+            </UserInfoDiv>
             {/* 테스트 케이스 */}
             <TestCasaeDiv>
               <TestCaseList />
@@ -224,7 +224,7 @@ grow-[6] bg-[#1E1E1E]
 `;
 
 /* 3.4.5 컴파일 정보 */
-const CompileInfoDiv = tw(CommonDiv)`
+const UserInfoDiv = tw(CommonDiv)`
 m-0 mb-[15px] dark-1
 w-full h-[20%]
 basis-auto
