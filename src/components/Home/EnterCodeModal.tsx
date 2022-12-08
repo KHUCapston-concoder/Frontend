@@ -103,6 +103,6 @@ px-[40px]
 const LinkDiv = tw.div`
 w-full text-center
 underline underline-offset-2
-text-2xs text-base-200
+text-2xs text-base-300
 cursor-pointer
 `;

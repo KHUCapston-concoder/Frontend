@@ -1,14 +1,16 @@
 import React from "react";
 import tw from "tailwind-styled-components";
 
-interface PropType{
-    label: string
+interface PropType {
+  label: string;
 }
 
-const LabelTab = ({ label }:PropType) => {
+const LabelTab = ({ label }: PropType) => {
   return (
     <div className="dark-1 tabs w-full">
-      <TitleDiv className={`tab tab-active tab-lifted w-2/3`}>{label}</TitleDiv>
+      <TitleDiv className={`tab tab-active  tab-lifted w-2/3 border-none`}>
+        {label}
+      </TitleDiv>
     </div>
   );
 };
