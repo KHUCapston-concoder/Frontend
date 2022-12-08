@@ -120,3 +120,8 @@ button.styled {
     display: none;
   }
 }
+
+.tab-lifted.tab-active:before {
+  border: none;
+  background-image: none;
+}
