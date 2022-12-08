@@ -56,7 +56,7 @@ const FlexDiv2 = tw(FlexDiv)`
 `;
 
 const TimeHolder = tw.span`
-px-[5px] text-[5px] text-base-200
+px-[5px] text-[5px] text-base-300
 `;
 
 const BubbleDiv = tw.div`

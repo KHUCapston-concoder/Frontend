@@ -121,7 +121,10 @@ button.styled {
   }
 }
 
-.tab-lifted.tab-active:before {
-  border: none;
-  background-image: none;
+.tab-lifted.tab-active {
+  &:before,
+  &:after {
+    border: none;
+    background-image: none;
+  }
 }
