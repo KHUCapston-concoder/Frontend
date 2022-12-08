@@ -22,6 +22,7 @@ const useMonacoEditor = () => {
   };
 
   const handleEditorChange: OnChange = (value) => {
+    if(userInfo.host)
     stompClient.send(
       `/pub/code/${userInfo.workspaceId}`,
       JSON.stringify({ userId: userInfo.userId, content: value })
@@ -41,13 +42,12 @@ const useMonacoEditor = () => {
   }, [monaco]);
 
   useEffect(() => {
-    console.log(stompClient);
-
     if (stompClient.connected) {
-      stompClient.subscribe(`/sub/code/${userInfo.workspaceId}`, (data) => {
-        console.log(data);
-        const { content } = data;
-        monacoRef.current.value = content;
+      stompClient.subscribe(`/sub/code/${userInfo.workspaceId}`, (res) => {
+        const data = JSON.parse(res.body);
+        const { userId, content } = data;
+
+        if (userId !== userInfo.userId) monacoRef.current.setValue(content);
       });
     }
   }, [stompClient.connected]);
