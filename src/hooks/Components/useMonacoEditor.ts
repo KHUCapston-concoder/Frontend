@@ -1,15 +1,32 @@
+import { userInfoState } from "@/store/userInfoState";
+import { WebSocketContext } from "@/context/WebSocketContext";
 import { liveCodeContentSetter } from "@/store/liveCode";
-import MonacoEditor, { useMonaco, OnMount, Monaco } from "@monaco-editor/react";
-import { useEffect, useRef } from "react";
-import { useRecoilState } from "recoil";
+import MonacoEditor, {
+  useMonaco,
+  OnMount,
+  Monaco,
+  OnChange,
+} from "@monaco-editor/react";
+import { useContext, useEffect, useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const useMonacoEditor = () => {
   const monaco = useMonaco();
   const monacoRef = useRef<Monaco>(null);
   const [, setliveCodeSetter] = useRecoilState(liveCodeContentSetter);
+  const stompClient = useContext(WebSocketContext);
+  const userInfo = useRecoilValue(userInfoState);
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     monacoRef.current = editor;
+  };
+
+  const handleEditorChange: OnChange = (value) => {
+    stompClient.send(
+      `pub/code/${userInfo.workspaceId}`,
+      JSON.stringify({ userId: userInfo.userId, content: value })
+    );
+    console.log("코드 전송");
   };
 
   useEffect(() => {
@@ -23,7 +40,33 @@ const useMonacoEditor = () => {
     });
   }, [monaco]);
 
-  return {monaco, monacoRef, setliveCodeSetter, handleEditorDidMount}
+  // if (stompClient.connected) {
+  //   stompClient.subscribe(`sub/code/${userInfo.workspaceId}`, (data) => {
+  //     console.log(data);
+  //     const { content } = data;
+  //     monacoRef.current.value = content;
+  //   });
+  // }
+
+  useEffect(() => {
+    console.log(stompClient);
+
+    if (stompClient.connected) {
+      stompClient.subscribe(`sub/code/${userInfo.workspaceId}`, (data) => {
+        console.log(data);
+        const { content } = data;
+        monacoRef.current.value = content;
+      });
+    }
+  }, [stompClient.connected]);
+
+  return {
+    monaco,
+    monacoRef,
+    setliveCodeSetter,
+    handleEditorDidMount,
+    handleEditorChange,
+  };
 };
 
 export default useMonacoEditor;
