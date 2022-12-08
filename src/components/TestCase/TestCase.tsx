@@ -10,7 +10,7 @@ import tw from "tailwind-styled-components";
 import { IconButton } from "../_styled/Buttons";
 import Textarea from "@/components/_styled/TextArea";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { ITestCaseResult, testCaseState } from "@/store/testCaseState";
+import { ITestCaseResult, testCaseResultState, testCaseState } from "@/store/testCaseState";
 import { WebSocketContext } from "@/context/WebSocketContext";
 import { userInfoState } from "@/store/userInfoState";
 
@@ -34,7 +34,9 @@ const TestCase = ({
   compileResult,
 }: PropType) => {
   const [testCases, setTestCases] = useRecoilState(testCaseState);
-
+  const [testCaseResultList, setTestCaseResultList] =
+    useRecoilState(testCaseResultState);
+    
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const outputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -62,8 +64,9 @@ const TestCase = ({
       output: outputRef.current?.value || "",
     };
 
-    const newList = [...testCases, objToAdd];
-    setTestCases(newList);
+    // const newList = [...testCases, objToAdd];
+    // setTestCases(newList);
+
     setIsAdding(false);
 
     if (stompClient.connected) {

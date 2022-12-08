@@ -33,7 +33,7 @@ const TestCaseList = () => {
         `/sub/testcases/create/${userInfo.workspaceId}`,
         async (res: any) => {
           const data = await JSON.parse(res.body);
-
+          
           const newList = [...testCases, data];
 
           setTestCases(newList)
