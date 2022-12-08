@@ -27,16 +27,19 @@ const useCompile = () => {
     const testCaseResultList = newList.map((e: any) => {
       if (e.testCaseId == data.testCaseId) {
         console.log("data", e, data);
-          return data.output === e.output
-            ? { ...e, time: data.time, success: true }
-            : { ...e, time: data.time, success: false };
-      }
-      else return e
+        return data.output === e.output
+          ? { ...e, time: data.time, success: true }
+          : { ...e, time: data.time, success: false };
+      } else return e;
     });
 
     console.log(newList, testCaseResultList);
 
-    setTestCaseResultList(testCaseResultList);
+    // setTestCaseResultList(testCaseResultList);
+    setTestCaseResultList([
+      { testCaseId: "1", output: "2", time: 10, success: true },
+      { testCaseId: "2", output: "2", time: 25, success: false },
+    ]);
   };
 
   const { isLoading, error, sendRequest } = usePost(
