@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { usePost } from "@/hooks/useHttp";
 import { testCaseResultState, testCaseState } from "@/store/testCaseState";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { toastMsgState } from "@/store/toastMsgState";
+import { WebSocketContext } from "@/context/WebSocketContext";
+import { userInfoState } from "@/store/userInfoState";
 
 interface PropType {
   code: string;
@@ -27,6 +29,9 @@ const useCompile = () => {
     handleCompileResult
   );
 
+  const stompClient = useContext(WebSocketContext);
+  const userInfo = useRecoilValue(userInfoState);
+
   const onCompile = ({ code }: PropType) => {
     const inputList = testCaseList.map((e) => e?.input);
 
@@ -35,14 +40,29 @@ const useCompile = () => {
     } else if (!inputList || inputList.length == 0) {
       setToastObj({ show: true, msg: "테스트케이스를 등록하세요." });
     } else {
-      sendRequest({
-        code,
-        inputs: inputList,
-      });
+      // sendRequest({
+      //   code,
+      //   inputs: inputList,
+      // });
+      // stompClient.connect({}, () => {
+      stompClient.send(
+        `api/compile/${userInfo.workspaceId}`,
+        JSON.stringify({ code: code })
+      );
+      // });
     }
   };
 
-  useEffect(() => {}, [isLoading]);
+  useEffect(() => {
+    if (stompClient.connected)
+      stompClient.subscribe(
+        `api/compile/${userInfo.workspaceId}`,
+        async (res: any) => {
+          const data = await JSON.parse(res.body);
+          handleCompileResult(data);
+        }
+      );
+  }, [stompClient.connected]);
 
   return { isLoading, error, onCompile };
 };
