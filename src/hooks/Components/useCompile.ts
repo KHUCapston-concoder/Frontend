@@ -1,3 +1,4 @@
+import { ITestCase } from "./../../store/testCaseState";
 import { useContext, useEffect } from "react";
 import { usePost } from "@/hooks/useHttp";
 import { testCaseResultState, testCaseState } from "@/store/testCaseState";
@@ -12,16 +13,30 @@ interface PropType {
 
 const useCompile = () => {
   const [, setToastObj] = useRecoilState(toastMsgState);
-  const [testCaseList] = useRecoilState(testCaseState);
+  const testCaseList = useRecoilValue(testCaseState);
   const [, setTestCaseResultList] = useRecoilState(testCaseResultState);
-  const handleCompileResult = (res: any) => {
+  const handleCompileResult = (res: any, testCaseList: ITestCase[]) => {
     const data = res;
-    const successResults = data.map((result: any, idx: number) =>
-      result.output == testCaseList[idx].output
-        ? { ...result, success: true }
-        : { ...result, success: false }
-    );
-    setTestCaseResultList(successResults);
+    console.log(data);
+
+    console.log("testCaseList", testCaseList);
+    const newList = testCaseList.map((e: ITestCase) => ({
+      output: e.output,
+      testCaseId: e.testCaseId,
+    }));
+    const testCaseResultList = newList.map((e: any) => {
+      if (e.testCaseId == data.testCaseId) {
+        console.log("data", e, data);
+          return data.output === e.output
+            ? { ...e, time: data.time, success: true }
+            : { ...e, time: data.time, success: false };
+      }
+      else return e
+    });
+
+    console.log(newList, testCaseResultList);
+
+    setTestCaseResultList(testCaseResultList);
   };
 
   const { isLoading, error, sendRequest } = usePost(
@@ -46,7 +61,7 @@ const useCompile = () => {
       // });
       // stompClient.connect({}, () => {
       stompClient.send(
-        `api/compile/${userInfo.workspaceId}`,
+        `/pub/compile/${userInfo.workspaceId}`,
         JSON.stringify({ code: code })
       );
       // });
@@ -56,13 +71,13 @@ const useCompile = () => {
   useEffect(() => {
     if (stompClient.connected)
       stompClient.subscribe(
-        `api/compile/${userInfo.workspaceId}`,
+        `/sub/compile/${userInfo.workspaceId}`,
         async (res: any) => {
           const data = await JSON.parse(res.body);
-          handleCompileResult(data);
+          handleCompileResult(data, testCaseList);
         }
       );
-  }, [stompClient.connected]);
+  }, [stompClient.connected, testCaseList]);
 
   return { isLoading, error, onCompile };
 };

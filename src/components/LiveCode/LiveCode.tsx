@@ -56,9 +56,7 @@ const LiveCode = () => {
         />
       </MainDiv>
       <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
-        <CompileFloatBtn
-          onClick={() => onCompile({ code: view.state.doc.toString() })}
-        />
+        <CompileFloatBtn onClick={() => onCompile({ code: monacoRef.current.getValue() })} />
         <SnapshotFloatBtn onClick={onSnapshot} />
       </FloatButtonDiv>
     </>

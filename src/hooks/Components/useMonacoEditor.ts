@@ -23,7 +23,7 @@ const useMonacoEditor = () => {
 
   const handleEditorChange: OnChange = (value) => {
     stompClient.send(
-      `pub/code/${userInfo.workspaceId}`,
+      `/pub/code/${userInfo.workspaceId}`,
       JSON.stringify({ userId: userInfo.userId, content: value })
     );
     console.log("코드 전송");
@@ -40,19 +40,11 @@ const useMonacoEditor = () => {
     });
   }, [monaco]);
 
-  // if (stompClient.connected) {
-  //   stompClient.subscribe(`sub/code/${userInfo.workspaceId}`, (data) => {
-  //     console.log(data);
-  //     const { content } = data;
-  //     monacoRef.current.value = content;
-  //   });
-  // }
-
   useEffect(() => {
     console.log(stompClient);
 
     if (stompClient.connected) {
-      stompClient.subscribe(`sub/code/${userInfo.workspaceId}`, (data) => {
+      stompClient.subscribe(`/sub/code/${userInfo.workspaceId}`, (data) => {
         console.log(data);
         const { content } = data;
         monacoRef.current.value = content;
