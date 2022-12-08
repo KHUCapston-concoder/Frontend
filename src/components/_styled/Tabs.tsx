@@ -21,7 +21,7 @@ const Tabs = ({ list, tabNum, setTabNum }: PropType) => {
             <a
               id={String(idx)}
               key={idx}
-              className={`tab tab-lifted ${
+              className={`tab tab-lifted border-none ${
                 tabNum == idx && "tab-active font-bold"
               } w-[${(1 / list.length) * 100}%]`}
               onClick={onClickTab}
