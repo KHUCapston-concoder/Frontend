@@ -10,13 +10,13 @@ import useCompile from "@/hooks/Components/useCompile";
 import { EditorView } from "codemirror";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/store/userInfoState";
-import Tooltip from "../_styled/Tooltip";
+import Tooltip from "@/components/_styled/Tooltip";
 
 const LiveCode = () => {
   const { onCompile } = useCompile();
   const [isEditable, setIsEditable] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
-  const { monaco, monacoRef, setliveCodeSetter, handleEditorDidMount } =
+  const { monaco, monacoRef, setliveCodeSetter, handleEditorDidMount, handleEditorChange } =
     useMonacoEditor();
   const { onSnapshot } = useCodeSnapshot(monacoRef);
 
@@ -49,9 +49,10 @@ const LiveCode = () => {
           height="calc(100% - 60px)"
           language="python"
           theme="vs-dark"
-          // disabled={}
+          options={{"read-only": !userInfo.host && !isEditable}}
           ref={monacoRef}
           onMount={handleEditorDidMount}
+          onChange={handleEditorChange}
         />
       </MainDiv>
       <FloatButtonDiv style={{ transform: "translate(-50%, 0)" }}>
