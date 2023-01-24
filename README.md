@@ -14,8 +14,9 @@
     WebRTC와 WebSocket 을 이용한 실시간 알고리즘 화상 교육 웹 플랫폼
     <br />
     <br />
-    <a href="">데모 영상 보기(준비중)</a> ·
-    <a href="https://www.notion.so/1-a011870b9d85404f89beca26bec26033">설계 문서</a> ·
+     <a href="https://docs.google.com/presentation/d/1gl47zH8lT-SUqEOyZNf-p6om7LkTeNML/edit?usp=share_link&ouid=113447500182791023131&rtpof=true&sd=true">Watch Demo</a> ·
+    <a href="https://docs.google.com/presentation/d/1sQJhbcKi3NeTKyqA1bI9ys2Mi7XX8lpA/edit#slide=id.p1">Check out Presentation Matrials</a> ·
+    <a href="https://www.notion.so/1-a011870b9d85404f89beca26bec26033">Development Docuemnt</a> ·
     <a href="https://github.com/KHUCapston-concoder/Backend">BACKEND PROJECT</a>
   </p>
 </div>
