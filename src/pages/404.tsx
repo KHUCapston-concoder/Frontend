@@ -34,7 +34,7 @@ flex flex-col items-center justify-center
 `;
 
 const MainDiv = tw.div`
-w-[80%] max-w-[800px] h-[50%] bg-neutral
+w-[80%] max-w-[800px] h-[50%] max-h-[400px] bg-neutral
 text-center
 rounded-[40px] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]
 py-[40px]
