@@ -10,10 +10,11 @@ const Page404 = () => {
       <MainDiv>
         <div>
           <OopsDiv>Oops!</OopsDiv>
-          <div style={{ textAlign: "center", padding: "20px 0 80px 0" }}>
-            <h1>404: Page Not Found</h1>
+          <div style={{ textAlign: "center", padding: "20px 0 40px 0" }}>
+            <h1 style={{ fontSize: "24px" }}>404: Page Not Found</h1>
             <div style={{ letterSpacing: "0.12rem", padding: "5px 0" }}>
-              We're sorry, looks like the page you've looking for does not exist
+              We're sorry,<br></br> looks like the page you've looking for does
+              not exist
             </div>
           </div>
         </div>
@@ -33,13 +34,13 @@ flex flex-col items-center justify-center
 `;
 
 const MainDiv = tw.div`
-w-[80%] max-w-[1200px] h-[50%] bg-neutral
+w-[80%] max-w-[800px] h-[50%] bg-neutral
 text-center
-rounded-[10rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]
-py-[5rem]
+rounded-[40px] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]
+py-[40px]
 flex flex-col items-center justify-around
 `;
 
 const OopsDiv = tw.div`
-text-[8rem] font-bold tracking-wide
+text-[60px] font-bold tracking-wide
 `;
