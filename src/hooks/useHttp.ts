@@ -42,14 +42,16 @@ const useHttp = (
       setError(null);
       const url = "http://163.180.146.59" + requestConfig.url;
 
-      try {
-        requestFunc(url, data).then((res: any) => {
+      requestFunc(url, data)
+        .then((res: any) => {
           handleResponse(res.data);
+        })
+        .catch((e: any) => {
+          setError(e.message);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
-      } catch (e: any) {
-        setError(e.message);
-      }
-      setIsLoading(false);
     },
     [isLoading, error, requestConfig]
   );
