@@ -66,7 +66,7 @@ const Home = () => {
           <TitleDiv style={{ color: themeColorset.pointColor }}>
             Code Concurrently
             <SubTitleDiv>
-              The joy of Concoder. <br />
+              The joy of Concoder.
               Use our free webRTC-based webcam service along with modern live
               code IDE supporting up to 10 users.
             </SubTitleDiv>
@@ -86,10 +86,10 @@ const Home = () => {
                 />
                 <button
                   className="styled"
-                  style={{ height: "50px", width: "160px" }}
+                  style={{ height: "50px", width: "180px" }}
                   onClick={onClick}
                 >
-                  ENTER CODE
+                  JOIN WORKSPACE
                 </button>
               </BtnDiv>
               <BtnDiv>
@@ -155,7 +155,7 @@ const TitleDiv = tw.div`
 
 const SubTitleDiv = tw.div`
   text-[18px] text-[#d4d4d4] font-[400]
-  w-[500px]
+  w-[480px]
   leading-[20px] tracking-normal
   pr-[20px]
 `;
