@@ -26,6 +26,9 @@ body {
 
 input,
 textarea {
+  &::placeholder {
+    font-weight: 400;
+  }
   &:focus,
   &:active {
     outline: unset !important;
@@ -36,10 +39,31 @@ textarea {
   resize: none;
 }
 
+nav {
+  @apply bg-base-100;
+  z-index: 10;
+}
+
+img {
+  z-index: 5;
+}
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+h2 {
+  font-size: 1.2rem;
+}
+
+img {
+  object-fit: contain;
 }
 
 .dark-1 {
@@ -66,6 +90,23 @@ input[type="number"]::-webkit-inner-spin-button {
 //   border: 1px solid $base-color;
 // }
 
+.polygon {
+  height: 100vh;
+  width: 60%;
+  left: 0;
+  z-index: 1;
+  clip-path: polygon(0% 0%, 100% 0, 90% 100%, 0% 100%);
+  position: absolute;
+}
+
+.diagonal > .diagonal-child {
+  -webkit-transform: skewY(5deg);
+  -moz-transform: skewY(5deg);
+  -ms-transform: skewY(5deg);
+  -o-transform: skewY(5deg);
+  transform: skewY(5deg);
+}
+
 button.accent {
   @apply my-auto w-fit rounded-[10px]
 bg-accent p-2 text-center
@@ -82,6 +123,7 @@ button:hover {
 }
 
 button.styled {
+  @apply flex items-center justify-center;
   position: relative;
   background-color: $point-color;
   color: $text-color;
@@ -89,6 +131,11 @@ button.styled {
   padding: 10px 18px;
   border-radius: 14px;
   z-index: 1;
+  &.line {
+    background: transparent;
+    border: 1px solid #00adb5;
+    color: #00adb5;
+  }
   &:before {
     content: "";
     position: absolute;

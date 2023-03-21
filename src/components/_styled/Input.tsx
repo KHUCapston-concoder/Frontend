@@ -6,6 +6,8 @@ interface PropType {
   className?: string;
   label?: string;
   disabled?: boolean;
+  containerStyle?: object;
+  inputStyle?: object;
 }
 
 const InputBox = ({
@@ -14,10 +16,15 @@ const InputBox = ({
   className = "",
   label,
   disabled = false,
+  containerStyle = {},
+  inputStyle = {},
 }: PropType) => {
   const inputRef = useRef(null);
   return (
-    <div className="my-[2px] w-full px-[12px] py-[4px]">
+    <div
+      className={"my-[2px] w-full px-[12px] py-[4px]"}
+      style={containerStyle}
+    >
       <div className="w-full text-left text-xs font-bold">
         {label != undefined && `· ${label}`}
       </div>
@@ -27,6 +34,7 @@ const InputBox = ({
         className={className + " input input-xs mt-[4px]"}
         disabled={disabled}
         ref={inputRef}
+        style={inputStyle}
         onChange={() =>
           setInput(inputRef.current ? inputRef.current.value : "")
         }
