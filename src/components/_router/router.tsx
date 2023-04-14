@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "@/pages/home";
+import Home from "@/pages/Home";
 import Workspace from "@/pages/workspace/:id";
 import PrivateRouter from "./PrivateRouter";
 import Page404 from "@/pages/404";
