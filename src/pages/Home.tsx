@@ -51,7 +51,7 @@ const Home = () => {
   };
 
   return (
-    <HomeDiv>
+    <>
       <Nav>
         <img width="200" src="src/assets/img/logo2.png" />
         <button
@@ -66,9 +66,8 @@ const Home = () => {
           <TitleDiv style={{ color: themeColorset.pointColor }}>
             Code Concurrently
             <SubTitleDiv>
-              The joy of Concoder.
-              Use our free webRTC-based webcam service along with modern live
-              code IDE supporting up to 10 users.
+              The joy of Concoder. Use our free webRTC-based webcam service
+              along with modern live code IDE supporting up to 10 users.
             </SubTitleDiv>
             <BtnContainer style={{ color: themeColorset.textColor }}>
               <BtnDiv>
@@ -120,7 +119,7 @@ const Home = () => {
         <EnterCodeModal />
       </Modal>
       <div className="blur"></div>
-    </HomeDiv>
+    </>
   );
 };
 
@@ -130,21 +129,18 @@ const Nav = tw.nav`
 h-[120px] w-full
 px-[20px]
 flex justify-between items-center
+fixed
 shadow-xl
 `;
 
 const MainDiv = tw.div`
 w-[80%] max-w-[1200px] h-[calc(100%-120px)]
 flex flex-col items-center justify-center
-z-[2] mb-[100px]
+z-[2] mb-[100px] mt-[120px]
 `;
 
 const FlexDiv = tw.div`
 flex gap-[20px]
-`;
-
-const HomeDiv = tw.div`
-  flex flex-col justify-center items-center h-full
 `;
 
 const TitleDiv = tw.div`

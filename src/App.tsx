@@ -23,6 +23,7 @@ function App() {
 const MainDiv = styled.div`
   width: 100%;
   height: 100%;
+  position: absolute;
   background-color: ${(props) => props.theme.baseColor};
 `;
 
